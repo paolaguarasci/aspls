@@ -13,7 +13,7 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 | Feature | What you get |
 |--------|----------------|
 | **Run Clingo** | Compute first or all answer sets (editor title buttons, context menu, Command Palette) |
-| **ASP sidebar — Solver** | Activity Bar **ASP → Solver**: readable/copyable answer sets, errors, re-run (**First** / **All** / **Config** in the view title) |
+| **ASP sidebar — Solver** | Activity Bar **ASP → Solver**: answer sets, errors, re-run; **Controls** for models, native Clingo path, and additional files (persists to `aspls.clingo.json` / workspace settings) |
 | **ASP sidebar — Predicates** | **ASP → Predicates**: predicates in the active `.lp` / `.asp` file; click to jump to definition (also powers the editor **Outline**) |
 | **PATH or WASM** | Bundled `clingo-wasm` by default; optional Clingo binary from PATH |
 | **Syntax highlighting** | Atoms, variables, comments, directives, operators |
@@ -81,6 +81,8 @@ For multi-file programs and shared flags, create a workspace file (default name 
 ```
 
 Then run **aspls: Compute answer sets (config)**. Paths in `additionalFiles` are resolved relative to the active file, then the workspace root.
+
+You can also edit **models**, **Use native Clingo** / **path**, and **additional files** from the Solver sidebar Controls section. Models and additional files write to the workspace config file; path settings write to workspace Settings. Threads and `customArgs` remain Settings / JSON only.
 
 ---
 
