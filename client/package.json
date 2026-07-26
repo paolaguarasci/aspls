@@ -1,0 +1,52 @@
+{
+  "name": "aspls",
+  "displayName": "ASP Language Support",
+  "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo dialect): syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
+  "version": "0.1.0",
+  "publisher": "TODO-set-before-publish",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Programming Languages"],
+  "activationEvents": ["onLanguage:asp"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "asp",
+        "aliases": ["ASP", "Answer Set Programming"],
+        "extensions": [".lp", ".asp"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "asp",
+        "scopeName": "source.asp",
+        "path": "./syntaxes/asp.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "ASP Language Server",
+      "properties": {
+        "aspls.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a Python 3 interpreter. Leave empty to auto-detect python3/python on PATH."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -watch -p ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  }
+}
