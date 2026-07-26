@@ -1,3 +1,5 @@
+import * as path from "path";
+
 /** Split a Clingo custom-args string into argv tokens (quotes supported). */
 export function splitCustomArgs(input: string): string[] {
   const trimmed = input.trim();
@@ -22,3 +24,52 @@ export const SAMPLE_CLINGO_CONFIG = `{
   "additionalFiles": []
 }
 `;
+
+export function isValidModels(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0;
+}
+
+export function mergeClingoFileConfig(
+  existing: Record<string, unknown>,
+  patch: { models?: number; additionalFiles?: string[] },
+): Record<string, unknown> {
+  const next: Record<string, unknown> = { ...existing };
+  if (patch.models !== undefined) {
+    next.models = patch.models;
+  }
+  if (patch.additionalFiles !== undefined) {
+    next.additionalFiles = patch.additionalFiles;
+  }
+  return next;
+}
+
+/** Prefer a workspace-relative path when `absPath` is under `workspaceRoot`. */
+export function toWorkspaceRelativePath(
+  absPath: string,
+  workspaceRoot: string,
+): string {
+  const root = path.resolve(workspaceRoot);
+  const full = path.resolve(absPath);
+  const rel = path.relative(root, full);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    return full;
+  }
+  return rel;
+}
+
+export function dedupePaths(paths: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const p of paths) {
+    if (seen.has(p)) {
+      continue;
+    }
+    seen.add(p);
+    out.push(p);
+  }
+  return out;
+}
+
+export function removePathEntry(paths: string[], toRemove: string): string[] {
+  return paths.filter((p) => p !== toRemove);
+}
