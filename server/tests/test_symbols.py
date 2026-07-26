@@ -25,3 +25,24 @@ def test_nullary_atom_has_arity_zero():
     result = parse_document(text)
     index = build_symbol_index(result.tree)
     assert ("sunny", 0) in index
+
+
+def test_occurrences_report_document_relative_line_for_every_statement():
+    text = "bird(tweety).\nflies(X) :- bird(X), not penguin(X)."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    bird_lines = {occ.line for occ in index[("bird", 1)]}
+    assert bird_lines == {1, 2}  # fact on line 1, body occurrence on line 2
+
+    assert index[("flies", 1)][0].line == 2
+    assert index[("penguin", 1)][0].line == 2
+
+
+def test_occurrence_line_correct_after_error_recovery_drops_lines():
+    text = "bird(tweety).\nbad statement here\npenguin(pingu)."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert index[("bird", 1)][0].line == 1
+    assert index[("penguin", 1)][0].line == 3  # not 1, the dropped fragment's line

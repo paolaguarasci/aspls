@@ -3,10 +3,7 @@ from features.hover import build_hover
 
 def test_hover_over_predicate_shows_name_arity_and_counts():
     text = "bird(tweety).\nflies(X) :- bird(X), not penguin(X)."
-    # parse_document parses each statement as an independent fragment, so
-    # Occurrence.line resets to 1 for every statement rather than tracking
-    # the document line -> the "bird" body occurrence reports line 1, not 2.
-    hover = build_hover(text, line=0, column=13)
+    hover = build_hover(text, line=1, column=13)
     assert hover is not None
     assert "bird/1" in hover.contents.value
     assert "1 head" in hover.contents.value

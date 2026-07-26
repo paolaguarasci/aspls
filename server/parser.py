@@ -40,6 +40,20 @@ def _split_top_level_statements(text: str) -> list[tuple[str, int]]:
     return statements
 
 
+def _offset_tree_lines(tree: lark.Tree, offset: int) -> None:
+    # propagate_positions numbers each fragment from line 1; shift back to
+    # document-relative lines so symbols.py's occurrence index is correct.
+    # Columns are untouched: the split only drops whole leading lines, never
+    # partial-line text, so column 1 of a fragment is always column 1 of the
+    # corresponding original document line.
+    if not tree.meta.empty:
+        tree.meta.line += offset
+        tree.meta.end_line += offset
+    for child in tree.children:
+        if isinstance(child, lark.Tree):
+            _offset_tree_lines(child, offset)
+
+
 def _parse_fragment(stmt_text: str, start_line: int) -> tuple[list[lark.Tree], list[ParseError]]:
     # The line-based split joins consecutive dot-less lines with the next
     # line that has a '.', so a single bad statement (no '.' of its own) can
@@ -56,6 +70,7 @@ def _parse_fragment(stmt_text: str, start_line: int) -> tuple[list[lark.Tree], l
         remainder = "\n".join(lines)
         try:
             stmt_tree = _parser.parse(remainder)
+            _offset_tree_lines(stmt_tree, line_offset)
             errors = [first_error] if first_error else []
             return list(stmt_tree.children), errors
         except UnexpectedInput as e:
