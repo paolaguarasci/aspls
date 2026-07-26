@@ -4,7 +4,7 @@ Language support for **Answer Set Programming** in the ASP-Core-2 / [Clingo](htt
 
 Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and other compatible editors.
 
-**Why aspls:** one extension that combines **language intelligence** (diagnostics, completion, hover, go-to-definition / find-references, semantic + rainbow highlighting, optional learner mode) with a **Clingo runner** (bundled WASM or PATH binary, Results panel). That avoids stacking a highlight-only extension (e.g. abelcour) with a separate run-oriented tool (e.g. Clingo for VSCode).
+**Why aspls:** one extension that combines **language intelligence** (diagnostics, completion, hover, go-to-definition / find-references, semantic + rainbow highlighting, optional learner mode) with a **Clingo runner** (bundled WASM or PATH binary, Solver sidebar). That avoids stacking a highlight-only extension (e.g. abelcour) with a separate run-oriented tool (e.g. Clingo for VSCode).
 
 ---
 
@@ -13,7 +13,8 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 | Feature | What you get |
 |--------|----------------|
 | **Run Clingo** | Compute first or all answer sets (editor title buttons, context menu, Command Palette) |
-| **Results panel** | Dedicated **ASP → Results** view: readable/copyable answer sets, errors, re-run |
+| **ASP sidebar — Solver** | Activity Bar **ASP → Solver**: readable/copyable answer sets, errors, re-run (**First** / **All** / **Config** in the view title) |
+| **ASP sidebar — Predicates** | **ASP → Predicates**: predicates in the active `.lp` / `.asp` file; click to jump to definition (also powers the editor **Outline**) |
 | **PATH or WASM** | Bundled `clingo-wasm` by default; optional Clingo binary from PATH |
 | **Syntax highlighting** | Atoms, variables, comments, directives, operators |
 | **Semantic highlighting** | Different colors for facts, rule heads, rule bodies, constraints, `#show`, `#minimize` |
@@ -37,7 +38,7 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 4. Click the **play** / **run all** icons in the editor title bar, or use the context menu / Command Palette:
    - **aspls: Compute first answer set**
    - **aspls: Compute all answer sets**
-5. Results open in the **ASP** panel tab.
+5. Results open in the Activity Bar **ASP → Solver** view (the sidebar focuses automatically after a run).
 
 Optional: install [Clingo](https://potassco.org/clingo/) on PATH for extra diagnostics (grounding/safety) and to use the system solver via `aspls.clingo.usePath`.
 
