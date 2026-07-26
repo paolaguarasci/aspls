@@ -16,3 +16,10 @@ def test_reports_syntax_error_with_position():
     result = parse_document(text)
     assert len(result.errors) == 1
     assert result.errors[0].line == 2
+
+
+def test_parses_disjunction_aggregates_and_directives():
+    text = (FIXTURES / "disjunction_aggregates_directives.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None

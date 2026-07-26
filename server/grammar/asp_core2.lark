@@ -1,16 +1,36 @@
 start: statement*
 
-statement: fact
+statement: directive
+         | fact
          | rule
          | constraint
 
-fact: literal "."
-rule: literal ":-" body "."
+directive: "#const" IDENTIFIER "=" INT "." -> const_directive
+         | "#show" IDENTIFIER "/" INT "." -> show_directive
+         | "#minimize" "{" weighted_literal ("," weighted_literal)* "}" "." -> minimize_directive
+
+weighted_literal: naf_literal "@" INT
+                 | naf_literal
+
+head: disjunction
+disjunction: literal (";" literal)*
+
+fact: head "."
+rule: head ":-" body "."
 constraint: ":-" body "."
 
 body: naf_literal ("," naf_literal)*
 naf_literal: "not" literal -> negated_literal
+           | aggregate
            | literal
+
+aggregate: AGGREGATE_FN "{" aggregate_elem ("," aggregate_elem)* "}" (COMPARE_OP term)?
+aggregate_elem: term_tuple ":" body
+              | body
+term_tuple: term ("," term)*
+
+AGGREGATE_FN: "#count" | "#sum" | "#max" | "#min"
+COMPARE_OP: "<" | "<=" | ">" | ">=" | "=" | "!="
 
 literal: atom
 
@@ -19,7 +39,10 @@ atom: IDENTIFIER "(" term ("," term)* ")" -> compound_atom
 
 term: VARIABLE -> var_term
     | IDENTIFIER -> const_term
+    | range_bound ".." range_bound -> range_term
     | INT -> int_term
+
+range_bound: INT | IDENTIFIER
 
 VARIABLE: /[A-Z_][a-zA-Z0-9_]*/
 IDENTIFIER: /[a-z][a-zA-Z0-9_]*/
