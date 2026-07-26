@@ -1,4 +1,7 @@
 .superpowers/
+client/node_modules/
+client/out/
+*.vsix
 
 ### Created by https://www.gitignore.io
 ### Python ###
