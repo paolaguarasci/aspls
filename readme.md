@@ -1,9 +1,11 @@
 # aspls
 
-VS Code / Cursor extension for Answer Set Programming (ASP-Core-2 / Clingo).
+VS Code / Cursor / VSCodium extension for Answer Set Programming (ASP-Core-2 / Clingo): **language intelligence** (diagnostics, completion, navigation, semantic highlighting) plus a **Clingo runner** (WASM or PATH) in one package.
+
+Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=pingflood.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls).
 
 **Repository:** https://github.com/paolaguarasci/aspls
 
 The publishable extension lives in [`client/`](client/).
 
-See [`client/README.md`](client/README.md) for features and settings.
+See [`client/README.md`](client/README.md) for features, settings, and maintainer publish notes (`publish:marketplace` / `publish:openvsx`).

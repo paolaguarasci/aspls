@@ -5,6 +5,7 @@
   "scripts": {
     "compile": "npm run compile --prefix client",
     "package": "npm run package --prefix client",
-    "publish:marketplace": "npm run publish:marketplace --prefix client"
+    "publish:marketplace": "npm run publish:marketplace --prefix client",
+    "publish:openvsx": "npm run publish:openvsx --prefix client"
   }
 }

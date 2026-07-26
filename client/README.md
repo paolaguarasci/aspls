@@ -2,7 +2,9 @@
 
 Language support for **Answer Set Programming** in the ASP-Core-2 / [Clingo](https://potassco.org/clingo/) dialect.
 
-Works with **`.lp`** and **`.asp`** files in VS Code (and compatible editors).
+Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and other compatible editors.
+
+**Why aspls:** one extension that combines **language intelligence** (diagnostics, completion, hover, go-to-definition / find-references, semantic + rainbow highlighting, optional learner mode) with a **Clingo runner** (bundled WASM or PATH binary, Results panel). That avoids stacking a highlight-only extension (e.g. abelcour) with a separate run-oriented tool (e.g. Clingo for VSCode).
 
 ---
 
@@ -28,7 +30,7 @@ Works with **`.lp`** and **`.asp`** files in VS Code (and compatible editors).
 
 ## Quick start
 
-1. Install **aspls** from the Marketplace.
+1. Install **aspls** from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=pingflood.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls) (Cursor / VSCodium).
 2. Make sure **Python 3** is available on your PATH (or set `aspls.pythonPath`) for the language server.
 3. Open a `.lp` file — the language server starts on first use and sets up a local venv automatically.
 4. Click the **play** / **run all** icons in the editor title bar, or use the context menu / Command Palette:
@@ -134,9 +136,22 @@ Semantic highlighting for ASP is enabled by default (`editor.semanticHighlightin
 
 ## Requirements
 
-- VS Code **1.85+** (or a compatible editor)
+- VS Code **1.85+** (or a compatible editor such as Cursor / VSCodium)
 - **Python 3** (for the bundled language server: `pygls`, `lark`)
 - Optional: **Clingo** on PATH when `aspls.clingo.usePath` is enabled
+
+---
+
+## Publishing (maintainers)
+
+- **VS Marketplace:** `npm run publish:marketplace` (from repo root or `client/`; uses `vsce` / Azure DevOps PAT).
+- **Open VSX** (Cursor / VSCodium): create an [Eclipse](https://accounts.eclipse.org/) account, sign the [Open VSX Publisher Agreement](https://open-vsx.org/user-settings/profile), generate a token, then once:
+
+  ```bash
+  npx ovsx create-namespace pingflood -p "$OVSX_PAT"
+  ```
+
+  Afterwards: `OVSX_PAT=… npm run publish:openvsx`
 
 ---
 
