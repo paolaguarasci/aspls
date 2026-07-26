@@ -46,6 +46,7 @@ from features.semantic_tokens import (
     TOKEN_TYPES,
     build_semantic_tokens,
 )
+from features.workspace_predicates import build_workspace_predicate_nodes
 from workspace_index import WorkspaceIndex, resolve_pool
 
 server = LanguageServer("aspls", "v0.1.0")
@@ -313,6 +314,29 @@ def document_symbol(ls: LanguageServer, params: DocumentSymbolParams):
     uri = params.text_document.uri
     doc = ls.workspace.get_text_document(uri)
     return build_document_symbols(doc.source)
+
+
+@server.feature("aspls/workspacePredicates")
+def workspace_predicates(ls: LanguageServer, params):
+    """Custom request: nested predicates for pool-or-discovered files.
+
+    params: {"uri": str | None}
+    """
+    _refresh_workspace_scan(ls)
+    uri = None
+    if isinstance(params, dict):
+        uri = params.get("uri")
+    else:
+        uri = getattr(params, "uri", None)
+    if uri:
+        pool = _pool_for(uri)
+    else:
+        pool = list(DISCOVERED)
+        for pool_uri in pool:
+            if not WORKSPACE.has(pool_uri):
+                _ensure_indexed(pool_uri)
+    merged = WORKSPACE.merged(pool)
+    return build_workspace_predicate_nodes(merged, WORKSPACE_ROOTS)
 
 
 @server.feature(TEXT_DOCUMENT_DEFINITION)

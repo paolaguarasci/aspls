@@ -32,7 +32,7 @@ export async function activate(
   registerClingoCommands(context, solverView);
   registerCookbookCommands(context);
 
-  const predicatesProvider = registerPredicatesTree(context);
+  const predicatesProvider = registerPredicatesTree(context, () => client);
   await startLanguageServer(context, predicatesProvider);
 }
 

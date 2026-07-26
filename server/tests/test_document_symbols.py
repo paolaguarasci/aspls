@@ -26,3 +26,27 @@ def test_document_symbols_sorted_by_name():
     text = "zebra(1).\napple(1)."
     names = [s.name for s in build_document_symbols(text)]
     assert names == ["apple/1", "zebra/1"]
+
+
+def test_document_symbols_nested_role_groups():
+    text = "bird(tweety).\nflies(X) :- bird(X), not bird(X)."
+    symbols = {s.name: s for s in build_document_symbols(text)}
+    bird = symbols["bird/1"]
+    assert bird.children is not None
+    role_names = [c.name for c in bird.children]
+    assert role_names == ["fact", "rule_body"]
+    fact = bird.children[0]
+    assert fact.detail == "1 occ"
+    assert len(fact.children) == 1
+    assert fact.children[0].name == "L1:1"
+    body = bird.children[1]
+    assert body.detail == "2 occ"
+    labels = [c.name for c in body.children]
+    assert labels == ["L2:13", "not L2:26"]
+
+
+def test_document_symbols_role_order_fixed():
+    text = "p(1).\n:- p(1).\np(X) :- q(X)."
+    # p has fact, rule_head, constraint — order must not be alpha
+    p = next(s for s in build_document_symbols(text) if s.name == "p/1")
+    assert [c.name for c in p.children] == ["fact", "rule_head", "constraint"]
