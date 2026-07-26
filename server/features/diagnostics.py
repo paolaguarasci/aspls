@@ -1,6 +1,7 @@
 from lsprotocol.types import Diagnostic, DiagnosticSeverity, Position, Range
 
 from parser import parse_document
+from clingo_check import check_with_clingo
 
 
 def build_diagnostics(text: str) -> list[Diagnostic]:
@@ -20,4 +21,21 @@ def build_diagnostics(text: str) -> list[Diagnostic]:
                 source="aspls",
             )
         )
+
+    if not result.errors:
+        for clingo_diag in check_with_clingo(text):
+            line = max(clingo_diag.line - 1, 0)
+            column = max(clingo_diag.column - 1, 0)
+            diagnostics.append(
+                Diagnostic(
+                    range=Range(
+                        start=Position(line=line, character=column),
+                        end=Position(line=line, character=column + 1),
+                    ),
+                    message=clingo_diag.message,
+                    severity=DiagnosticSeverity.Warning,
+                    source="aspls (clingo)",
+                )
+            )
+
     return diagnostics
