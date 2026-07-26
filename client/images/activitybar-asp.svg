@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Chess knight (cavallo) — Material Design Icons path, Apache-2.0 -->
+  <path
+    fill="#C5C5C5"
+    d="M19 22H5v-2h14v2M13 2c-1.25 0-2.42.62-3.11 1.66L7 8l2 2 2.06-1.37c.44-.31 1.08-.19 1.39.27.02.03.05.06.05.1 0 0 .3.59-.17 1.06L7.42 15.57c-.55.56-.55 1.46.01 2.01.26.26.62.42.99.42H17V6a4 4 0 0 0-4-4z"
+  />
+</svg>
