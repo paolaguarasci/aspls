@@ -23,3 +23,17 @@ def test_parses_disjunction_aggregates_and_directives():
     result = parse_document(text)
     assert result.errors == []
     assert result.tree is not None
+
+
+def test_recovers_after_one_bad_statement_and_parses_the_rest():
+    text = "bird(tweety).\nbad statement here\npenguin(pingu)."
+    result = parse_document(text)
+    assert len(result.errors) == 1
+    assert result.tree is not None
+    assert len(result.tree.children) == 2  # bird(tweety). and penguin(pingu).
+
+
+def test_error_line_number_matches_original_document():
+    text = "bird(tweety).\nbad statement here\npenguin(pingu)."
+    result = parse_document(text)
+    assert result.errors[0].line == 2

@@ -22,10 +22,53 @@ class ParseResult:
     errors: list[ParseError] = field(default_factory=list)
 
 
-def parse_document(text: str) -> ParseResult:
+def _split_top_level_statements(text: str) -> list[tuple[str, int]]:
+    statements = []
+    line_offset = 0
+    current = []
+    current_start_line = 0
+    for line in text.split("\n"):
+        if not current:
+            current_start_line = line_offset
+        current.append(line)
+        if "." in line:
+            statements.append(("\n".join(current), current_start_line))
+            current = []
+        line_offset += 1
+    if current and "".join(current).strip():
+        statements.append(("\n".join(current), current_start_line))
+    return statements
+
+
+def _parse_fragment(stmt_text: str, start_line: int) -> tuple[list[lark.Tree], list[ParseError]]:
+    # The line-based split joins consecutive dot-less lines with the next
+    # line that has a '.', so a single bad statement (no '.' of its own) can
+    # end up glued to a valid statement that follows it on a later line.
+    # Retry on shrinking suffixes (dropping one leading line at a time) so
+    # the valid tail is still recovered instead of being swallowed whole.
     try:
-        tree = _parser.parse(text)
-        return ParseResult(tree=tree, errors=[])
+        stmt_tree = _parser.parse(stmt_text)
+        return list(stmt_tree.children), []
     except UnexpectedInput as e:
-        error = ParseError(line=e.line, column=e.column, message=str(e))
-        return ParseResult(tree=None, errors=[error])
+        error = ParseError(line=e.line + start_line, column=e.column, message=str(e))
+        lines = stmt_text.split("\n")
+        if len(lines) > 1:
+            remainder = "\n".join(lines[1:])
+            children, errors = _parse_fragment(remainder, start_line + 1)
+            return children, [error] + errors
+        return [], [error]
+
+
+def parse_document(text: str) -> ParseResult:
+    children: list[lark.Tree] = []
+    errors: list[ParseError] = []
+
+    for stmt_text, start_line in _split_top_level_statements(text):
+        if not stmt_text.strip():
+            continue
+        stmt_children, stmt_errors = _parse_fragment(stmt_text, start_line)
+        children.extend(stmt_children)
+        errors.extend(stmt_errors)
+
+    tree = lark.Tree("start", children) if children else None
+    return ParseResult(tree=tree, errors=errors)
