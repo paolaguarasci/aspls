@@ -1,8 +1,8 @@
 {
     "name": "aspls",
     "displayName": "aspls — Answer Set Programming (Clingo)",
-    "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo dialect): syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
-    "version": "0.1.2",
+    "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results panel, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
+    "version": "0.2.0",
     "publisher": "paolaguarasci",
     "author": "Paola Guarasci",
     "license": "MIT",
@@ -33,10 +33,98 @@
         "potassco"
     ],
     "activationEvents": [
-        "onLanguage:asp"
+        "onLanguage:asp",
+        "onView:aspls.clingoResults"
     ],
     "main": "./out/extension.js",
     "contributes": {
+        "commands": [
+            {
+                "command": "aspls.clingo.computeFirst",
+                "title": "Compute first answer set",
+                "category": "aspls",
+                "icon": "$(play)"
+            },
+            {
+                "command": "aspls.clingo.computeAll",
+                "title": "Compute all answer sets",
+                "category": "aspls",
+                "icon": "$(run-all)"
+            },
+            {
+                "command": "aspls.clingo.computeWithConfig",
+                "title": "Compute answer sets (config)",
+                "category": "aspls",
+                "icon": "$(settings-gear)"
+            },
+            {
+                "command": "aspls.clingo.rerun",
+                "title": "Re-run Clingo",
+                "category": "aspls",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "aspls.clingo.initConfig",
+                "title": "Initialize Clingo config file",
+                "category": "aspls"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.clingo.computeFirst",
+                    "group": "aspls@1"
+                },
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.clingo.computeAll",
+                    "group": "aspls@2"
+                },
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.clingo.computeWithConfig",
+                    "group": "aspls@3"
+                }
+            ],
+            "editor/title": [
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.clingo.computeFirst",
+                    "group": "navigation@1"
+                },
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.clingo.computeAll",
+                    "group": "navigation@2"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "aspls.clingo.rerun",
+                    "when": "view == aspls.clingoResults",
+                    "group": "navigation"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "panel": [
+                {
+                    "id": "aspls-clingo",
+                    "title": "ASP",
+                    "icon": "$(symbol-logic)"
+                }
+            ]
+        },
+        "views": {
+            "aspls-clingo": [
+                {
+                    "type": "webview",
+                    "id": "aspls.clingoResults",
+                    "name": "Results"
+                }
+            ]
+        },
         "languages": [
             {
                 "id": "asp",
@@ -90,28 +178,31 @@
                 "description": "Negated with not"
             }
         ],
-        "semanticTokenScopes": {
-            "scopes": {
-                "aspFact": [
-                    "entity.name.function.asp.fact"
-                ],
-                "aspRuleHead": [
-                    "entity.name.function.asp.rule.head"
-                ],
-                "aspRuleBody": [
-                    "entity.name.function.asp.rule.body"
-                ],
-                "aspConstraint": [
-                    "entity.name.function.asp.constraint"
-                ],
-                "aspShow": [
-                    "entity.name.function.asp.show"
-                ],
-                "aspMinimize": [
-                    "entity.name.function.asp.minimize"
-                ]
+        "semanticTokenScopes": [
+            {
+                "language": "asp",
+                "scopes": {
+                    "aspFact": [
+                        "entity.name.function.asp.fact"
+                    ],
+                    "aspRuleHead": [
+                        "entity.name.function.asp.rule.head"
+                    ],
+                    "aspRuleBody": [
+                        "entity.name.function.asp.rule.body"
+                    ],
+                    "aspConstraint": [
+                        "entity.name.function.asp.constraint"
+                    ],
+                    "aspShow": [
+                        "entity.name.function.asp.show"
+                    ],
+                    "aspMinimize": [
+                        "entity.name.function.asp.minimize"
+                    ]
+                }
             }
-        },
+        ],
         "configurationDefaults": {
             "[asp]": {
                 "editor.semanticHighlighting.enabled": true
@@ -147,7 +238,7 @@
             }
         },
         "configuration": {
-            "title": "ASP Language Server",
+            "title": "aspls",
             "properties": {
                 "aspls.pythonPath": {
                     "type": "string",
@@ -158,6 +249,45 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Underline each predicate name with a stable rainbow color derived from its name (role colors come from semantic highlighting)."
+                },
+                "aspls.clingo.usePath": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Use the Clingo binary from PATH (or aspls.clingo.path) instead of the bundled WASM solver."
+                },
+                "aspls.clingo.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Optional absolute path to the Clingo executable. Empty = look up `clingo` on PATH when usePath is enabled."
+                },
+                "aspls.clingo.models": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Default number of models for config-based runs (0 = enumerate all). First/all commands override this."
+                },
+                "aspls.clingo.threads": {
+                    "type": "number",
+                    "default": 1,
+                    "minimum": 1,
+                    "description": "Clingo thread count (-t)."
+                },
+                "aspls.clingo.customArgs": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Extra Clingo CLI arguments (escape hatch). Split on whitespace; use quotes for values with spaces."
+                },
+                "aspls.clingo.additionalFiles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "description": "Extra .lp/.asp files to include (relative to the active file or workspace root). Overridden by aspls.clingo.json when present."
+                },
+                "aspls.clingo.configFile": {
+                    "type": "string",
+                    "default": "aspls.clingo.json",
+                    "description": "Workspace-relative Clingo config file name (models, threads, customArgs, additionalFiles)."
                 }
             }
         }
@@ -165,6 +295,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish"
@@ -176,6 +307,7 @@
         "typescript": "^5.4.0"
     },
     "dependencies": {
+        "clingo-wasm": "^0.3.2",
         "vscode-languageclient": "^9.0.1"
     }
 }

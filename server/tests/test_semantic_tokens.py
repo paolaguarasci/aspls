@@ -24,7 +24,7 @@ def test_semantic_tokens_distinguish_fact_rule_constraint_show():
             "flies(X) :- bird(X), not penguin(X).",
             ":- bird(X).",
             "#show flies/1.",
-            "#minimize { penalty }.",
+            "#minimize { 1, X : penalty(X) }.",
         ]
     )
     tokens = build_semantic_tokens(text)

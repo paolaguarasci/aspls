@@ -7,10 +7,10 @@ statement: directive
 
 directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#show" IDENTIFIER "/" INT "." -> show_directive
-         | "#minimize" "{" weighted_literal ("," weighted_literal)* "}" "." -> minimize_directive
+         | "#minimize" "{" minimize_elem (";" minimize_elem)* "}" "." -> minimize_directive
 
-weighted_literal: naf_literal "@" INT
-                 | naf_literal
+// Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
+minimize_elem: term ("@" INT)? ("," term)* ":" body
 
 head: disjunction
 disjunction: literal (";" literal)*
@@ -25,10 +25,11 @@ naf_literal: "not" literal -> negated_literal
            | aggregate
            | literal
 
-comparison: comparison_operand COMPARE_OP comparison_operand
-comparison_operand: aggregate | term
+comparison: aggregate COMPARE_OP term -> aggregate_cmp_term
+          | term COMPARE_OP aggregate -> term_cmp_aggregate
+          | term COMPARE_OP term -> term_cmp_term
 
-aggregate: AGGREGATE_FN "{" aggregate_elem ("," aggregate_elem)* "}"
+aggregate: AGGREGATE_FN "{" aggregate_elem (";" aggregate_elem)* "}"
 aggregate_elem: term_tuple ":" body
               | body
 term_tuple: term ("," term)*

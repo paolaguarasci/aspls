@@ -60,7 +60,7 @@ def test_find_key_at_matches_occurrence_position():
 
 
 def test_indexes_constraint_show_and_minimize():
-    text = ":- bird(X).\n#show bird/1.\n#minimize { cost(X) }."
+    text = ":- bird(X).\n#show bird/1.\n#minimize { 1, X : cost(X) }."
     result = parse_document(text)
     index = build_symbol_index(result.tree)
 

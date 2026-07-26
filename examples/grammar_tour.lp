@@ -1,21 +1,24 @@
 % =============================================================================
-% ASP grammar tour — esercita ogni costrutto riconosciuto da asp_core2.lark
+% ASP grammar tour — every construct recognized by asp_core2.lark
+% Note: some rules intentionally use free variables (e.g. eq(X) :- X = 0).
+% Clingo reports those as "unsafe"; add domain facts (bird/1, candidate/1, …)
+% for a runnable program.
 % =============================================================================
 
-% --- commenti (COMMENT: % fino a fine riga) ---------------------------------
-% questa riga e' interamente un commento
+% --- comments (COMMENT: % to end of line) ------------------------------------
+% this line is entirely a comment
 
-% --- direttive --------------------------------------------------------------
+% --- directives -------------------------------------------------------------
 #const n = 5.
 #const width = 10.
 
 #show chosen/1.
 #show edge/2.
 
-#minimize { cost(X) @ 2, penalty }.
-#minimize { soft(X) }.
+#minimize { 2@2, X : cost(X) }.
+#minimize { 1, X : soft(X) }.
 
-% --- fatti: atomi nullary / compound, range nei termini ---------------------
+% --- facts: nullary / compound atoms, ranges in terms -----------------------
 ok.
 node(a).
 node(b).
@@ -26,27 +29,27 @@ domain(1..n).
 domain(1..10).
 label(hello).
 
-% --- fatto disgiuntivo (head = disjunction) ---------------------------------
+% --- disjunctive fact (head = disjunction) ----------------------------------
 maybe_a ; maybe_b.
 
-% --- regole: head :- body. --------------------------------------------------
-% literal positivo, negazione (not), piu' letterali nel body
+% --- rules: head :- body. ---------------------------------------------------
+% positive literal, negation (not), multiple body literals
 flies(X) :- bird(X), not penguin(X).
 
-% atomo nullary in testa e nel body
+% nullary atom in head and body
 alarm :- danger, not silenced.
 
-% disgiunzione in testa
+% head disjunction
 chosen(X) ; rejected(X) :- candidate(X).
 
-% --- termini: VARIABLE, IDENTIFIER, INT, range ------------------------------
+% --- terms: VARIABLE, IDENTIFIER, INT, range --------------------------------
 % range_bound: INT | IDENTIFIER | VARIABLE
 cell(X) :- size(N), X = 1..N.
 cell(Y) :- Y = 1..width.
 pair(A, B) :- A = 1..3, B = 2..4.
 
-% --- confronti (comparison + tutti i COMPARE_OP) ----------------------------
-% operandi: term | aggregate
+% --- comparisons (comparison + all COMPARE_OP) ------------------------------
+% operands: term | aggregate
 eq(X)    :- X = 0.
 neq(X)   :- X != 0.
 lt(X)    :- X < 10.
@@ -54,34 +57,34 @@ le(X)    :- X <= 10.
 gt(X)    :- X > 0.
 ge(X)    :- X >= 0.
 
-% confronto tra termini
+% term vs term
 same(X, Y) :- X = Y.
 ordered(X, Y) :- X < Y.
 
-% --- aggregati: #count #sum #max #min ---------------------------------------
-% aggregate_elem con term_tuple : body
+% --- aggregates: #count #sum #max #min --------------------------------------
+% aggregate_elem with term_tuple : body
 num_nodes(N) :- N = #count{ X : node(X) }.
 total(S)     :- S = #sum{ W,X : weight(X, W) }.
 peak(M)      :- M = #max{ V : value(V) }.
 floor(M)     :- M = #min{ V : value(V) }.
 
-% aggregate_elem solo body (senza tupla a sinistra di :)
-has_any :- #count{ node(X) } > 0.
+% aggregate_elem body only (no tuple left of :) — X must be bound
+has_any :- #count{ X : node(X) } > 0.
 
-% piu' elementi nell'aggregato (separati da virgola)
-mixed(C) :- C = #count{ X : node(X), Y : edge(Y, _) }.
+% multiple aggregate elements (separated by ';' in Clingo, not ',')
+mixed(C) :- C = #count{ X : node(X); Y : edge(Y, _) }.
 
-% aggregato come operando sinistro/destro di un confronto
+% aggregate as comparison operand (not aggregate = aggregate)
 enough :- #count{ X : chosen(X) } >= 2.
 bounded :- 1 <= #count{ X : chosen(X) }.
-exact :- #count{ X : chosen(X) } = #count{ X : candidate(X) }.
+exact :- N = #count{ X : chosen(X) }, M = #count{ X : candidate(X) }, N = M.
 
-% --- vincoli (constraint: :- body.) -----------------------------------------
+% --- constraints (constraint: :- body.) -------------------------------------
 :- chosen(X), rejected(X).
 :- #count{ X : chosen(X) } < 1.
 :- not ok.
 
-% --- rule body misto: literal, not, comparison, aggregate -------------------
+% --- mixed rule body: literal, not, comparison, aggregate -------------------
 valid(X) :-
     candidate(X),
     not forbidden(X),

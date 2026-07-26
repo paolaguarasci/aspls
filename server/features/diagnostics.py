@@ -22,10 +22,17 @@ def build_diagnostics(text: str) -> list[Diagnostic]:
             )
         )
 
+    # Clingo only after a clean Lark parse: otherwise cascading parse noise.
+    # The grammar tracks Clingo syntax; Clingo still catches grounding/safety.
     if not result.errors:
         for clingo_diag in check_with_clingo(text):
             line = max(clingo_diag.line - 1, 0)
             column = max(clingo_diag.column - 1, 0)
+            severity = (
+                DiagnosticSeverity.Error
+                if clingo_diag.severity == "error"
+                else DiagnosticSeverity.Warning
+            )
             diagnostics.append(
                 Diagnostic(
                     range=Range(
@@ -33,7 +40,7 @@ def build_diagnostics(text: str) -> list[Diagnostic]:
                         end=Position(line=line, character=column + 1),
                     ),
                     message=clingo_diag.message,
-                    severity=DiagnosticSeverity.Warning,
+                    severity=severity,
                     source="aspls (clingo)",
                 )
             )
