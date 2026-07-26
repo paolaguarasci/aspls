@@ -6,6 +6,7 @@ import {
   ServerOptions,
 } from "vscode-languageclient/node";
 import { registerClingoCommands } from "./clingoCommands";
+import { registerCookbookCommands } from "./cookbook/cookbookCommands";
 import { ClingoResultsPanel } from "./clingoResultsPanel";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
@@ -28,6 +29,7 @@ export async function activate(
     ),
   );
   registerClingoCommands(context, resultsPanel);
+  registerCookbookCommands(context);
 
   await startLanguageServer(context);
 }

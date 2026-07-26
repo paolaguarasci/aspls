@@ -36,7 +36,8 @@
     ],
     "activationEvents": [
         "onLanguage:asp",
-        "onView:aspls.clingoResults"
+        "onView:aspls.clingoResults",
+        "onCommand:aspls.cookbook.open"
     ],
     "main": "./out/extension.js",
     "contributes": {
@@ -69,6 +70,12 @@
                 "command": "aspls.clingo.initConfig",
                 "title": "Initialize Clingo config file",
                 "category": "aspls"
+            },
+            {
+                "command": "aspls.cookbook.open",
+                "title": "Open Code Cookbook",
+                "category": "aspls",
+                "icon": "$(book)"
             }
         ],
         "menus": {
@@ -87,6 +94,11 @@
                     "when": "resourceLangId == asp",
                     "command": "aspls.clingo.computeWithConfig",
                     "group": "aspls@3"
+                },
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.cookbook.open",
+                    "group": "aspls@4"
                 }
             ],
             "editor/title": [
@@ -99,6 +111,11 @@
                     "when": "resourceLangId == asp",
                     "command": "aspls.clingo.computeAll",
                     "group": "navigation@2"
+                },
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.cookbook.open",
+                    "group": "navigation@3"
                 }
             ],
             "view/title": [
@@ -314,7 +331,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
-        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/cookbook/recipes.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",

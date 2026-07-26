@@ -24,7 +24,8 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 | **Go to Definition** | Jump to facts and rule heads (cross-file) |
 | **Find References** | All occurrences of a predicate in the pool |
 | **Learner mode** | Optional rule-order and missing-comment warnings, plus **Fix Order** quick fix (off by default) |
-| **Snippets** | Templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints |
+| **Code Cookbook** | Browse working ASP patterns (Command Palette / editor menu) and insert at cursor or open as a new `.lp` file |
+| **Snippets** | Typing templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints (distinct from the Cookbook) |
 
 ---
 
