@@ -1,6 +1,7 @@
 .superpowers/
 client/node_modules/
 client/out/
+client/server/
 *.vsix
 
 ### Created by https://www.gitignore.io

@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "compile": "tsc -p .",
+    "compile": "bash scripts/copy-server.sh && tsc -p .",
     "watch": "tsc -watch -p ."
   },
   "devDependencies": {
