@@ -1,0 +1,31 @@
+start: statement*
+
+statement: fact
+         | rule
+         | constraint
+
+fact: literal "."
+rule: literal ":-" body "."
+constraint: ":-" body "."
+
+body: naf_literal ("," naf_literal)*
+naf_literal: "not" literal -> negated_literal
+           | literal
+
+literal: atom
+
+atom: IDENTIFIER "(" term ("," term)* ")" -> compound_atom
+    | IDENTIFIER -> nullary_atom
+
+term: VARIABLE -> var_term
+    | IDENTIFIER -> const_term
+    | INT -> int_term
+
+VARIABLE: /[A-Z_][a-zA-Z0-9_]*/
+IDENTIFIER: /[a-z][a-zA-Z0-9_]*/
+INT: /-?[0-9]+/
+
+COMMENT: /%[^\n]*/
+%import common.WS
+%ignore WS
+%ignore COMMENT
