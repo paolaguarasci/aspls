@@ -6,14 +6,14 @@ import {
   writeSampleConfigFile,
 } from "./clingoConfig";
 import { runClingo } from "./clingoRunner";
-import type { ClingoResultsPanel } from "./clingoResultsPanel";
+import type { ClingoSolverView } from "./clingoSolverView";
 import type { ClingoRunRequest } from "./clingoTypes";
 
 type RunMode = "first" | "all" | "config";
 
 export function registerClingoCommands(
   context: vscode.ExtensionContext,
-  panel: ClingoResultsPanel,
+  panel: ClingoSolverView,
 ): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("aspls.clingo.computeFirst", () =>
@@ -48,7 +48,7 @@ async function initConfig(): Promise<void> {
   }
 }
 
-async function rerun(panel: ClingoResultsPanel): Promise<void> {
+async function rerun(panel: ClingoSolverView): Promise<void> {
   const mode = panel.getLastMode();
   const lastFile = panel.getLastFile();
   if (lastFile) {
@@ -59,7 +59,7 @@ async function rerun(panel: ClingoResultsPanel): Promise<void> {
 }
 
 async function runFromEditor(
-  panel: ClingoResultsPanel,
+  panel: ClingoSolverView,
   mode: RunMode,
 ): Promise<void> {
   const editor = vscode.window.activeTextEditor;

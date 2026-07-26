@@ -1,7 +1,7 @@
 {
     "name": "aspls",
     "displayName": "aspls — Answer Set Programming (Clingo)",
-    "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results panel, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
+    "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results sidebar, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
     "version": "0.2.1",
     "publisher": "pingflood",
     "author": "Paola Guarasci",
@@ -36,7 +36,8 @@
     ],
     "activationEvents": [
         "onLanguage:asp",
-        "onView:aspls.clingoResults",
+        "onView:aspls.solver",
+        "onView:aspls.predicates",
         "onCommand:aspls.cookbook.open"
     ],
     "main": "./out/extension.js",
@@ -120,27 +121,46 @@
             ],
             "view/title": [
                 {
+                    "command": "aspls.clingo.computeFirst",
+                    "when": "view == aspls.solver",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "aspls.clingo.computeAll",
+                    "when": "view == aspls.solver",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "aspls.clingo.computeWithConfig",
+                    "when": "view == aspls.solver",
+                    "group": "navigation@3"
+                },
+                {
                     "command": "aspls.clingo.rerun",
-                    "when": "view == aspls.clingoResults",
-                    "group": "navigation"
+                    "when": "view == aspls.solver",
+                    "group": "navigation@4"
                 }
             ]
         },
         "viewsContainers": {
-            "panel": [
+            "activitybar": [
                 {
-                    "id": "aspls-clingo",
+                    "id": "aspls",
                     "title": "ASP",
                     "icon": "$(symbol-logic)"
                 }
             ]
         },
         "views": {
-            "aspls-clingo": [
+            "aspls": [
                 {
                     "type": "webview",
-                    "id": "aspls.clingoResults",
-                    "name": "Results"
+                    "id": "aspls.solver",
+                    "name": "Solver"
+                },
+                {
+                    "id": "aspls.predicates",
+                    "name": "Predicates"
                 }
             ]
         },

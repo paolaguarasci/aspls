@@ -3,8 +3,8 @@ import type { ClingoRunOutcome } from "./clingoTypes";
 
 type RerunMode = "first" | "all" | "config";
 
-export class ClingoResultsPanel implements vscode.WebviewViewProvider {
-  public static readonly viewType = "aspls.clingoResults";
+export class ClingoSolverView implements vscode.WebviewViewProvider {
+  public static readonly viewType = "aspls.solver";
 
   private view?: vscode.WebviewView;
   private lastOutcome?: ClingoRunOutcome;
@@ -50,12 +50,10 @@ export class ClingoResultsPanel implements vscode.WebviewViewProvider {
     this.lastOutcome = outcome;
     this.lastMode = mode;
     this.lastFile = file;
-    await vscode.commands.executeCommand(
-      "workbench.view.extension.aspls-clingo",
-    );
+    await vscode.commands.executeCommand("workbench.view.extension.aspls");
     try {
       await vscode.commands.executeCommand(
-        `${ClingoResultsPanel.viewType}.focus`,
+        `${ClingoSolverView.viewType}.focus`,
       );
     } catch {
       /* view may not be focusable until first resolve */
@@ -209,7 +207,7 @@ export class ClingoResultsPanel implements vscode.WebviewViewProvider {
 <header>
   <h1>ASP Results</h1>
 </header>
-<p class="empty">Run <strong>Compute first answer set</strong> or <strong>Compute all answer sets</strong> on a <code>.lp</code> / <code>.asp</code> file.</p>`;
+<p class="empty">Use the Solver view title actions — <strong>First</strong>, <strong>All</strong>, or <strong>Config</strong> — on a <code>.lp</code> / <code>.asp</code> file, or run from the editor context menu.</p>`;
   }
 
   private renderOutcome(outcome: ClingoRunOutcome): string {

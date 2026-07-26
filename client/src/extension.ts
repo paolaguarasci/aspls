@@ -7,7 +7,7 @@ import {
 } from "vscode-languageclient/node";
 import { registerClingoCommands } from "./clingoCommands";
 import { registerCookbookCommands } from "./cookbook/cookbookCommands";
-import { ClingoResultsPanel } from "./clingoResultsPanel";
+import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
 
@@ -21,14 +21,14 @@ export async function activate(
   rainbow.start();
   context.subscriptions.push({ dispose: () => rainbow?.dispose() });
 
-  const resultsPanel = new ClingoResultsPanel(context.extensionUri);
+  const solverView = new ClingoSolverView(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
-      ClingoResultsPanel.viewType,
-      resultsPanel,
+      ClingoSolverView.viewType,
+      solverView,
     ),
   );
-  registerClingoCommands(context, resultsPanel);
+  registerClingoCommands(context, solverView);
   registerCookbookCommands(context);
 
   await startLanguageServer(context);
