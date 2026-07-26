@@ -4,15 +4,18 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DID_CHANGE,
     TEXT_DOCUMENT_HOVER,
     TEXT_DOCUMENT_DEFINITION,
+    TEXT_DOCUMENT_REFERENCES,
     DidOpenTextDocumentParams,
     DidChangeTextDocumentParams,
     HoverParams,
     DefinitionParams,
+    ReferenceParams,
 )
 
 from features.diagnostics import build_diagnostics
 from features.hover import build_hover
 from features.definition import build_definitions
+from features.references import build_references
 
 server = LanguageServer("aspls", "v0.1.0")
 
@@ -43,6 +46,14 @@ def hover(ls: LanguageServer, params: HoverParams):
 def definition(ls: LanguageServer, params: DefinitionParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
     return build_definitions(
+        doc.source, params.position.line, params.position.character, params.text_document.uri
+    )
+
+
+@server.feature(TEXT_DOCUMENT_REFERENCES)
+def references(ls: LanguageServer, params: ReferenceParams):
+    doc = ls.workspace.get_text_document(params.text_document.uri)
+    return build_references(
         doc.source, params.position.line, params.position.character, params.text_document.uri
     )
 
