@@ -11,6 +11,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DID_OPEN,
     TEXT_DOCUMENT_DID_CHANGE,
     TEXT_DOCUMENT_HOVER,
+    TEXT_DOCUMENT_DOCUMENT_SYMBOL,
     TEXT_DOCUMENT_DEFINITION,
     TEXT_DOCUMENT_REFERENCES,
     TEXT_DOCUMENT_COMPLETION,
@@ -23,6 +24,7 @@ from lsprotocol.types import (
     DidChangeConfigurationParams,
     DidChangeWorkspaceFoldersParams,
     HoverParams,
+    DocumentSymbolParams,
     DefinitionParams,
     ReferenceParams,
     CompletionParams,
@@ -33,6 +35,7 @@ from lsprotocol.types import (
 )
 
 from features.diagnostics import build_diagnostics
+from features.document_symbols import build_document_symbols
 from features.hover import build_hover_from_index
 from features.definition import build_definitions_from_index
 from features.references import build_references_from_index
@@ -303,6 +306,13 @@ def hover(ls: LanguageServer, params: HoverParams):
         document_index=_document_index_for(uri),
         source=doc.source,
     )
+
+
+@server.feature(TEXT_DOCUMENT_DOCUMENT_SYMBOL)
+def document_symbol(ls: LanguageServer, params: DocumentSymbolParams):
+    uri = params.text_document.uri
+    doc = ls.workspace.get_text_document(uri)
+    return build_document_symbols(doc.source)
 
 
 @server.feature(TEXT_DOCUMENT_DEFINITION)
