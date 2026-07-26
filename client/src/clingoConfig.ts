@@ -156,15 +156,23 @@ export async function ensureClingoConfigFile(
   const name =
     (configFileName ?? resolveClingoConfig().configFileName).trim() ||
     DEFAULT_CONFIG_FILE;
+  // Multi-root: write to folders[0], same as writeSampleConfigFile (Init Config).
   const uri = vscode.Uri.joinPath(folders[0].uri, name);
   try {
     await vscode.workspace.fs.stat(uri);
     return uri;
   } catch {
-    await vscode.workspace.fs.writeFile(
-      uri,
-      Buffer.from(SAMPLE_CLINGO_CONFIG, "utf8"),
-    );
+    // Seed from current settings so existing additionalFiles / threads / customArgs
+    // are not wiped by a blank SAMPLE overwrite (Init Config still uses SAMPLE).
+    const cfg = vscode.workspace.getConfiguration("aspls");
+    const seeded = {
+      models: cfg.get<number>("clingo.models", 1),
+      threads: cfg.get<number>("clingo.threads", 1),
+      customArgs: cfg.get<string>("clingo.customArgs", "") ?? "",
+      additionalFiles: asStringArray(cfg.get("clingo.additionalFiles", [])),
+    };
+    const body = `${JSON.stringify(seeded, null, 2)}\n`;
+    await vscode.workspace.fs.writeFile(uri, Buffer.from(body, "utf8"));
     return uri;
   }
 }

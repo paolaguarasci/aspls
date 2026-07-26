@@ -395,7 +395,8 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
     if (!config) {
       return "";
     }
-    const pathDisabled = config.usePath ? "" : "disabled";
+    // Browse only when usePath is on; Clear stays enabled so users can reset path.
+    const browseDisabled = config.usePath ? "" : "disabled";
     const pathDisplay = config.clingoPath
       ? escapeHtml(config.clingoPath)
       : '<span class="empty">(default: clingo on PATH)</span>';
@@ -430,8 +431,8 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
   <div class="row path-row ${config.usePath ? "" : "dimmed"}">
     <div class="path-text">Path: ${pathDisplay}</div>
     <div class="actions">
-      <button type="button" data-action="pickPath" ${pathDisabled}>Browse</button>
-      <button type="button" data-action="clearPath" ${pathDisabled}>Clear</button>
+      <button type="button" data-action="pickPath" ${browseDisabled}>Browse</button>
+      <button type="button" data-action="clearPath">Clear</button>
     </div>
   </div>
   <div class="files">
