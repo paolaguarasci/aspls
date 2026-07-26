@@ -1,4 +1,7 @@
 .superpowers/
+docs/superpowers/
+.agent/
+.agents/
 client/node_modules/
 client/out/
 client/server/
