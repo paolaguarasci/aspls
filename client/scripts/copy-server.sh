@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
-rm -rf "$(dirname "$0")/../server"
-cp -r "$(dirname "$0")/../../server" "$(dirname "$0")/../server"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+DEST="$(cd "$(dirname "$0")/.." && pwd)/server"
+rm -rf "$DEST"
+mkdir -p "$DEST"
+# Copy server sources only — skip local venvs, caches, and egg-info.
+rsync -a \
+  --exclude '.venv/' \
+  --exclude '**/__pycache__/' \
+  --exclude '*.egg-info/' \
+  --exclude '.pytest_cache/' \
+  "$ROOT/server/" "$DEST/"

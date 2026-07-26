@@ -1,0 +1,10 @@
+{
+  "name": "aspls-workspace",
+  "private": true,
+  "description": "Run npm scripts from the repo root; the VS Code extension lives in client/.",
+  "scripts": {
+    "compile": "npm run compile --prefix client",
+    "package": "npm run package --prefix client",
+    "publish:marketplace": "npm run publish:marketplace --prefix client"
+  }
+}

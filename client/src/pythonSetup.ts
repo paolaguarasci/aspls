@@ -8,14 +8,17 @@ const execFileAsync = promisify(execFile);
 async function isWorkingPython(executable: string): Promise<boolean> {
   try {
     const { stdout } = await execFileAsync(executable, ["--version"]);
-    return stdout.toLowerCase().includes("python 3") || stdout.toLowerCase().includes("python 3");
+    return (
+      stdout.toLowerCase().includes("python 3") ||
+      stdout.toLowerCase().includes("python 3")
+    );
   } catch {
     return false;
   }
 }
 
 export async function findPythonInterpreter(
-  configuredPath: string | undefined
+  configuredPath: string | undefined,
 ): Promise<string | null> {
   if (configuredPath && (await isWorkingPython(configuredPath))) {
     return configuredPath;
@@ -37,7 +40,7 @@ function venvPythonPath(venvDir: string): string {
 export async function ensureServerVenv(
   globalStorageDir: string,
   pythonInterpreter: string,
-  requirementsPath: string
+  requirementsPath: string,
 ): Promise<string> {
   const venvDir = path.join(globalStorageDir, "venv");
   const venvPython = venvPythonPath(venvDir);
@@ -46,10 +49,16 @@ export async function ensureServerVenv(
     fs.mkdirSync(globalStorageDir, { recursive: true });
     try {
       await execFileAsync(pythonInterpreter, ["-m", "venv", venvDir]);
-      await execFileAsync(venvPython, ["-m", "pip", "install", "-r", requirementsPath]);
+      await execFileAsync(venvPython, [
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        requirementsPath,
+      ]);
     } catch (err) {
       throw new Error(
-        `Failed to set up the ASP language server's Python environment: ${err}`
+        `Failed to set up the ASP language server's Python environment: ${err}`,
       );
     }
   }

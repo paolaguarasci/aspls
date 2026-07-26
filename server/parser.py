@@ -52,6 +52,12 @@ def _offset_tree_lines(tree: lark.Tree, offset: int) -> None:
     for child in tree.children:
         if isinstance(child, lark.Tree):
             _offset_tree_lines(child, offset)
+        elif isinstance(child, lark.Token):
+            # Tokens carry their own line/end_line (used e.g. by #show).
+            if getattr(child, "line", None) is not None:
+                child.line += offset
+            if getattr(child, "end_line", None) is not None:
+                child.end_line += offset
 
 
 def _parse_fragment(stmt_text: str, start_line: int) -> tuple[list[lark.Tree], list[ParseError]]:

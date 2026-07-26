@@ -1,7 +1,7 @@
 from lsprotocol.types import Location, Position, Range
 
 from parser import parse_document
-from symbols import build_symbol_index, find_key_at
+from symbols import DEFINING_ROLES, build_symbol_index, find_key_at
 
 
 def build_definitions(text: str, line: int, column: int, uri: str) -> list[Location]:
@@ -14,7 +14,7 @@ def build_definitions(text: str, line: int, column: int, uri: str) -> list[Locat
 
     locations = []
     for occ in index[key]:
-        if occ.role != "head":
+        if occ.role not in DEFINING_ROLES:
             continue
         start = Position(line=occ.line - 1, character=occ.column - 1)
         end = Position(line=occ.line - 1, character=occ.column - 1 + len(occ.name))

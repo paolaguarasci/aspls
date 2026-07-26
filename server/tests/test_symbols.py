@@ -11,13 +11,14 @@ def test_indexes_head_and_body_occurrences():
     bird_occurrences = index[("bird", 1)]
     assert len(bird_occurrences) == 2
     roles = {occ.role for occ in bird_occurrences}
-    assert roles == {"head", "body"}
+    assert roles == {"fact", "rule_body"}
 
     assert ("flies", 1) in index
-    assert index[("flies", 1)][0].role == "head"
+    assert index[("flies", 1)][0].role == "rule_head"
 
     assert ("penguin", 1) in index
-    assert index[("penguin", 1)][0].role == "body"
+    assert index[("penguin", 1)][0].role == "rule_body"
+    assert index[("penguin", 1)][0].negated is True
 
 
 def test_nullary_atom_has_arity_zero():
@@ -56,3 +57,13 @@ def test_find_key_at_matches_occurrence_position():
     assert find_key_at(index, 1, 1) == ("bird", 1)
     assert find_key_at(index, 2, 13) == ("bird", 1)
     assert find_key_at(index, 1, 5) is None
+
+
+def test_indexes_constraint_show_and_minimize():
+    text = ":- bird(X).\n#show bird/1.\n#minimize { cost(X) }."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert index[("bird", 1)][0].role == "constraint"
+    assert any(o.role == "show" for o in index[("bird", 1)])
+    assert index[("cost", 1)][0].role == "minimize"

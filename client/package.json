@@ -1,52 +1,173 @@
 {
-  "name": "aspls",
-  "displayName": "ASP Language Support",
-  "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo dialect): syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
-  "version": "0.1.0",
-  "publisher": "TODO-set-before-publish",
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": ["Programming Languages"],
-  "activationEvents": ["onLanguage:asp"],
-  "main": "./out/extension.js",
-  "contributes": {
-    "languages": [
-      {
-        "id": "asp",
-        "aliases": ["ASP", "Answer Set Programming"],
-        "extensions": [".lp", ".asp"],
-        "configuration": "./language-configuration.json"
-      }
+    "name": "aspls",
+    "displayName": "aspls — Answer Set Programming (Clingo)",
+    "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo dialect): syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
+    "version": "0.1.1",
+    "publisher": "paolaguarasci",
+    "author": "Paola Guarasci",
+    "license": "MIT",
+    "icon": "images/icon.png",
+    "galleryBanner": {
+        "color": "#1e2430",
+        "theme": "dark"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Programming Languages"
     ],
-    "grammars": [
-      {
-        "language": "asp",
-        "scopeName": "source.asp",
-        "path": "./syntaxes/asp.tmLanguage.json"
-      }
+    "keywords": [
+        "asp",
+        "answer set programming",
+        "clingo",
+        "logic programming",
+        "potassco"
     ],
-    "configuration": {
-      "title": "ASP Language Server",
-      "properties": {
-        "aspls.pythonPath": {
-          "type": "string",
-          "default": "",
-          "description": "Path to a Python 3 interpreter. Leave empty to auto-detect python3/python on PATH."
+    "activationEvents": [
+        "onLanguage:asp"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "languages": [
+            {
+                "id": "asp",
+                "aliases": [
+                    "ASP",
+                    "Answer Set Programming"
+                ],
+                "extensions": [
+                    ".lp",
+                    ".asp"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "asp",
+                "scopeName": "source.asp",
+                "path": "./syntaxes/asp.tmLanguage.json"
+            }
+        ],
+        "semanticTokenTypes": [
+            {
+                "id": "aspFact",
+                "description": "Predicate occurring in a fact"
+            },
+            {
+                "id": "aspRuleHead",
+                "description": "Predicate occurring in a rule head"
+            },
+            {
+                "id": "aspRuleBody",
+                "description": "Predicate occurring in a rule body"
+            },
+            {
+                "id": "aspConstraint",
+                "description": "Predicate occurring in a constraint"
+            },
+            {
+                "id": "aspShow",
+                "description": "Predicate referenced by #show"
+            },
+            {
+                "id": "aspMinimize",
+                "description": "Predicate occurring in #minimize"
+            }
+        ],
+        "semanticTokenModifiers": [
+            {
+                "id": "aspNegated",
+                "description": "Negated with not"
+            }
+        ],
+        "semanticTokenScopes": {
+            "scopes": {
+                "aspFact": [
+                    "entity.name.function.asp.fact"
+                ],
+                "aspRuleHead": [
+                    "entity.name.function.asp.rule.head"
+                ],
+                "aspRuleBody": [
+                    "entity.name.function.asp.rule.body"
+                ],
+                "aspConstraint": [
+                    "entity.name.function.asp.constraint"
+                ],
+                "aspShow": [
+                    "entity.name.function.asp.show"
+                ],
+                "aspMinimize": [
+                    "entity.name.function.asp.minimize"
+                ]
+            }
+        },
+        "configurationDefaults": {
+            "[asp]": {
+                "editor.semanticHighlighting.enabled": true
+            },
+            "editor.semanticTokenColorCustomizations": {
+                "rules": {
+                    "aspFact:asp": {
+                        "foreground": "#3f9d6a",
+                        "fontStyle": "bold"
+                    },
+                    "aspRuleHead:asp": {
+                        "foreground": "#4d8fd6",
+                        "fontStyle": "bold"
+                    },
+                    "aspRuleBody:asp": {
+                        "foreground": "#9aa0a6"
+                    },
+                    "aspConstraint:asp": {
+                        "foreground": "#d4775a",
+                        "fontStyle": "italic"
+                    },
+                    "aspShow:asp": {
+                        "foreground": "#c9a227"
+                    },
+                    "aspMinimize:asp": {
+                        "foreground": "#b07cc6"
+                    },
+                    "aspRuleBody.aspNegated:asp": {
+                        "foreground": "#9aa0a6",
+                        "fontStyle": "italic"
+                    }
+                }
+            }
+        },
+        "configuration": {
+            "title": "ASP Language Server",
+            "properties": {
+                "aspls.pythonPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to a Python 3 interpreter. Leave empty to auto-detect python3/python on PATH."
+                },
+                "aspls.rainbowPredicates": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Underline each predicate name with a stable rainbow color derived from its name (role colors come from semantic highlighting)."
+                }
+            }
         }
-      }
+    },
+    "scripts": {
+        "compile": "bash scripts/copy-server.sh && tsc -p .",
+        "watch": "tsc -watch -p .",
+        "vscode:prepublish": "npm run compile",
+        "package": "vsce package",
+        "publish:marketplace": "vsce publish"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/vscode": "^1.85.0",
+        "@vscode/vsce": "^3.9.2",
+        "typescript": "^5.4.0"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1"
     }
-  },
-  "scripts": {
-    "compile": "bash scripts/copy-server.sh && tsc -p .",
-    "watch": "tsc -watch -p ."
-  },
-  "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/vscode": "^1.85.0",
-    "typescript": "^5.4.0"
-  },
-  "dependencies": {
-    "vscode-languageclient": "^9.0.1"
-  }
 }

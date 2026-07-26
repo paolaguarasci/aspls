@@ -1,6 +1,11 @@
 .vscode/**
 src/**
+scripts/**
 tsconfig.json
 **/*.map
-node_modules/**
-!node_modules/vscode-languageclient/**
+**/*.test.js
+server/tests/**
+server/.venv/**
+**/__pycache__/**
+**/*.egg-info/**
+**/.pytest_cache/**
