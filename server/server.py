@@ -14,6 +14,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DEFINITION,
     TEXT_DOCUMENT_REFERENCES,
     TEXT_DOCUMENT_COMPLETION,
+    TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
     WORKSPACE_DID_CHANGE_WORKSPACE_FOLDERS,
@@ -25,6 +26,7 @@ from lsprotocol.types import (
     DefinitionParams,
     ReferenceParams,
     CompletionParams,
+    CodeActionParams,
     SemanticTokensParams,
     SemanticTokensLegend,
     InitializedParams,
@@ -35,6 +37,7 @@ from features.hover import build_hover_from_index
 from features.definition import build_definitions_from_index
 from features.references import build_references_from_index
 from features.completion import build_completions_from_index
+from features.code_actions import build_code_actions
 from features.semantic_tokens import (
     TOKEN_MODIFIERS,
     TOKEN_TYPES,
@@ -46,6 +49,7 @@ server = LanguageServer("aspls", "v0.1.0")
 
 # Fallback when workspace/didChangeConfiguration has not yet arrived.
 ONCE_USED = True
+LEARNER_MODE = False
 
 WORKSPACE = WorkspaceIndex()
 DISCOVERED: list[str] = []
@@ -95,8 +99,24 @@ def _extract_config_file_name(settings) -> str | None:
     return None
 
 
+def _extract_learner_mode(settings) -> bool | None:
+    """Pull aspls.learnerMode from didChangeConfiguration settings."""
+    if not isinstance(settings, dict):
+        return None
+    aspls = settings.get("aspls", settings)
+    if not isinstance(aspls, dict):
+        return None
+    if "learnerMode" in aspls:
+        return bool(aspls["learnerMode"])
+    return None
+
+
 def _once_used_enabled() -> bool:
     return ONCE_USED
+
+
+def _learner_mode_enabled() -> bool:
+    return LEARNER_MODE
 
 
 def _workspace_root_paths(ls: LanguageServer) -> list[str]:
@@ -216,6 +236,7 @@ def _publish_diagnostics(uri: str, text: str) -> None:
     diagnostics = build_diagnostics(
         text,
         once_used=_once_used_enabled(),
+        learner_mode=_learner_mode_enabled(),
         index=merged,
         document_uri=uri,
     )
@@ -236,10 +257,13 @@ def did_change_workspace_folders(
 
 @server.feature(WORKSPACE_DID_CHANGE_CONFIGURATION)
 def did_change_configuration(ls: LanguageServer, params: DidChangeConfigurationParams):
-    global ONCE_USED, CONFIG_FILE_NAME
+    global ONCE_USED, LEARNER_MODE, CONFIG_FILE_NAME
     value = _extract_once_used(params.settings)
     if value is not None:
         ONCE_USED = value
+    learner = _extract_learner_mode(params.settings)
+    if learner is not None:
+        LEARNER_MODE = learner
     config_name = _extract_config_file_name(params.settings)
     if config_name:
         CONFIG_FILE_NAME = config_name
@@ -270,12 +294,14 @@ def did_change(ls: LanguageServer, params: DidChangeTextDocumentParams):
 @server.feature(TEXT_DOCUMENT_HOVER)
 def hover(ls: LanguageServer, params: HoverParams):
     uri = params.text_document.uri
+    doc = ls.workspace.get_text_document(uri)
     return build_hover_from_index(
         _merged_for(uri),
         params.position.line,
         params.position.character,
         uri,
         document_index=_document_index_for(uri),
+        source=doc.source,
     )
 
 
@@ -307,6 +333,20 @@ def references(ls: LanguageServer, params: ReferenceParams):
 def completion(ls: LanguageServer, params: CompletionParams):
     uri = params.text_document.uri
     return build_completions_from_index(_merged_for(uri))
+
+
+@server.feature(TEXT_DOCUMENT_CODE_ACTION)
+def code_action(ls: LanguageServer, params: CodeActionParams):
+    uri = params.text_document.uri
+    doc = ls.workspace.get_text_document(uri)
+    return build_code_actions(
+        uri,
+        doc.source,
+        learner_mode=_learner_mode_enabled(),
+        diagnostics=list(params.context.diagnostics)
+        if params.context and params.context.diagnostics
+        else None,
+    )
 
 
 @server.feature(

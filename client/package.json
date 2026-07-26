@@ -261,6 +261,11 @@
                     "default": true,
                     "description": "Warn when a predicate appears only once in the program pool (excluding #show / #minimize)."
                 },
+                "aspls.learnerMode": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable learner-oriented diagnostics: recommended rule order and missing preceding comments (EZASP-style). Off by default so power users are not noisy."
+                },
 
                 "aspls.clingo.usePath": {
                     "type": "boolean",

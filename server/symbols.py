@@ -73,6 +73,68 @@ def find_key_at(
     return None
 
 
+def find_key_covering(
+    index: dict,
+    line: int,
+    column: int,
+    source: str | None = None,
+    uri: str | None = None,
+) -> tuple[tuple[str, int], "Occurrence"] | None:
+    """Return ``((name, arity), occurrence)`` for the atom covering ``column``.
+
+    Matches the predicate name token, or — when ``source`` is given — any
+    column inside ``name(...)`` on that line (for parameter hover).
+    """
+    hit = find_key_at(index, line, column, uri)
+    if hit is not None:
+        for occ in index.get(hit, []):
+            if uri is not None:
+                occ_uri = getattr(occ, "uri", None)
+                if occ_uri is not None and occ_uri != uri:
+                    continue
+            if occ.line == line and occ.column <= column < occ.column + len(occ.name):
+                return hit, occ
+        # Fallback: first same-line occurrence of key
+        for occ in index.get(hit, []):
+            if occ.line == line:
+                return hit, occ
+
+    if source is None:
+        return None
+
+    lines = source.split("\n")
+    if line < 1 or line > len(lines):
+        return None
+    atom_line = lines[line - 1]
+
+    best: tuple[tuple[str, int], Occurrence] | None = None
+    best_span = None
+    for (name, arity), occurrences in index.items():
+        for occ in occurrences:
+            if occ.line != line:
+                continue
+            if uri is not None:
+                occ_uri = getattr(occ, "uri", None)
+                if occ_uri is not None and occ_uri != uri:
+                    continue
+            start = occ.column  # 1-based
+            # Span through closing paren when present, else just the name
+            name_end = start + len(occ.name) - 1
+            open_paren = atom_line.find("(", start - 1)
+            if open_paren >= 0 and open_paren == start - 1 + len(occ.name):
+                close = atom_line.find(")", open_paren + 1)
+                end = close + 1 if close >= 0 else name_end
+            else:
+                end = name_end
+            if start <= column <= end:
+                span = end - start
+                if best is None or span < (best_span or span + 1):
+                    best = ((name, arity), occ)
+                    best_span = span
+    return best
+
+
+
 def collect_occurrences(tree: lark.Tree | None) -> list[Occurrence]:
     if tree is None:
         return []

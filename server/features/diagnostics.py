@@ -1,15 +1,71 @@
 from lsprotocol.types import Diagnostic, DiagnosticSeverity, Position, Range
 
+from constructs import (
+    KIND_LABELS,
+    collect_constructs,
+    find_order_violations,
+)
 from parser import parse_document
 from clingo_check import check_with_clingo
 from safety import find_unsafe_variables
 from symbols import DIRECTIVE_ROLES, build_symbol_index
+
+CODE_RULE_ORDER = "learner.ruleOrder"
+CODE_MISSING_COMMENT = "learner.missingComment"
+
+
+def _learner_diagnostics(text: str) -> list[Diagnostic]:
+    constructs = collect_constructs(text)
+    diagnostics: list[Diagnostic] = []
+
+    for c in find_order_violations(constructs):
+        label = KIND_LABELS.get(c.kind, "construct")
+        line = c.start_line
+        diagnostics.append(
+            Diagnostic(
+                range=Range(
+                    start=Position(line=line, character=0),
+                    end=Position(line=line, character=max(len(c.text.split("\n")[0]), 1)),
+                ),
+                message=(
+                    f"Learner mode: {label} appear out of the recommended order "
+                    f"(constants → facts → choices → definitions → constraints → "
+                    f"optimization → show)"
+                ),
+                severity=DiagnosticSeverity.Warning,
+                source="aspls",
+                code=CODE_RULE_ORDER,
+            )
+        )
+
+    for c in constructs:
+        if c.has_preceding_comment:
+            continue
+        line = c.start_line
+        code_line = c.text.split("\n")
+        # Prefer the first code line length for range end
+        first = next((ln for ln in code_line if ln.strip() and not ln.lstrip().startswith("%")), code_line[0] if code_line else "")
+        diagnostics.append(
+            Diagnostic(
+                range=Range(
+                    start=Position(line=line, character=0),
+                    end=Position(line=line, character=max(len(first), 1)),
+                ),
+                message="Learner mode: statement is missing a preceding comment",
+                severity=DiagnosticSeverity.Warning,
+                source="aspls",
+                code=CODE_MISSING_COMMENT,
+            )
+        )
+
+    return diagnostics
 
 
 def build_diagnostics(
     text: str,
     *,
     once_used: bool = True,
+    learner_mode: bool = False,
     index: dict | None = None,
     document_uri: str | None = None,
 ) -> list[Diagnostic]:
@@ -99,5 +155,10 @@ def build_diagnostics(
                     source="aspls (clingo)",
                 )
             )
+
+    # Learner-mode warnings are source-based and still useful when some
+    # statements fail to parse (order/comments apply to recoverable constructs).
+    if learner_mode:
+        diagnostics.extend(_learner_diagnostics(text))
 
     return diagnostics
