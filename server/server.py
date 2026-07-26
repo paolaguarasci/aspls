@@ -5,17 +5,20 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_HOVER,
     TEXT_DOCUMENT_DEFINITION,
     TEXT_DOCUMENT_REFERENCES,
+    TEXT_DOCUMENT_COMPLETION,
     DidOpenTextDocumentParams,
     DidChangeTextDocumentParams,
     HoverParams,
     DefinitionParams,
     ReferenceParams,
+    CompletionParams,
 )
 
 from features.diagnostics import build_diagnostics
 from features.hover import build_hover
 from features.definition import build_definitions
 from features.references import build_references
+from features.completion import build_completions
 
 server = LanguageServer("aspls", "v0.1.0")
 
@@ -56,6 +59,12 @@ def references(ls: LanguageServer, params: ReferenceParams):
     return build_references(
         doc.source, params.position.line, params.position.character, params.text_document.uri
     )
+
+
+@server.feature(TEXT_DOCUMENT_COMPLETION)
+def completion(ls: LanguageServer, params: CompletionParams):
+    doc = ls.workspace.get_text_document(params.text_document.uri)
+    return build_completions(doc.source)
 
 
 if __name__ == "__main__":
