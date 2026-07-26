@@ -14,7 +14,7 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 |--------|----------------|
 | **Run Clingo** | Compute first or all answer sets (editor title buttons, context menu, Command Palette) |
 | **ASP sidebar — Solver** | Activity Bar **ASP → Solver**: First / All / Config runs, answer sets, errors, re-run; **Controls** for models, native Clingo path, and additional files (persists to `aspls.clingo.json` / workspace settings) |
-| **ASP sidebar — Predicates** | **ASP → Predicates**: predicates in the active `.lp` / `.asp` file; click to jump to definition (also powers the editor **Outline**) |
+| **ASP sidebar — Predicates** | **ASP → Predicates**: active-file predicates nested by role → occurrence (powers **Outline**); toolbar toggle **Show Workspace Predicates** lists the Clingo pool or all workspace `.lp`/`.asp` |
 | **PATH or WASM** | Bundled `clingo-wasm` by default; optional Clingo binary from PATH |
 | **Syntax highlighting** | Atoms, variables, comments, directives, operators |
 | **Semantic highlighting** | Different colors for facts, rule heads, rule bodies, constraints, `#show`, `#minimize` |

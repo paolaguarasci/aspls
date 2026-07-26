@@ -77,6 +77,12 @@
                 "title": "Open Code Cookbook",
                 "category": "aspls",
                 "icon": "$(book)"
+            },
+            {
+                "command": "aspls.predicates.toggleWorkspace",
+                "title": "Show Workspace Predicates",
+                "category": "aspls",
+                "icon": "$(folder-library)"
             }
         ],
         "menus": {
@@ -139,6 +145,12 @@
                     "command": "aspls.clingo.rerun",
                     "when": "view == aspls.solver",
                     "group": "navigation@4"
+                },
+                {
+                    "command": "aspls.predicates.toggleWorkspace",
+                    "when": "view == aspls.predicates",
+                    "group": "navigation@1",
+                    "toggled": "aspls.predicates.workspaceMode"
                 }
             ]
         },

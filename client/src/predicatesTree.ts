@@ -1,9 +1,14 @@
 import * as vscode from "vscode";
+import { LanguageClient } from "vscode-languageclient/node";
 import {
   mapDocumentSymbols,
+  mapWorkspaceNodes,
   type PredicateTreeNode,
   type RangeLike,
+  type WorkspacePredicateNode,
 } from "./predicatesTreeMap";
+
+const STATE_KEY = "aspls.predicates.workspaceMode";
 
 function rangeLikeToVscode(range: RangeLike): vscode.Range {
   return new vscode.Range(
@@ -22,6 +27,11 @@ export class PredicatesTreeProvider
   >();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private debounce: NodeJS.Timeout | undefined;
+
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly getClient: () => LanguageClient | undefined,
+  ) {}
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
@@ -77,6 +87,54 @@ export class PredicatesTreeProvider
     }
     if (element) return [];
 
+    const workspaceMode = this.context.workspaceState.get<boolean>(
+      STATE_KEY,
+      false,
+    );
+    if (workspaceMode) {
+      if (!vscode.workspace.workspaceFolders?.length) {
+        return [
+          {
+            kind: "message",
+            label: "Open a folder to browse workspace predicates",
+          },
+        ];
+      }
+      const client = this.getClient();
+      if (!client) {
+        return [
+          {
+            kind: "message",
+            label: "Predicates unavailable (language server not ready)",
+          },
+        ];
+      }
+      try {
+        const uri =
+          vscode.window.activeTextEditor?.document.uri.toString() ?? null;
+        const nodes = await client.sendRequest<WorkspacePredicateNode[]>(
+          "aspls/workspacePredicates",
+          { uri },
+        );
+        if (!nodes?.length) {
+          return [
+            {
+              kind: "message",
+              label: "No predicates in workspace",
+            },
+          ];
+        }
+        return mapWorkspaceNodes(nodes);
+      } catch {
+        return [
+          {
+            kind: "message",
+            label: "Predicates unavailable (language server not ready)",
+          },
+        ];
+      }
+    }
+
     const editor = vscode.window.activeTextEditor;
     if (!editor || editor.document.languageId !== "asp") {
       return [
@@ -114,17 +172,46 @@ export class PredicatesTreeProvider
 
 export function registerPredicatesTree(
   context: vscode.ExtensionContext,
+  getClient: () => LanguageClient | undefined,
 ): PredicatesTreeProvider {
-  const provider = new PredicatesTreeProvider();
+  const provider = new PredicatesTreeProvider(context, getClient);
+  const syncContext = async () => {
+    const on = context.workspaceState.get<boolean>(STATE_KEY, false);
+    await vscode.commands.executeCommand(
+      "setContext",
+      "aspls.predicates.workspaceMode",
+      on,
+    );
+  };
+  void syncContext();
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider("aspls.predicates", provider),
+    vscode.commands.registerCommand(
+      "aspls.predicates.toggleWorkspace",
+      async () => {
+        const cur = context.workspaceState.get<boolean>(STATE_KEY, false);
+        await context.workspaceState.update(STATE_KEY, !cur);
+        await syncContext();
+        provider.refresh();
+      },
+    ),
     vscode.window.onDidChangeActiveTextEditor(() => provider.refresh()),
     vscode.workspace.onDidChangeTextDocument((e) => {
+      if (context.workspaceState.get<boolean>(STATE_KEY, false)) {
+        if (e.document.languageId === "asp") provider.scheduleRefresh();
+        return;
+      }
       const active = vscode.window.activeTextEditor?.document;
       if (active && e.document.uri.toString() === active.uri.toString()) {
         provider.scheduleRefresh();
       }
     }),
+    vscode.workspace
+      .createFileSystemWatcher("**/aspls.clingo.json")
+      .onDidChange(() => {
+        if (context.workspaceState.get<boolean>(STATE_KEY, false))
+          provider.refresh();
+      }),
   );
   return provider;
 }
