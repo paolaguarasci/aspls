@@ -1,5 +1,5 @@
 from parser import parse_document
-from symbols import build_symbol_index
+from symbols import build_symbol_index, find_key_at
 
 
 def test_indexes_head_and_body_occurrences():
@@ -46,3 +46,13 @@ def test_occurrence_line_correct_after_error_recovery_drops_lines():
 
     assert index[("bird", 1)][0].line == 1
     assert index[("penguin", 1)][0].line == 3  # not 1, the dropped fragment's line
+
+
+def test_find_key_at_matches_occurrence_position():
+    text = "bird(tweety).\nflies(X) :- bird(X), not penguin(X)."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert find_key_at(index, 1, 1) == ("bird", 1)
+    assert find_key_at(index, 2, 13) == ("bird", 1)
+    assert find_key_at(index, 1, 5) is None

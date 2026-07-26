@@ -43,6 +43,17 @@ def _collect_atoms_with_role(node, role: str, out: list[Occurrence]) -> None:
             _collect_atoms_with_role(child, role, out)
 
 
+def find_key_at(
+    index: dict[tuple[str, int], list[Occurrence]], line: int, column: int
+) -> tuple[str, int] | None:
+    for (name, arity), occurrences in index.items():
+        for occ in occurrences:
+            token_end_column = occ.column + len(occ.name)
+            if occ.line == line and occ.column <= column < token_end_column:
+                return (name, arity)
+    return None
+
+
 def build_symbol_index(tree: lark.Tree | None) -> dict[tuple[str, int], list[Occurrence]]:
     index: dict[tuple[str, int], list[Occurrence]] = {}
     if tree is None:
