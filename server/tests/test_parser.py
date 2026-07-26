@@ -37,3 +37,20 @@ def test_error_line_number_matches_original_document():
     text = "bird(tweety).\nbad statement here\npenguin(pingu)."
     result = parse_document(text)
     assert result.errors[0].line == 2
+
+
+def test_multiline_bad_statement_produces_one_error():
+    text = "bird(tweety).\nbad statement\nspanning lines\npenguin(pingu)."
+    result = parse_document(text)
+    assert len(result.errors) == 1
+    assert result.errors[0].line == 2
+    assert result.tree is not None
+    assert len(result.tree.children) == 2
+
+
+def test_large_unparseable_fragment_does_not_crash():
+    text = "\n".join(f"not a valid line {i}" for i in range(2000))
+    result = parse_document(text)
+    assert len(result.errors) == 1
+    assert result.errors[0].line == 1
+    assert result.tree is None

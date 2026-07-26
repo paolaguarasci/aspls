@@ -46,17 +46,24 @@ def _parse_fragment(stmt_text: str, start_line: int) -> tuple[list[lark.Tree], l
     # end up glued to a valid statement that follows it on a later line.
     # Retry on shrinking suffixes (dropping one leading line at a time) so
     # the valid tail is still recovered instead of being swallowed whole.
-    try:
-        stmt_tree = _parser.parse(stmt_text)
-        return list(stmt_tree.children), []
-    except UnexpectedInput as e:
-        error = ParseError(line=e.line + start_line, column=e.column, message=str(e))
-        lines = stmt_text.split("\n")
-        if len(lines) > 1:
-            remainder = "\n".join(lines[1:])
-            children, errors = _parse_fragment(remainder, start_line + 1)
-            return children, [error] + errors
-        return [], [error]
+    # Iterative rather than recursive: a fragment can consist of thousands of
+    # dot-less lines, and recursing once per dropped line would blow the
+    # Python call stack instead of returning a structured error.
+    first_error: ParseError | None = None
+    lines = stmt_text.split("\n")
+    line_offset = start_line
+    while lines:
+        remainder = "\n".join(lines)
+        try:
+            stmt_tree = _parser.parse(remainder)
+            errors = [first_error] if first_error else []
+            return list(stmt_tree.children), errors
+        except UnexpectedInput as e:
+            if first_error is None:
+                first_error = ParseError(line=e.line + line_offset, column=e.column, message=str(e))
+            lines = lines[1:]
+            line_offset += 1
+    return [], [first_error]
 
 
 def parse_document(text: str) -> ParseResult:
