@@ -76,6 +76,10 @@ Semantic highlighting for ASP is enabled by default (`editor.semanticHighlightin
 
 ---
 
+## Feedback
+
+Issues and contributions: [github.com/paolaguarasci/aspls](https://github.com/paolaguarasci/aspls).
+
 ## License
 
 MIT © Paola Guarasci
