@@ -1,19 +1,24 @@
 import * as vscode from "vscode";
+import {
+  mapDocumentSymbols,
+  type PredicateTreeNode,
+  type RangeLike,
+} from "./predicatesTreeMap";
 
-type PredicateItem =
-  | { kind: "message"; label: string }
-  | {
-      kind: "predicate";
-      label: string;
-      detail?: string;
-      location: vscode.Location;
-    };
+function rangeLikeToVscode(range: RangeLike): vscode.Range {
+  return new vscode.Range(
+    range.start.line,
+    range.start.character,
+    range.end.line,
+    range.end.character,
+  );
+}
 
 export class PredicatesTreeProvider
-  implements vscode.TreeDataProvider<PredicateItem>
+  implements vscode.TreeDataProvider<PredicateTreeNode>
 {
   private readonly _onDidChangeTreeData = new vscode.EventEmitter<
-    PredicateItem | undefined | void
+    PredicateTreeNode | undefined | void
   >();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
   private debounce: NodeJS.Timeout | undefined;
@@ -27,7 +32,7 @@ export class PredicatesTreeProvider
     this.debounce = setTimeout(() => this.refresh(), 200);
   }
 
-  getTreeItem(element: PredicateItem): vscode.TreeItem {
+  getTreeItem(element: PredicateTreeNode): vscode.TreeItem {
     if (element.kind === "message") {
       const item = new vscode.TreeItem(
         element.label,
@@ -36,25 +41,42 @@ export class PredicatesTreeProvider
       item.contextValue = "aspls.predicates.message";
       return item;
     }
-    const item = new vscode.TreeItem(
-      element.label,
-      vscode.TreeItemCollapsibleState.None,
-    );
+
+    const collapsible =
+      element.kind === "occurrence"
+        ? vscode.TreeItemCollapsibleState.None
+        : element.children?.length
+          ? vscode.TreeItemCollapsibleState.Collapsed
+          : vscode.TreeItemCollapsibleState.None;
+
+    const item = new vscode.TreeItem(element.label, collapsible);
     item.description = element.detail;
-    item.command = {
-      command: "vscode.open",
-      title: "Open",
-      arguments: [
-        element.location.uri,
-        { selection: element.location.range },
-      ],
-    };
-    item.contextValue = "aspls.predicates.predicate";
+
+    if (
+      (element.kind === "predicate" || element.kind === "occurrence") &&
+      element.uri &&
+      element.range
+    ) {
+      item.command = {
+        command: "vscode.open",
+        title: "Open",
+        arguments: [
+          vscode.Uri.parse(element.uri),
+          { selection: rangeLikeToVscode(element.range) },
+        ],
+      };
+    }
+
+    item.contextValue = `aspls.predicates.${element.kind}`;
     return item;
   }
 
-  async getChildren(element?: PredicateItem): Promise<PredicateItem[]> {
+  async getChildren(element?: PredicateTreeNode): Promise<PredicateTreeNode[]> {
+    if (element && element.kind !== "message" && element.children?.length) {
+      return element.children;
+    }
     if (element) return [];
+
     const editor = vscode.window.activeTextEditor;
     if (!editor || editor.document.languageId !== "asp") {
       return [
@@ -78,12 +100,7 @@ export class PredicatesTreeProvider
           },
         ];
       }
-      return symbols.map((s) => ({
-        kind: "predicate" as const,
-        label: s.name,
-        detail: s.detail,
-        location: new vscode.Location(editor.document.uri, s.selectionRange),
-      }));
+      return mapDocumentSymbols(symbols, editor.document.uri.toString());
     } catch {
       return [
         {
