@@ -10,6 +10,7 @@ import { registerCookbookCommands } from "./cookbook/cookbookCommands";
 import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
+import { registerPredicatesTree } from "./predicatesTree";
 
 let client: LanguageClient | undefined;
 let rainbow: PredicateRainbow | undefined;
@@ -31,11 +32,13 @@ export async function activate(
   registerClingoCommands(context, solverView);
   registerCookbookCommands(context);
 
-  await startLanguageServer(context);
+  const predicatesProvider = registerPredicatesTree(context);
+  await startLanguageServer(context, predicatesProvider);
 }
 
 async function startLanguageServer(
   context: vscode.ExtensionContext,
+  predicatesProvider: ReturnType<typeof registerPredicatesTree>,
 ): Promise<void> {
   const config = vscode.workspace.getConfiguration("aspls");
   const configuredPath = config.get<string>("pythonPath");
@@ -83,6 +86,7 @@ async function startLanguageServer(
     clientOptions,
   );
   await client.start();
+  predicatesProvider.refresh();
 }
 
 export async function deactivate(): Promise<void> {
