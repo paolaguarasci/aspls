@@ -17,10 +17,11 @@ Works with **`.lp`** and **`.asp`** files in VS Code (and compatible editors).
 | **Semantic highlighting** | Different colors for facts, rule heads, rule bodies, constraints, `#show`, `#minimize` |
 | **Rainbow predicates** | Optional underline color per predicate name (stable across the file) |
 | **Diagnostics** | Syntax errors from the ASP parser; optional Clingo-backed checks |
-| **IntelliSense** | Predicate completion from the current document |
-| **Hover** | Name, arity, and head/body occurrence counts |
-| **Go to Definition** | Jump to facts and rule heads |
-| **Find References** | All occurrences of a predicate in the file |
+| **IntelliSense** | Predicate completion from the workspace / config file pool |
+| **Hover** | Name, arity, and head/body occurrence counts (pool-wide) |
+| **Go to Definition** | Jump to facts and rule heads (cross-file) |
+| **Find References** | All occurrences of a predicate in the pool |
+| **Snippets** | Templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints |
 
 ---
 
@@ -84,6 +85,7 @@ Then run **aspls: Compute answer sets (config)**. Paths in `additionalFiles` are
 |---------|---------|-------------|
 | `aspls.pythonPath` | `""` | Path to Python 3. Empty = auto-detect `python3` / `python`. |
 | `aspls.rainbowPredicates` | `true` | Rainbow underline per predicate name (role colors stay from semantic highlighting). |
+| `aspls.diagnostics.onceUsed` | `true` | Warn when a predicate appears only once (excluding `#show` / `#minimize`). |
 | `aspls.clingo.usePath` | `false` | Use PATH / `aspls.clingo.path` instead of bundled WASM. |
 | `aspls.clingo.path` | `""` | Optional absolute path to the Clingo binary. |
 | `aspls.clingo.models` | `1` | Default model count for config runs (`0` = all). |
@@ -107,7 +109,8 @@ Semantic highlighting for ASP is enabled by default (`editor.semanticHighlightin
 ## Known limits
 
 - Grammar covers a practical ASP-Core-2 / Clingo subset (facts, rules, constraints, aggregates, comparisons, common directives). Not every Clingo extension is parsed yet.
-- Diagnostics and navigation are **per document** (not whole workspace project graphs).
+- Symbol index covers the workspace (all `.lp`/`.asp`) or, when `aspls.clingo.json` lists `additionalFiles`, that explicit file pool.
+- `aspls.diagnostics.onceUsed` (default true) warns on predicates that appear only once in the pool.
 - Bundled WASM supports common runs; some advanced CLI flags work more reliably with PATH Clingo.
 
 ---

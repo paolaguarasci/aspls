@@ -4,6 +4,7 @@ import lark
 
 DEFINING_ROLES = frozenset({"fact", "rule_head"})
 USING_ROLES = frozenset({"rule_body", "constraint", "minimize"})
+DIRECTIVE_ROLES = frozenset({"show", "minimize"})
 
 
 @dataclass
@@ -52,10 +53,20 @@ def _collect_atoms_with_role(
 
 
 def find_key_at(
-    index: dict[tuple[str, int], list[Occurrence]], line: int, column: int
+    index: dict, line: int, column: int, uri: str | None = None
 ) -> tuple[str, int] | None:
+    """Return (name, arity) at line/column.
+
+    When ``uri`` is set, only occurrences from that document match. This avoids
+    cross-file collisions in a merged index where the same (line, column) can
+    belong to different predicates in different files.
+    """
     for (name, arity), occurrences in index.items():
         for occ in occurrences:
+            if uri is not None:
+                occ_uri = getattr(occ, "uri", None)
+                if occ_uri is not None and occ_uri != uri:
+                    continue
             token_end_column = occ.column + len(occ.name)
             if occ.line == line and occ.column <= column < token_end_column:
                 return (name, arity)

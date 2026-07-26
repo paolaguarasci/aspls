@@ -69,6 +69,9 @@ async function startLanguageServer(
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "asp" }],
+    synchronize: {
+      configurationSection: "aspls",
+    },
   };
 
   client = new LanguageClient(

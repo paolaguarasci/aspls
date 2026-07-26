@@ -1,0 +1,37 @@
+{
+  "Show directive": {
+    "prefix": "show",
+    "body": ["#show ${1:pred}/${2:1}."],
+    "description": "ASP #show directive"
+  },
+  "Const directive": {
+    "prefix": "const",
+    "body": ["#const ${1:name} = ${2:0}."],
+    "description": "ASP #const directive"
+  },
+  "Minimize directive": {
+    "prefix": "minimize",
+    "body": ["#minimize { ${1:1}@${2:1}, ${3:X} : ${4:body} }."],
+    "description": "ASP #minimize directive"
+  },
+  "Count aggregate": {
+    "prefix": "count",
+    "body": ["#count{ ${1:X} : ${2:p(X)} }"],
+    "description": "ASP #count aggregate"
+  },
+  "Sum aggregate": {
+    "prefix": "sum",
+    "body": ["#sum{ ${1:X} : ${2:p(X)} }"],
+    "description": "ASP #sum aggregate"
+  },
+  "Choice rule": {
+    "prefix": "choice",
+    "body": ["${1:1} { ${2:p(X)} : ${3:domain(X)} } ${4:1}."],
+    "description": "ASP choice rule"
+  },
+  "Weak constraint": {
+    "prefix": "weak",
+    "body": [":~ ${1:body}. [${2:1}@${3:1}, ${4:X}]"],
+    "description": "ASP weak constraint"
+  }
+}

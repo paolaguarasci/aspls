@@ -146,6 +146,12 @@
                 "path": "./syntaxes/asp.tmLanguage.json"
             }
         ],
+        "snippets": [
+            {
+                "language": "asp",
+                "path": "./snippets/asp.json"
+            }
+        ],
         "semanticTokenTypes": [
             {
                 "id": "aspFact",
@@ -250,6 +256,12 @@
                     "default": true,
                     "description": "Underline each predicate name with a stable rainbow color derived from its name (role colors come from semantic highlighting)."
                 },
+                "aspls.diagnostics.onceUsed": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Warn when a predicate appears only once in the program pool (excluding #show / #minimize)."
+                },
+
                 "aspls.clingo.usePath": {
                     "type": "boolean",
                     "default": false,
