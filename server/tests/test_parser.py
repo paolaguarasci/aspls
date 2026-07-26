@@ -25,6 +25,13 @@ def test_parses_disjunction_aggregates_and_directives():
     assert result.tree is not None
 
 
+def test_parses_comparison_literals_in_body():
+    text = (FIXTURES / "comparison_literals.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
 def test_recovers_after_one_bad_statement_and_parses_the_rest():
     text = "bird(tweety).\nbad statement here\npenguin(pingu)."
     result = parse_document(text)
