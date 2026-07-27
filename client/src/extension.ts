@@ -72,10 +72,33 @@ async function startLanguageServer(
     args: [serverModulePath],
   };
 
+  const configFileName =
+    vscode.workspace
+      .getConfiguration("aspls")
+      .get<string>("clingo.configFile")
+      ?.trim() || "aspls.clingo.json";
+
+  const configWatchers = (vscode.workspace.workspaceFolders ?? []).map((folder) =>
+    vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(folder, configFileName),
+    ),
+  );
+  for (const watcher of configWatchers) {
+    context.subscriptions.push(watcher);
+  }
+
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ scheme: "file", language: "asp" }],
     synchronize: {
       configurationSection: "aspls",
+      ...(configWatchers.length > 0
+        ? {
+            fileEvents:
+              configWatchers.length === 1
+                ? configWatchers[0]
+                : configWatchers,
+          }
+        : {}),
     },
   };
 
