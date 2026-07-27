@@ -30,6 +30,36 @@ def test_resolve_pool_falls_back_to_discovered():
     assert pool == discovered
 
 
+def test_resolve_pool_empty_additional_files_is_active_only():
+    """additionalFiles=[] must NOT fall back to discovered (regression for PIN-164)."""
+    discovered = [
+        "file:///proj/main.lp",
+        "file:///proj/other.lp",
+    ]
+    pool = resolve_pool(
+        active_uri="file:///proj/main.lp",
+        workspace_roots=["/proj"],
+        config_path=None,
+        additional_files=[],
+        discovered_uris=discovered,
+    )
+    assert pool == ["file:///proj/main.lp"]
+    assert "file:///proj/other.lp" not in pool
+
+
+def test_resolve_pool_none_additional_files_uses_discovered():
+    """additional_files=None must still fall back to full workspace discovery."""
+    discovered = ["file:///proj/a.lp", "file:///proj/b.lp"]
+    pool = resolve_pool(
+        active_uri="file:///proj/a.lp",
+        workspace_roots=["/proj"],
+        config_path=None,
+        additional_files=None,
+        discovered_uris=discovered,
+    )
+    assert pool == discovered
+
+
 def test_merged_index_unions_predicates_across_files():
     idx = WorkspaceIndex()
     idx.upsert("file:///a.lp", "bird(tweety).")

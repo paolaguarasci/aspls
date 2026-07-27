@@ -57,6 +57,32 @@ export function toWorkspaceRelativePath(
   return rel;
 }
 
+/**
+ * Canonical pool rules (must stay in sync with server workspace_index.py resolve_pool):
+ *
+ * | additionalFiles (raw config) | Pool                                          |
+ * |------------------------------|-----------------------------------------------|
+ * | undefined / absent           | full-workspace fallback (discoveredUris)       |
+ * | []  (explicit empty array)   | active file only                              |
+ * | ["a.lp", ...]                | active file + resolved entries                |
+ *
+ * Resolution order per entry: activeDir first, then workspaceRoot.
+ *
+ * This function operates on already-resolved absolute paths (post resolveAdditionalFiles).
+ */
+export function resolvePool(opts: {
+  primaryFile: string;
+  additionalFiles: string[];
+  /** True when additionalFiles came from an explicit config key (even if empty). */
+  additionalFilesExplicit: boolean;
+  discoveredFiles: string[];
+}): string[] {
+  if (!opts.additionalFilesExplicit) {
+    return dedupePaths(opts.discoveredFiles);
+  }
+  return dedupePaths([opts.primaryFile, ...opts.additionalFiles]);
+}
+
 export function dedupePaths(paths: string[]): string[] {
   const seen = new Set<string>();
   const out: string[] = [];

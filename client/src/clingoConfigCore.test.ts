@@ -5,6 +5,7 @@ import {
   isValidModels,
   mergeClingoFileConfig,
   removePathEntry,
+  resolvePool,
   toWorkspaceRelativePath,
 } from "./clingoConfigCore";
 
@@ -56,11 +57,50 @@ function testDedupeAndRemove(): void {
   assert.deepStrictEqual(removePathEntry(["a.lp"], "missing.lp"), ["a.lp"]);
 }
 
+function testResolvePool(): void {
+  const primary = "/proj/main.lp";
+  const discovered = ["/proj/main.lp", "/proj/other.lp"];
+
+  // additionalFiles absent → full workspace fallback
+  assert.deepStrictEqual(
+    resolvePool({
+      primaryFile: primary,
+      additionalFiles: [],
+      additionalFilesExplicit: false,
+      discoveredFiles: discovered,
+    }),
+    discovered,
+  );
+
+  // additionalFiles=[] (explicit empty) → active file only (regression PIN-164)
+  assert.deepStrictEqual(
+    resolvePool({
+      primaryFile: primary,
+      additionalFiles: [],
+      additionalFilesExplicit: true,
+      discoveredFiles: discovered,
+    }),
+    [primary],
+  );
+
+  // additionalFiles non-empty → active + entries (deduped)
+  assert.deepStrictEqual(
+    resolvePool({
+      primaryFile: primary,
+      additionalFiles: ["/proj/facts.lp", primary],
+      additionalFilesExplicit: true,
+      discoveredFiles: discovered,
+    }),
+    [primary, "/proj/facts.lp"],
+  );
+}
+
 function main(): void {
   testIsValidModels();
   testMergeClingoFileConfig();
   testToWorkspaceRelativePath();
   testDedupeAndRemove();
+  testResolvePool();
   console.log("clingoConfigCore.test.ts: ok");
 }
 

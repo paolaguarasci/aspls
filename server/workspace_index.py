@@ -35,20 +35,31 @@ def resolve_pool(
     additional_files: list[str] | None,
     discovered_uris: list[str],
 ) -> list[str]:
-    if additional_files:
-        active_path = _uri_to_path(active_uri)
-        uris = {active_uri}
-        for entry in additional_files:
-            candidate = (active_path.parent / entry).resolve()
-            if not candidate.exists():
-                for root in workspace_roots:
-                    alt = (Path(root) / entry).resolve()
-                    if alt.exists():
-                        candidate = alt
-                        break
-            uris.add(_path_to_uri(candidate))
-        return sorted(uris)
-    return list(discovered_uris)
+    """Compute the file pool for LSP features.
+
+    Rules (canonical, must match client resolveAdditionalFiles logic):
+    - additional_files is None  → full-workspace fallback: return discovered_uris.
+    - additional_files == []    → explicit empty: pool is {active_uri} only.
+    - additional_files non-empty → pool is {active_uri} + resolved entries.
+      Resolution order per entry: active-file directory first, then workspace
+      roots in order (mirrors client resolveAdditionalFiles).
+    """
+    if additional_files is None:
+        return list(discovered_uris)
+
+    # Explicit additionalFiles (possibly empty list): active file is always included.
+    active_path = _uri_to_path(active_uri)
+    uris: set[str] = {active_uri}
+    for entry in additional_files:
+        candidate = (active_path.parent / entry).resolve()
+        if not candidate.exists():
+            for root in workspace_roots:
+                alt = (Path(root) / entry).resolve()
+                if alt.exists():
+                    candidate = alt
+                    break
+        uris.add(_path_to_uri(candidate))
+    return sorted(uris)
 
 
 class WorkspaceIndex:

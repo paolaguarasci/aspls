@@ -141,20 +141,27 @@ def _workspace_root_paths(ls: LanguageServer) -> list[str]:
 
 
 def _read_additional_files_from_config(roots: list[str]) -> list[str] | None:
-    """Read additionalFiles from aspls.clingo.json when present and non-empty."""
+    """Read additionalFiles from aspls.clingo.json.
+
+    Returns:
+    - list[str] (possibly empty) when the key is present and is a JSON array.
+      An empty array [] is returned as [] so resolve_pool treats it as explicit
+      "active file only", not as a fallback to full-workspace discovery.
+    - None when the key is absent or the config file does not exist / is invalid.
+    """
     name = CONFIG_FILE_NAME.strip() or "aspls.clingo.json"
     for root in roots:
-        path = Path(root) / name
-        if not path.is_file():
+        config_path = Path(root) / name
+        if not config_path.is_file():
             continue
         try:
-            data = json.loads(path.read_text(encoding="utf-8"))
+            data = json.loads(config_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
         if not isinstance(data, dict):
             continue
         files = data.get("additionalFiles")
-        if isinstance(files, list) and files:
+        if isinstance(files, list):
             return [f for f in files if isinstance(f, str)]
     return None
 
