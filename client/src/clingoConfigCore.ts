@@ -25,6 +25,52 @@ export const SAMPLE_CLINGO_CONFIG = `{
 }
 `;
 
+export interface ClingoFileSeed {
+  models: number;
+  threads: number;
+  customArgs: string;
+  additionalFiles: string[];
+}
+
+/** JSON body for a new workspace Clingo config (init / ensure). */
+export function formatClingoConfigFile(seed: ClingoFileSeed): string {
+  return `${JSON.stringify(seed, null, 2)}\n`;
+}
+
+export function asStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter((v): v is string => typeof v === "string");
+}
+
+/**
+ * Resolve additionalFiles from the workspace config file only (never settings).
+ * Matches server `_read_additional_files_from_config` semantics.
+ */
+export function resolveConfigAdditionalFiles(
+  fileAdditionalFiles: unknown,
+): { additionalFiles: string[]; additionalFilesExplicit: boolean } {
+  if (fileAdditionalFiles === undefined) {
+    return { additionalFiles: [], additionalFilesExplicit: false };
+  }
+  return {
+    additionalFiles: asStringArray(fileAdditionalFiles),
+    additionalFilesExplicit: true,
+  };
+}
+
+/** True when settings still carry additionalFiles but the config file does not. */
+export function shouldWarnDeprecatedAdditionalFilesSetting(opts: {
+  settingsAdditionalFiles: string[];
+  configAdditionalFilesDefined: boolean;
+}): boolean {
+  return (
+    opts.settingsAdditionalFiles.length > 0 &&
+    !opts.configAdditionalFilesDefined
+  );
+}
+
 export function isValidModels(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0;
 }

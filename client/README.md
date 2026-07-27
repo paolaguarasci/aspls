@@ -65,11 +65,9 @@ flies(X) :- bird(X), not penguin(X).
 
 ## Clingo config
 
-Settings under `aspls.clingo.*` control models, threads, `customArgs`, and `additionalFiles`.
+Workspace file `aspls.clingo.json` (name configurable via `aspls.clingo.configFile`) is the **canonical source** for `additionalFiles`, `models`, `threads`, and `customArgs` used by both the language server and the Clingo runner.
 
-For multi-file programs and shared flags, create a workspace file (default name `aspls.clingo.json`) with:
-
-**aspls: Initialize Clingo config file**
+Create it with **aspls: Initialize Clingo config file**. If you already use `aspls.clingo.additionalFiles` in Settings, that value is **copied into the new file once** as a migration aid — it is not read at runtime anymore.
 
 ```json
 {
@@ -81,6 +79,10 @@ For multi-file programs and shared flags, create a workspace file (default name 
 ```
 
 Then run **aspls: Compute answer sets (config)**. Paths in `additionalFiles` are resolved relative to the active file, then the workspace root.
+
+**Fallback when `additionalFiles` is absent from the config file:** the language server analyses all `.lp` / `.asp` files in the workspace. The runner includes only the active file unless you add an explicit `additionalFiles` array (use `[]` to run the active file in isolation).
+
+Other `aspls.clingo.*` settings (`models`, `threads`, `customArgs`) still apply when the config file omits those keys. Only `additionalFiles` is config-file-only.
 
 You can also edit **models**, **Use native Clingo** / **path**, and **additional files** from the Solver sidebar Controls section. Models and additional files write to the workspace config file; path settings write to workspace Settings. Threads and `customArgs` remain Settings / JSON only.
 
@@ -131,7 +133,7 @@ On rule-order warnings, use **Quick Fix → Fix Order** to rewrite the file into
 | `aspls.clingo.models`          | `1`                 | Default model count for config runs (`0` = all).                                                                  |
 | `aspls.clingo.threads`         | `1`                 | Clingo `-t` thread count.                                                                                         |
 | `aspls.clingo.customArgs`      | `""`                | Extra CLI args (quoted tokens supported).                                                                         |
-| `aspls.clingo.additionalFiles` | `[]`                | Extra program files to include.                                                                                   |
+| `aspls.clingo.additionalFiles` | `[]`                | **Deprecated.** Migrated into `aspls.clingo.json` on init/ensure only; not used at runtime. |
 | `aspls.clingo.configFile`      | `aspls.clingo.json` | Workspace config file name.                                                                                       |
 
 Semantic highlighting for ASP is enabled by default (`editor.semanticHighlighting.enabled` for `[asp]`).

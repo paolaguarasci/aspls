@@ -6,6 +6,7 @@ import {
   ServerOptions,
 } from "vscode-languageclient/node";
 import { registerClingoCommands } from "./clingoCommands";
+import { registerAdditionalFilesDeprecationWarning } from "./clingoConfigDeprecation";
 import { registerCookbookCommands } from "./cookbook/cookbookCommands";
 import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
@@ -30,6 +31,7 @@ export async function activate(
     ),
   );
   registerClingoCommands(context, solverView);
+  registerAdditionalFilesDeprecationWarning(context);
   registerCookbookCommands(context);
 
   const predicatesProvider = registerPredicatesTree(context, () => client);

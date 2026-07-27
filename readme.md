@@ -26,3 +26,12 @@ Both the LSP server (`server/workspace_index.py :: resolve_pool`) and the client
 3. If neither exists, the active-directory candidate is used as-is.
 
 > **Note on `[]`**: an explicit empty array intentionally means "run/analyse the active file in isolation". It is _not_ treated as "no config" — that distinction prevents surprising cross-file symbol leakage.
+
+### `additionalFiles` source of truth
+
+| Source | Runtime effect |
+|--------|----------------|
+| `aspls.clingo.json` → `additionalFiles` | Canonical for LSP pool and Clingo runner |
+| `aspls.clingo.additionalFiles` (Settings) | **Deprecated** — copied only when creating the config file (`aspls: Initialize Clingo config file` or Solver sidebar ensure); ignored at runtime |
+
+This keeps LSP diagnostics and runner file sets aligned. Migrate by moving entries into `aspls.clingo.json` (or run **Initialize Clingo config file** to seed from your current setting).

@@ -3,10 +3,14 @@ import * as path from "path";
 import * as vscode from "vscode";
 import {
   DEFAULT_CONFIG_FILE,
+  asStringArray,
+  formatClingoConfigFile,
   isValidModels,
   mergeClingoFileConfig,
+  resolveConfigAdditionalFiles,
   SAMPLE_CLINGO_CONFIG,
   splitCustomArgs,
+  type ClingoFileSeed,
 } from "./clingoConfigCore";
 import type { ClingoResolvedConfig } from "./clingoTypes";
 
@@ -45,16 +49,35 @@ function readWorkspaceConfigFile(
   return undefined;
 }
 
-function asStringArray(value: unknown): string[] {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-  return value.filter((v): v is string => typeof v === "string");
+/** Exposed for deprecation warning: whether any workspace config defines additionalFiles. */
+export function readClingoFileConfigState(): {
+  configFileName: string;
+  additionalFilesDefined: boolean;
+} {
+  const cfg = vscode.workspace.getConfiguration("aspls");
+  const configFileName =
+    cfg.get<string>("clingo.configFile", DEFAULT_CONFIG_FILE) ||
+    DEFAULT_CONFIG_FILE;
+  const file = readWorkspaceConfigFile(configFileName);
+  return {
+    configFileName,
+    additionalFilesDefined: file?.additionalFiles !== undefined,
+  };
+}
+
+function clingoSettingsSeed(): ClingoFileSeed {
+  const cfg = vscode.workspace.getConfiguration("aspls");
+  return {
+    models: cfg.get<number>("clingo.models", 1),
+    threads: cfg.get<number>("clingo.threads", 1),
+    customArgs: cfg.get<string>("clingo.customArgs", "") ?? "",
+    additionalFiles: asStringArray(cfg.get("clingo.additionalFiles", [])),
+  };
 }
 
 /**
  * Merge VS Code settings with an optional workspace config file.
- * File values override settings when present.
+ * File values override settings when present (except additionalFiles, which is config-file-only).
  */
 export function resolveClingoConfig(options?: {
   /** When true, require the workspace config file (for "run with config"). */
@@ -72,19 +95,16 @@ export function resolveClingoConfig(options?: {
     );
   }
 
-  const settingsAdditional = asStringArray(
-    cfg.get("clingo.additionalFiles", []),
-  );
+  const { additionalFiles, additionalFilesExplicit } =
+    resolveConfigAdditionalFiles(file?.additionalFiles);
 
   return {
     models: file?.models ?? cfg.get<number>("clingo.models", 1),
     threads: file?.threads ?? cfg.get<number>("clingo.threads", 1),
     customArgs:
       file?.customArgs ?? cfg.get<string>("clingo.customArgs", "") ?? "",
-    additionalFiles:
-      file?.additionalFiles !== undefined
-        ? asStringArray(file.additionalFiles)
-        : settingsAdditional,
+    additionalFiles,
+    additionalFilesExplicit,
     usePath: cfg.get<boolean>("clingo.usePath", false),
     clingoPath: cfg.get<string>("clingo.path", "") ?? "",
     configFileName,
@@ -140,7 +160,7 @@ export async function writeSampleConfigFile(
   }
   await vscode.workspace.fs.writeFile(
     uri,
-    Buffer.from(SAMPLE_CLINGO_CONFIG, "utf8"),
+    Buffer.from(formatClingoConfigFile(clingoSettingsSeed()), "utf8"),
   );
   return uri;
 }
@@ -163,15 +183,8 @@ export async function ensureClingoConfigFile(
     return uri;
   } catch {
     // Seed from current settings so existing additionalFiles / threads / customArgs
-    // are not wiped by a blank SAMPLE overwrite (Init Config still uses SAMPLE).
-    const cfg = vscode.workspace.getConfiguration("aspls");
-    const seeded = {
-      models: cfg.get<number>("clingo.models", 1),
-      threads: cfg.get<number>("clingo.threads", 1),
-      customArgs: cfg.get<string>("clingo.customArgs", "") ?? "",
-      additionalFiles: asStringArray(cfg.get("clingo.additionalFiles", [])),
-    };
-    const body = `${JSON.stringify(seeded, null, 2)}\n`;
+    // are preserved when the Solver sidebar creates the config file.
+    const body = formatClingoConfigFile(clingoSettingsSeed());
     await vscode.workspace.fs.writeFile(uri, Buffer.from(body, "utf8"));
     return uri;
   }

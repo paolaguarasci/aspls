@@ -1,11 +1,14 @@
 import * as assert from "assert";
 import * as path from "path";
 import {
+  asStringArray,
   dedupePaths,
   isValidModels,
   mergeClingoFileConfig,
   removePathEntry,
+  resolveConfigAdditionalFiles,
   resolvePool,
+  shouldWarnDeprecatedAdditionalFilesSetting,
   toWorkspaceRelativePath,
 } from "./clingoConfigCore";
 
@@ -95,12 +98,59 @@ function testResolvePool(): void {
   );
 }
 
+function testResolveConfigAdditionalFiles(): void {
+  assert.deepStrictEqual(resolveConfigAdditionalFiles(undefined), {
+    additionalFiles: [],
+    additionalFilesExplicit: false,
+  });
+  assert.deepStrictEqual(resolveConfigAdditionalFiles([]), {
+    additionalFiles: [],
+    additionalFilesExplicit: true,
+  });
+  assert.deepStrictEqual(resolveConfigAdditionalFiles(["a.lp", 1, "b.lp"]), {
+    additionalFiles: ["a.lp", "b.lp"],
+    additionalFilesExplicit: true,
+  });
+}
+
+function testShouldWarnDeprecatedAdditionalFilesSetting(): void {
+  assert.strictEqual(
+    shouldWarnDeprecatedAdditionalFilesSetting({
+      settingsAdditionalFiles: ["facts.lp"],
+      configAdditionalFilesDefined: false,
+    }),
+    true,
+  );
+  assert.strictEqual(
+    shouldWarnDeprecatedAdditionalFilesSetting({
+      settingsAdditionalFiles: ["facts.lp"],
+      configAdditionalFilesDefined: true,
+    }),
+    false,
+  );
+  assert.strictEqual(
+    shouldWarnDeprecatedAdditionalFilesSetting({
+      settingsAdditionalFiles: [],
+      configAdditionalFilesDefined: false,
+    }),
+    false,
+  );
+}
+
+function testAsStringArray(): void {
+  assert.deepStrictEqual(asStringArray(["a", 1, "b"]), ["a", "b"]);
+  assert.deepStrictEqual(asStringArray(null), []);
+}
+
 function main(): void {
   testIsValidModels();
   testMergeClingoFileConfig();
   testToWorkspaceRelativePath();
   testDedupeAndRemove();
   testResolvePool();
+  testResolveConfigAdditionalFiles();
+  testShouldWarnDeprecatedAdditionalFilesSetting();
+  testAsStringArray();
   console.log("clingoConfigCore.test.ts: ok");
 }
 

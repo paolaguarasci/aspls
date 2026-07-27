@@ -52,6 +52,8 @@ export interface ClingoResolvedConfig {
   threads: number;
   customArgs: string;
   additionalFiles: string[];
+  /** True when `additionalFiles` came from an explicit config key (even if empty). */
+  additionalFilesExplicit: boolean;
   usePath: boolean;
   clingoPath: string;
   configFileName: string;

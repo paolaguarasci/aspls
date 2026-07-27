@@ -350,7 +350,8 @@
                         "type": "string"
                     },
                     "default": [],
-                    "description": "Extra .lp/.asp files to include (relative to the active file or workspace root). Overridden by aspls.clingo.json when present."
+                    "markdownDeprecationMessage": "**Deprecated** — use `additionalFiles` in your workspace Clingo config file (`aspls.clingo.json` by default). This setting is only copied into the config file when you run **aspls: Initialize Clingo config file** or when the extension creates the file for the Solver sidebar; it no longer affects runs or the language server.",
+                    "description": "Deprecated. Extra .lp/.asp files — migrate to aspls.clingo.json `additionalFiles`."
                 },
                 "aspls.clingo.configFile": {
                     "type": "string",
