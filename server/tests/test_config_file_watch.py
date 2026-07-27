@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from lsprotocol.types import FileChangeType, FileEvent
+
 from features.diagnostics import build_diagnostics
 from server import is_config_file_change
 from workspace_index import resolve_pool
@@ -33,6 +35,17 @@ def test_is_config_file_change_respects_custom_name():
         "file:///proj/aspls.clingo.json",
         "my-clingo.json",
     )
+
+
+def test_watched_changes_detect_relevant_config_event():
+    import server as srv
+
+    changes = [
+        FileEvent(uri="file:///proj/readme.md", type=FileChangeType.Changed),
+        FileEvent(uri="file:///proj/aspls.clingo.json", type=FileChangeType.Changed),
+    ]
+    assert any(is_config_file_change(c.uri, "aspls.clingo.json") for c in changes)
+    assert not any(is_config_file_change(c.uri, "aspls.clingo.json") for c in changes[:1])
 
 
 def test_config_file_change_realigns_once_used(tmp_path: Path, monkeypatch):

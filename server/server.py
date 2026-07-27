@@ -19,9 +19,11 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
     WORKSPACE_DID_CHANGE_WORKSPACE_FOLDERS,
+    WORKSPACE_DID_CHANGE_WATCHED_FILES,
     DidOpenTextDocumentParams,
     DidChangeTextDocumentParams,
     DidChangeConfigurationParams,
+    DidChangeWatchedFilesParams,
     DidChangeWorkspaceFoldersParams,
     HoverParams,
     DocumentSymbolParams,
@@ -265,6 +267,15 @@ def _publish_diagnostics(uri: str, text: str) -> None:
     server.publish_diagnostics(uri, diagnostics)
 
 
+def _republish_open_diagnostics(ls: LanguageServer) -> None:
+    try:
+        documents = ls.workspace.text_documents
+    except RuntimeError:
+        return
+    for uri, doc in documents.items():
+        _publish_diagnostics(uri, doc.source)
+
+
 @server.feature(INITIALIZED)
 def on_initialized(ls: LanguageServer, params: InitializedParams):
     _refresh_workspace_scan(ls)
@@ -292,12 +303,16 @@ def did_change_configuration(ls: LanguageServer, params: DidChangeConfigurationP
     # Pool comes only from aspls.clingo.json additionalFiles (or full workspace).
     # Never drive ADDITIONAL_FILES from VS Code setting aspls.clingo.additionalFiles.
     _refresh_workspace_scan(ls)
-    try:
-        documents = ls.workspace.text_documents
-    except RuntimeError:
+    _republish_open_diagnostics(ls)
+
+
+@server.feature(WORKSPACE_DID_CHANGE_WATCHED_FILES)
+def did_change_watched_files(ls: LanguageServer, params: DidChangeWatchedFilesParams):
+    relevant = any(is_config_file_change(change.uri) for change in params.changes)
+    if not relevant:
         return
-    for uri, doc in documents.items():
-        _publish_diagnostics(uri, doc.source)
+    _refresh_workspace_scan(ls)
+    _republish_open_diagnostics(ls)
 
 
 @server.feature(TEXT_DOCUMENT_DID_OPEN)
