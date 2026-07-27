@@ -73,6 +73,17 @@ def _path_to_uri(path: Path) -> str:
     return path.resolve().as_uri()
 
 
+def is_config_file_change(uri: str, config_file_name: str | None = None) -> bool:
+    """True when the changed URI's basename matches the active config file name."""
+    name = (config_file_name if config_file_name is not None else CONFIG_FILE_NAME).strip()
+    if not name:
+        name = "aspls.clingo.json"
+    try:
+        return _uri_to_path(uri).name == name
+    except Exception:
+        return False
+
+
 def _extract_once_used(settings) -> bool | None:
     """Pull aspls.diagnostics.onceUsed from didChangeConfiguration settings."""
     if not isinstance(settings, dict):
