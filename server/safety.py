@@ -203,6 +203,16 @@ def _finding_for_vars(var_occurrences: list[tuple[str, int, int]], unsafe: set[s
     return UnsafeFinding(line=1, column=1, variables=ordered)
 
 
+def _check_weak_constraint(statement: lark.Tree) -> UnsafeFinding | None:
+    body, weight = statement.children[0], statement.children[1]
+    all_vars: list[tuple[str, int, int]] = []
+    _collect_vars(body, all_vars)
+    _collect_vars(weight, all_vars)
+    safe = _collect_safe_vars(body)
+    names = {n for n, _, _ in all_vars}
+    return _finding_for_vars(all_vars, names - safe)
+
+
 def _check_rule_or_constraint(statement: lark.Tree) -> UnsafeFinding | None:
     all_vars: list[tuple[str, int, int]] = []
     safe: set[str] = set()
@@ -236,6 +246,10 @@ def find_unsafe_variables(tree: lark.Tree | None) -> list[UnsafeFinding]:
         data = statement.data
         if data in ("fact", "rule", "constraint"):
             found = _check_rule_or_constraint(statement)
+            if found:
+                findings.append(found)
+        elif data == "weak_constraint":
+            found = _check_weak_constraint(statement)
             if found:
                 findings.append(found)
     return findings

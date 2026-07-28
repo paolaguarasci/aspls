@@ -119,3 +119,24 @@ def test_aggregate_body_only_element_does_not_bind_tuple_vars():
     findings = find_unsafe_variables(parse_document(text).tree)
     assert len(findings) == 1
     assert "X" in findings[0].variables
+
+
+def test_weak_constraint_bound_vars_are_safe():
+    for text in (
+        ":~ selected(X), expensive(X). [1@1, X]",
+        ":~ selected(X). [2@2]",
+        ":~ selected(a). [1]",
+    ):
+        assert find_unsafe_variables(parse_document(text).tree) == [], text
+
+
+def test_weak_weight_unbound_var_is_unsafe():
+    findings = find_unsafe_variables(parse_document(":~ q. [X]").tree)
+    assert len(findings) == 1
+    assert findings[0].variables == ["X"]
+
+
+def test_weak_negated_only_var_is_unsafe():
+    findings = find_unsafe_variables(parse_document(":~ not p(X). [1, X]").tree)
+    assert len(findings) == 1
+    assert findings[0].variables == ["X"]
