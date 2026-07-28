@@ -454,6 +454,10 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
 
   private renderOutcome(outcome: ClingoRunOutcome): string {
     if (!outcome.ok) {
+      const failWarnings =
+        outcome.warnings && outcome.warnings.length > 0
+          ? `<div class="warn-box"><pre>${escapeHtml(outcome.warnings.join("\n\n"))}</pre></div>`
+          : "";
       return `
 <header>
   <h1>ASP Results <span class="badge fail">ERROR</span></h1>
@@ -463,6 +467,7 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
   </div>
 </header>
 <p class="meta">${escapeHtml(outcome.commandSummary)} · ${escapeHtml(outcome.backend)}</p>
+${failWarnings}
 <div class="error-box"><pre>${escapeHtml(outcome.error)}</pre></div>
 ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome.raw)}</pre></details>` : ""}`;
     }

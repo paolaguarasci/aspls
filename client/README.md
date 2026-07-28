@@ -88,6 +88,20 @@ You can also edit **models**, **Use native Clingo** / **path**, and **additional
 
 Before every run, aspls **preflights** the request: missing `additionalFiles`, invalid `models`, and a configured but missing `aspls.clingo.path` fail immediately in the Solver panel with an actionable message and a command summary that shows the effective backend (`WASM` or `PATH`).
 
+### Capability matrix (WASM vs PATH)
+
+| Feature | Bundled WASM | Native PATH |
+|---------|--------------|-------------|
+| Basic programs / answer sets | yes | yes |
+| Multi-file via `additionalFiles` | limited (concatenated sources) | yes (real multi-file) |
+| models / `-n` (via aspls UI) | yes | yes |
+| `--const` / `-c` | yes | yes |
+| Threads (`-t`) | limited | yes |
+| Output control (`--outf`, `-q`, `--stats`, `--verbose`) | no | yes |
+| Advanced CLI (`--parallel-mode`, `--configuration`, Lua, limits) | no | yes |
+
+When WASM is active and `customArgs` include fragile flags, the Solver panel shows a **WASM capability warning** and suggests enabling `aspls.clingo.usePath`.
+
 ---
 
 ## Docstrings & learner mode

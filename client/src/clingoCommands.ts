@@ -91,6 +91,13 @@ async function runFromEditor(
         const request = buildRequest(editor.document, mode);
         const outcome = await runClingo(request);
         await panel.showOutcome(outcome, mode, editor.document.uri.fsPath);
+        const capWarn = (outcome.ok ? outcome.warnings : outcome.warnings ?? [])
+          .find((w) => w.startsWith("WASM capability warning"));
+        if (capWarn) {
+          void vscode.window.showWarningMessage(
+            "Some customArgs are limited under WASM. Enable aspls.clingo.usePath for full Clingo CLI support.",
+          );
+        }
         if (!outcome.ok) {
           void vscode.window.showErrorMessage(
             `Clingo: ${outcome.error.split("\n")[0]}`,

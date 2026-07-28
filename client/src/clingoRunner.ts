@@ -12,6 +12,7 @@ import {
   buildPreflightCommandSummary,
   preflightClingoRun,
 } from "./clingoPreflight";
+import { collectBackendCapabilityWarnings } from "./clingoCapabilities";
 import type { ClingoRunOutcome, ClingoRunRequest } from "./clingoTypes";
 
 const execFileAsync = promisify(execFile);
@@ -219,15 +220,35 @@ async function runWasmClingo(
   }
 }
 
+function attachCapabilityWarnings(
+  request: ClingoRunRequest,
+  outcome: ClingoRunOutcome,
+): ClingoRunOutcome {
+  const caps = collectBackendCapabilityWarnings({
+    usePath: request.usePath,
+    customArgs: request.customArgs,
+  });
+  if (caps.length === 0) {
+    return outcome;
+  }
+  if (outcome.ok) {
+    return { ...outcome, warnings: [...caps, ...outcome.warnings] };
+  }
+  return {
+    ...outcome,
+    warnings: [...caps, ...(outcome.warnings ?? [])],
+  };
+}
+
 export async function runClingo(
   request: ClingoRunRequest,
 ): Promise<ClingoRunOutcome> {
   const blocked = preflightClingoRun(request);
   if (blocked) {
-    return blocked;
+    return attachCapabilityWarnings(request, blocked);
   }
   if (request.usePath) {
-    return runPathClingo(request);
+    return attachCapabilityWarnings(request, await runPathClingo(request));
   }
-  return runWasmClingo(request);
+  return attachCapabilityWarnings(request, await runWasmClingo(request));
 }

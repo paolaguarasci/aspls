@@ -27,6 +27,8 @@ export interface ClingoRunFailure {
   error: string;
   raw?: string;
   commandSummary: string;
+  /** Non-fatal capability / migration hints (e.g. fragile WASM flags). */
+  warnings?: string[];
 }
 
 export type ClingoRunOutcome = ClingoRunSuccess | ClingoRunFailure;
