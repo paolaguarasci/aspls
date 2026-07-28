@@ -14,11 +14,11 @@ See [`client/README.md`](client/README.md) for features, settings, and maintaine
 
 Both the LSP server (`server/workspace_index.py :: resolve_pool`) and the client runner share the same canonical rules for determining which files are analysed together (the "pool"):
 
-| `additionalFiles` in config | Pool                                                    |
-|-----------------------------|---------------------------------------------------------|
-| Key absent / `null`         | Full workspace discovery (all `.lp` / `.asp` files)    |
-| `[]` (explicit empty array) | Active file only — no workspace fallback               |
-| `["a.lp", "b.lp"]`         | Active file + listed files                              |
+| `additionalFiles` in config | LSP pool                                                | Runner file set                          |
+|-----------------------------|---------------------------------------------------------|------------------------------------------|
+| Key absent / `null`         | Full workspace discovery (all `.lp` / `.asp` files)    | Active file only                         |
+| `[]` (explicit empty array) | Active file only — no workspace fallback               | Active file only                         |
+| `["a.lp", "b.lp"]`         | Active file + listed files                              | Active file + listed files               |
 
 **Path resolution order** (per entry, both LSP and runner):
 1. Relative to the active file's directory.
