@@ -61,3 +61,17 @@ def test_large_unparseable_fragment_does_not_crash():
     assert len(result.errors) == 1
     assert result.errors[0].line == 1
     assert result.tree is None
+
+
+def test_parses_choice_rules():
+    text = (FIXTURES / "choice_rules.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
+def test_choice_syntax_error_reports_line():
+    text = "1 { chosen(X) : candidate(X) 1.\n"  # missing closing }
+    result = parse_document(text)
+    assert len(result.errors) >= 1
+    assert result.errors[0].line >= 1
