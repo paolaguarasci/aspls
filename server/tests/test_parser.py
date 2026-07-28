@@ -75,3 +75,18 @@ def test_choice_syntax_error_reports_line():
     result = parse_document(text)
     assert len(result.errors) >= 1
     assert result.errors[0].line >= 1
+
+
+def test_parses_weak_constraints():
+    text = (FIXTURES / "weak_constraints.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
+def test_weak_constraint_syntax_error_reports_line():
+    # Weight bracket missing closing ]
+    text = ":~ selected(X). [1@1, X\n"
+    result = parse_document(text)
+    assert len(result.errors) >= 1
+    assert result.errors[0].line >= 1
