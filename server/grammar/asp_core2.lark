@@ -4,6 +4,7 @@ statement: directive
          | fact
          | rule
          | constraint
+         | weak_constraint
 
 directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#show" IDENTIFIER "/" INT "." -> show_directive
@@ -24,6 +25,11 @@ choice_elem: literal (":" body)?
 fact: head "."
 rule: head ":-" body "."
 constraint: ":-" body "."
+
+// Clingo weak constraint: :~ body. [weight@priority, t1, t2, ...]
+// Weight bracket must stay on the same '.'-containing fragment (line splitter).
+weak_constraint: ":~" body "." "[" weak_weight "]"
+weak_weight: term ("@" INT)? ("," term)*
 
 body: naf_literal ("," naf_literal)*
 naf_literal: "not" literal -> negated_literal

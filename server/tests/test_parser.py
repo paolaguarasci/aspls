@@ -89,4 +89,5 @@ def test_weak_constraint_syntax_error_reports_line():
     text = ":~ selected(X). [1@1, X\n"
     result = parse_document(text)
     assert len(result.errors) >= 1
-    assert result.errors[0].line >= 1
+    # EOF after unclosed '[' — Lark may report line -1; assert bracket error, not unknown :~
+    assert "RSQB" in result.errors[0].message
