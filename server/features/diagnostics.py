@@ -137,6 +137,8 @@ def build_diagnostics(
                     where = "in a rule body"
                 elif occ.role == "constraint":
                     where = "in a constraint"
+                elif occ.role == "weak":
+                    where = "in a weak constraint"
                 else:
                     where = "as a use"
                 diagnostics.append(

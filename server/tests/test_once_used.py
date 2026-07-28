@@ -55,3 +55,10 @@ def test_example_test_lp_once_used_bound():
     text = (Path(__file__).resolve().parents[2] / "examples" / "test.lp").read_text()
     diags = [d for d in build_diagnostics(text, once_used=True) if "only once" in d.message]
     assert len(diags) <= 5
+
+
+def test_once_used_weak_constraint_message():
+    text = ":~ lonely(X). [1, X]"
+    diags = [d for d in build_diagnostics(text, once_used=True) if "only once" in d.message]
+    assert len(diags) == 1
+    assert "weak constraint" in diags[0].message

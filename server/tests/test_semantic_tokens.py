@@ -49,3 +49,11 @@ def test_semantic_tokens_distinguish_fact_rule_constraint_show():
 def test_semantic_tokens_empty_on_empty_document():
     tokens = build_semantic_tokens("")
     assert tokens.data == []
+
+
+def test_semantic_tokens_weak_maps_to_minimize_type():
+    text = ":~ penalty(X). [1, X]"
+    data = build_semantic_tokens(text).data
+    # One atom token: penalty — type index must be aspMinimize
+    minimize_idx = TOKEN_TYPES.index("aspMinimize")
+    assert minimize_idx in {data[i] for i in range(3, len(data), 5)}
