@@ -1,8 +1,9 @@
 % =============================================================================
 % ASP grammar tour — every construct recognized by asp_core2.lark
-% Note: some rules intentionally use free variables (e.g. eq(X) :- X = 0).
-% Clingo reports those as "unsafe"; add domain facts (bird/1, candidate/1, …)
-% for a runnable program.
+% Note: inequalities / relational comparisons alone leave variables unsafe
+% (e.g. neq(X) :- X != 0). Equality to a ground term (eq(X) :- X = 0) is safe
+% in Clingo; add domain facts (bird/1, candidate/1, …) for a richer runnable
+% program.
 % =============================================================================
 
 % --- comments (COMMENT: % to end of line) ------------------------------------
