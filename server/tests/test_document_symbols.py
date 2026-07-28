@@ -50,3 +50,13 @@ def test_document_symbols_role_order_fixed():
     # p has fact, rule_head, constraint — order must not be alpha
     p = next(s for s in build_document_symbols(text) if s.name == "p/1")
     assert [c.name for c in p.children] == ["fact", "rule_head", "constraint"]
+
+
+def test_document_symbols_weak_role_after_minimize():
+    text = (
+        "cost(a).\n"
+        "#minimize { 1, X : cost(X) }.\n"
+        ":~ cost(X). [1@1, X]\n"
+    )
+    cost = next(s for s in build_document_symbols(text) if s.name == "cost/1")
+    assert [c.name for c in cost.children] == ["fact", "minimize", "weak"]
