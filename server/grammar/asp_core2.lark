@@ -13,7 +13,13 @@ directive: "#const" IDENTIFIER "=" INT "." -> const_directive
 minimize_elem: term ("@" INT)? ("," term)* ":" body
 
 head: disjunction
+     | choice
+
 disjunction: literal (";" literal)*
+
+// Clingo choice: [lower] { elem ; elem ; ... } [upper]
+choice: INT? "{" choice_elem (";" choice_elem)* "}" INT?
+choice_elem: literal (":" body)?
 
 fact: head "."
 rule: head ":-" body "."
