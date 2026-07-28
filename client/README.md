@@ -24,7 +24,7 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 | **Hover**                    | Name, arity, occurrence counts; asp-lsp-style `%*…*%` docstrings; definition line + preceding comment                                                                                                           |
 | **Go to Definition**         | Jump to facts and rule heads (cross-file)                                                                                                                                                                       |
 | **Find References**          | All occurrences of a predicate in the pool                                                                                                                                                                      |
-| **Learner mode**             | Optional rule-order and missing-comment warnings, plus **Fix Order** quick fix (off by default)                                                                                                                 |
+| **Learner mode**             | Optional rule-order and missing-comment **Information** hints, plus **Fix Order** / **Add preceding comment** quick fixes (off by default)                                                                      |
 | **Code Cookbook**            | Browse working ASP patterns (Command Palette / editor menu) and insert at cursor or open as a new `.lp` file                                                                                                    |
 | **Snippets**                 | Typing templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints (distinct from the Cookbook)                                                                                    |
 
@@ -147,12 +147,72 @@ Without a formal docstring, hover still shows the **definition line** and any **
 
 ### Learner mode (`aspls.learnerMode`)
 
-When enabled, the language server warns about:
+When enabled, the language server reports **Information**-level hints (not Warnings) about:
 
 1. **Rule order** — recommended: constants → facts → choices → definitions → constraints → optimization → show
-2. **Missing preceding comments** — each statement should have a comment above it
+2. **Missing preceding comments** — each statement should have a `%` comment above it
 
-On rule-order warnings, use **Quick Fix → Fix Order** to rewrite the file into the recommended order (comments stay attached to their statements).
+#### Before / after — rule order
+
+**Before** (`#show` appears before facts):
+
+```asp
+#show bird/1.
+bird(tweety).
+```
+
+Hint: *Recommended order: move this facts before later categories … Quick Fix: Fix Order.*
+
+**After** (Quick Fix → **Fix Order**):
+
+```asp
+bird(tweety).
+
+#show bird/1.
+```
+
+#### Before / after — missing comment
+
+**Before:**
+
+```asp
+bird(tweety).
+```
+
+Hint: *Add a % comment above this statement … Quick Fix: Add preceding comment.*
+
+**After** (Quick Fix → **Add preceding comment**):
+
+```asp
+% Describe this statement
+bird(tweety).
+```
+
+---
+
+### onceUsed (`aspls.diagnostics.onceUsed`)
+
+Warns when a predicate appears only once as a **use** (rule body / constraint) — often a typo. Does **not** warn for:
+
+- lone definitions (fact / rule head) that are intentional output
+- predicates also referenced by `#show` / `#minimize` (directives count as a use)
+- `#show` / `#minimize` alone
+
+**Before** (noisy on a shown derived predicate):
+
+```asp
+flies(X) :- bird(X).
+bird(tweety).
+#show flies/1.
+```
+
+Older heuristic warned on `flies/1` even with `#show`.
+
+**After** (current heuristic): no onceUsed warning for `flies/1`. A lone body use still warns:
+
+```asp
+ok :- bird(X).   % bird/1 appears only once in a rule body — check for a typo or add a definition
+```
 
 ---
 
@@ -162,8 +222,8 @@ On rule-order warnings, use **Quick Fix → Fix Order** to rewrite the file into
 | ------------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `aspls.pythonPath`             | `""`                | Path to Python 3. Empty = auto-detect `python3` / `python`.                                                       |
 | `aspls.rainbowPredicates`      | `true`              | Rainbow underline per predicate name (role colors stay from semantic highlighting).                               |
-| `aspls.diagnostics.onceUsed`   | `true`              | Warn when a predicate appears only once (excluding `#show` / `#minimize`).                                        |
-| `aspls.learnerMode`            | `false`             | Learner diagnostics: recommended construct order and missing preceding comments; enables **Fix Order** quick fix. |
+| `aspls.diagnostics.onceUsed`   | `true`              | Warn when a predicate appears only once as a use (body/constraint); skips lone definitions and `#show`/`#minimize`-linked predicates. |
+| `aspls.learnerMode`            | `false`             | Learner Information hints: construct order + missing comments; enables **Fix Order** and **Add preceding comment** quick fixes. |
 | `aspls.clingo.usePath`         | `false`             | Use PATH / `aspls.clingo.path` instead of bundled WASM.                                                           |
 | `aspls.clingo.path`            | `""`                | Optional absolute path to the Clingo binary.                                                                      |
 | `aspls.clingo.models`          | `1`                 | Default model count for config runs (`0` = all).                                                                  |

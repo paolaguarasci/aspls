@@ -9,7 +9,7 @@ from workspace_index import resolve_pool
 
 
 def _once_used_msgs(diags):
-    return [d.message for d in diags if "used only once" in d.message]
+    return [d.message for d in diags if "only once" in d.message]
 
 
 def test_is_config_file_change_matches_basename():
@@ -55,8 +55,9 @@ def test_config_file_change_realigns_once_used(tmp_path: Path, monkeypatch):
     root = tmp_path
     main = root / "main.lp"
     other = root / "other.lp"
-    main.write_text("bird(tweety).\n", encoding="utf-8")
-    other.write_text("flies(X) :- bird(X).\n", encoding="utf-8")
+    # Lone body use → onceUsed when pool is file-local; silent when other defines bird/1.
+    main.write_text("ok :- bird(X).\n", encoding="utf-8")
+    other.write_text("bird(tweety).\n", encoding="utf-8")
     config = root / "aspls.clingo.json"
     config.write_text(json.dumps({"additionalFiles": []}), encoding="utf-8")
 
