@@ -84,6 +84,15 @@ exact :- N = #count{ X : chosen(X) }, M = #count{ X : candidate(X) }, N = M.
 :- #count{ X : chosen(X) } < 1.
 :- not ok.
 
+% --- choice rules -----------------------------------------------------------
+% unbounded / bounded; elements: literal or literal : body; ';' separators
+candidate(1).
+candidate(2).
+1 { chosen(X) : candidate(X) } 1.
+{ a; b }.
+{ selected(X) : candidate(X) }.
+1 { picked(X) : candidate(X) } 1 :- ok.
+
 % --- mixed rule body: literal, not, comparison, aggregate -------------------
 valid(X) :-
     candidate(X),

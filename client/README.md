@@ -30,6 +30,26 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 
 ---
 
+## Known limits (ASP grammar subset)
+
+The language server parses a growing **subset** of Clingo / ASP-Core-2. Unsupported constructs get syntax diagnostics even when Clingo itself would accept them.
+
+| Construct | Status |
+|-----------|--------|
+| Facts, rules, integrity constraints | Supported |
+| Default negation (`not`) | Supported |
+| Comparisons and `#count` / `#sum` / `#max` / `#min` | Supported |
+| `#const`, `#show`, `#minimize` | Supported |
+| Choice rules `{ … }` (optional INT bounds, `literal` / `literal : body`) | Supported |
+| Weak constraints (`:~ … . [w@p, …]`) | Not yet |
+| `#maximize` | Not yet |
+| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet |
+| VARIABLE bounds on choice (`L { … } U` with variables) | Not yet |
+
+Snippets and the Code Cookbook may show patterns ahead of the parser; prefer this table when diagnostics disagree with Clingo.
+
+---
+
 ## Quick start
 
 1. Install **aspls** from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=pingflood.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls) (Cursor / VSCodium).
