@@ -41,7 +41,7 @@ The language server parses a growing **subset** of Clingo / ASP-Core-2. Unsuppor
 | Comparisons and `#count` / `#sum` / `#max` / `#min` | Supported |
 | `#const`, `#show`, `#minimize` | Supported |
 | Choice rules `{ … }` (optional INT bounds, `literal` / `literal : body`) | Supported |
-| Weak constraints (`:~ … . [w@p, …]`) | Not yet |
+| Weak constraints (`:~ … . [w@p, …]`) | Supported |
 | `#maximize` | Not yet |
 | `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet |
 | VARIABLE bounds on choice (`L { … } U` with variables) | Not yet |

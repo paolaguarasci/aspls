@@ -91,3 +91,18 @@ def test_weak_constraint_syntax_error_reports_line():
     assert len(result.errors) >= 1
     # EOF after unclosed '[' — Lark may report line -1; assert bracket error, not unknown :~
     assert "RSQB" in result.errors[0].message
+
+
+def test_cookbook_choice_and_weak_recipes_parse():
+    """Recipes that previously red-squiggled must parse clean."""
+    samples = [
+        # choice-exact-one (body without surrounding comments)
+        "candidate(1).\ncandidate(2).\n1 { chosen(X) : candidate(X) } 1.\n",
+        # constraints-integrity
+        "{ a; b }.\n:- a, b.\n",
+        # optimization-weak
+        "item(a).\n{ selected(X) : item(X) }.\n:~ selected(X), expensive(X). [1@1, X]\n",
+    ]
+    for text in samples:
+        result = parse_document(text)
+        assert result.errors == [], text
