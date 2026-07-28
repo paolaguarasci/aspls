@@ -8,7 +8,7 @@ from constructs import (
 from parser import parse_document
 from clingo_check import check_with_clingo
 from safety import find_unsafe_variables
-from symbols import DIRECTIVE_ROLES, build_symbol_index
+from symbols import DEFINING_ROLES, DIRECTIVE_ROLES, build_symbol_index
 
 CODE_RULE_ORDER = "learner.ruleOrder"
 CODE_MISSING_COMMENT = "learner.missingComment"
@@ -28,11 +28,11 @@ def _learner_diagnostics(text: str) -> list[Diagnostic]:
                     end=Position(line=line, character=max(len(c.text.split("\n")[0]), 1)),
                 ),
                 message=(
-                    f"Learner mode: {label} appear out of the recommended order "
+                    f"Recommended order: move this {label} before later categories "
                     f"(constants → facts → choices → definitions → constraints → "
-                    f"optimization → show)"
+                    f"optimization → show). Quick Fix: Fix Order."
                 ),
-                severity=DiagnosticSeverity.Warning,
+                severity=DiagnosticSeverity.Information,
                 source="aspls",
                 code=CODE_RULE_ORDER,
             )
@@ -51,8 +51,11 @@ def _learner_diagnostics(text: str) -> list[Diagnostic]:
                     start=Position(line=line, character=0),
                     end=Position(line=line, character=max(len(first), 1)),
                 ),
-                message="Learner mode: statement is missing a preceding comment",
-                severity=DiagnosticSeverity.Warning,
+                message=(
+                    "Add a % comment above this statement to explain it. "
+                    "Quick Fix: Add preceding comment."
+                ),
+                severity=DiagnosticSeverity.Information,
                 source="aspls",
                 code=CODE_MISSING_COMMENT,
             )
@@ -111,10 +114,16 @@ def build_diagnostics(
         if once_used:
             symbol_index = index if index is not None else build_symbol_index(result.tree)
             for (name, arity), occurrences in symbol_index.items():
-                counted = [o for o in occurrences if o.role not in DIRECTIVE_ROLES]
-                if len(counted) != 1:
+                non_dir = [o for o in occurrences if o.role not in DIRECTIVE_ROLES]
+                if len(non_dir) != 1:
                     continue
-                occ = counted[0]
+                # #show / #minimize counts as a use alongside the sole occurrence.
+                if any(o.role in DIRECTIVE_ROLES for o in occurrences):
+                    continue
+                occ = non_dir[0]
+                # Lone definition (fact / rule head) — suppress didactic false positives.
+                if occ.role in DEFINING_ROLES:
+                    continue
                 occ_uri = getattr(occ, "uri", None)
                 if (
                     document_uri is not None
@@ -124,13 +133,22 @@ def build_diagnostics(
                     continue
                 line = max(occ.line - 1, 0)
                 column = max(occ.column - 1, 0)
+                if occ.role == "rule_body":
+                    where = "in a rule body"
+                elif occ.role == "constraint":
+                    where = "in a constraint"
+                else:
+                    where = "as a use"
                 diagnostics.append(
                     Diagnostic(
                         range=Range(
                             start=Position(line=line, character=column),
                             end=Position(line=line, character=column + len(occ.name)),
                         ),
-                        message=f"Predicate {name}/{arity} is used only once",
+                        message=(
+                            f"Predicate {name}/{arity} appears only once {where} — "
+                            f"check for a typo or add a definition"
+                        ),
                         severity=DiagnosticSeverity.Warning,
                         source="aspls",
                     )
