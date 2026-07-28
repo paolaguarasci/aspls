@@ -156,6 +156,19 @@ Semantic highlighting for ASP is enabled by default (`editor.semanticHighlightin
 
 ---
 
+## Release checklist (stability B/D)
+
+Before cutting a Marketplace / Open VSX build after pool or runner changes:
+
+1. `npm test` in `client/` (includes B/D regression + WASM/PATH smoke).
+2. `pytest` in `server/` (includes `additionalFiles=[]` pool regression).
+3. Manual: set `additionalFiles: []` in `aspls.clingo.json` → onceUsed / hover stay file-local; remove the key → workspace pool returns.
+4. Manual: add a missing path under `additionalFiles` → Solver shows preflight error (no hang).
+5. Manual: WASM + `customArgs: "--outf=2"` → capability warning; enable `usePath` → warning gone.
+6. Manual: edit `aspls.clingo.json` while a `.lp` is open → diagnostics refresh without reload window.
+
+---
+
 ## Feedback
 
 Issues and contributions: [github.com/paolaguarasci/aspls](https://github.com/paolaguarasci/aspls).

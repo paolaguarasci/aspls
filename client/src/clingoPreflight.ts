@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 import type {
   ClingoBackend,
   ClingoRunFailure,
@@ -98,7 +99,13 @@ export function preflightClingoRun(
 
   if (request.usePath) {
     const configured = request.clingoPath.trim();
-    if (configured && !fs.existsSync(configured)) {
+    // Only validate absolute / explicit filesystem paths. Bare names like
+    // `clingo` are resolved from PATH later by findClingoBinary.
+    if (
+      configured &&
+      (path.isAbsolute(configured) || configured.includes("/") || configured.includes("\\")) &&
+      !fs.existsSync(configured)
+    ) {
       return failure(request, formatInvalidClingoPathError(configured), {
         binary: configured,
       });

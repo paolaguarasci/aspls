@@ -107,11 +107,15 @@ function testInvalidConfiguredPath(): void {
 
 function testEmptyConfiguredPathSkipsPathExistsCheck(): void {
   // Binary discovery happens later in the PATH runner; preflight must not fail
-  // when clingoPath is empty (look up `clingo` on PATH at run time).
-  const outcome = preflightClingoRun(
-    baseRequest({ usePath: true, clingoPath: "" }),
+  // when clingoPath is empty or a bare command name (looked up on PATH).
+  assert.strictEqual(
+    preflightClingoRun(baseRequest({ usePath: true, clingoPath: "" })),
+    null,
   );
-  assert.strictEqual(outcome, null);
+  assert.strictEqual(
+    preflightClingoRun(baseRequest({ usePath: true, clingoPath: "clingo" })),
+    null,
+  );
 }
 
 function testFormatMissingHelpers(): void {
