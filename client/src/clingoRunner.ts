@@ -8,6 +8,10 @@ import {
   parseClingoJsonStdout,
   type ClingoJsonResult,
 } from "./clingoResultParse";
+import {
+  buildPreflightCommandSummary,
+  preflightClingoRun,
+} from "./clingoPreflight";
 import type { ClingoRunOutcome, ClingoRunRequest } from "./clingoTypes";
 
 const execFileAsync = promisify(execFile);
@@ -78,19 +82,8 @@ async function runPathClingo(
       backend: "path",
       error:
         "Clingo binary not found on PATH. Install Clingo or disable 'aspls.clingo.usePath' to use the bundled WASM solver.",
-      commandSummary: "clingo (not found)",
+      commandSummary: buildPreflightCommandSummary(request),
     };
-  }
-
-  for (const file of request.additionalFiles) {
-    if (!fs.existsSync(file)) {
-      return {
-        ok: false,
-        backend: "path",
-        error: `Additional file not found: ${file}`,
-        commandSummary: binary,
-      };
-    }
   }
 
   // Prefer the on-disk primary file so Clingo reports real paths in errors.
@@ -111,7 +104,12 @@ async function runPathClingo(
     request.threads,
     request.customArgs,
   );
-  const commandSummary = `${binary} ${argv
+  const displayArgv = [
+    path.basename(request.primaryFile),
+    ...request.additionalFiles.map((f) => path.basename(f)),
+    ...argv.slice(files.length),
+  ];
+  const commandSummary = `${buildPreflightCommandSummary(request, { binary })} · ${displayArgv
     .map((a) => (a.includes(" ") ? `"${a}"` : a))
     .join(" ")}`;
 
@@ -169,7 +167,7 @@ async function runPathClingo(
 async function runWasmClingo(
   request: ClingoRunRequest,
 ): Promise<ClingoRunOutcome> {
-  const commandSummary = `clingo-wasm (models=${request.models})`;
+  const commandSummary = buildPreflightCommandSummary(request);
   let program: string;
   try {
     program = buildProgramWithIncludes(
@@ -224,6 +222,10 @@ async function runWasmClingo(
 export async function runClingo(
   request: ClingoRunRequest,
 ): Promise<ClingoRunOutcome> {
+  const blocked = preflightClingoRun(request);
+  if (blocked) {
+    return blocked;
+  }
   if (request.usePath) {
     return runPathClingo(request);
   }

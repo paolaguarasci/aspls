@@ -86,6 +86,8 @@ Other `aspls.clingo.*` settings (`models`, `threads`, `customArgs`) still apply 
 
 You can also edit **models**, **Use native Clingo** / **path**, and **additional files** from the Solver sidebar Controls section. Models and additional files write to the workspace config file; path settings write to workspace Settings. Threads and `customArgs` remain Settings / JSON only.
 
+Before every run, aspls **preflights** the request: missing `additionalFiles`, invalid `models`, and a configured but missing `aspls.clingo.path` fail immediately in the Solver panel with an actionable message and a command summary that shows the effective backend (`WASM` or `PATH`).
+
 ---
 
 ## Docstrings & learner mode
