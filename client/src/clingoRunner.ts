@@ -9,9 +9,9 @@ import {
 } from "./clingoResultParse";
 import {
   buildPreflightCommandSummary,
+  collectPreflightWasmPathSuggestions,
   preflightClingoRun,
 } from "./clingoPreflight";
-import { collectBackendCapabilityWarnings } from "./clingoCapabilities";
 import { expandIncludesInProgram } from "./clingoIncludes";
 import type { ClingoRunOutcome, ClingoRunRequest } from "./clingoTypes";
 
@@ -201,10 +201,7 @@ function attachCapabilityWarnings(
   request: ClingoRunRequest,
   outcome: ClingoRunOutcome,
 ): ClingoRunOutcome {
-  const caps = collectBackendCapabilityWarnings({
-    usePath: request.usePath,
-    customArgs: request.customArgs,
-  });
+  const caps = collectPreflightWasmPathSuggestions(request);
   if (caps.length === 0) {
     return outcome;
   }

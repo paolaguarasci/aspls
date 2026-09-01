@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { collectBackendCapabilityWarnings } from "./clingoCapabilities";
 import type {
   ClingoBackend,
   ClingoRunFailure,
@@ -113,4 +114,18 @@ export function preflightClingoRun(
   }
 
   return null;
+}
+
+/**
+ * Non-blocking WASM → PATH suggestions before invoking the solver.
+ * Covers fragile customArgs (--outf, --stats, …) and threads > 1.
+ */
+export function collectPreflightWasmPathSuggestions(
+  request: ClingoRunRequest,
+): string[] {
+  return collectBackendCapabilityWarnings({
+    usePath: request.usePath,
+    customArgs: request.customArgs,
+    threads: request.threads,
+  });
 }

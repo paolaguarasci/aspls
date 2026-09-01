@@ -111,14 +111,16 @@ async function testRunClingoHonoursPreflight(): Promise<void> {
   assert.ok(outcome.error.startsWith(PREFLIGHT_PREFIX.missingFile));
 }
 
-/** D2: fragile WASM args produce capability warnings. */
+/** D2: fragile WASM args and threads produce WASM → PATH suggestions. */
 function testFragileWasmWarning(): void {
   const warnings = collectBackendCapabilityWarnings({
     usePath: false,
     customArgs: ["--outf=2", "-q"],
+    threads: 4,
   });
   assert.strictEqual(warnings.length, 1);
   assert.ok(warnings[0].includes("--outf=2"));
+  assert.ok(warnings[0].includes("threads=4"));
   assert.ok(warnings[0].includes("usePath"));
 }
 

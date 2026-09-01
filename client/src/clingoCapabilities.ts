@@ -124,28 +124,40 @@ export function findFragileWasmArgs(customArgs: string[]): string[] {
 
 export function formatWasmFragileArgsWarning(fragileArgs: string[]): string {
   const listed = fragileArgs.map((a) => `  - ${a}`).join("\n");
+  return formatWasmToPathSuggestion(listed);
+}
+
+export function formatWasmToPathSuggestion(listedItems: string): string {
   return (
-    "WASM capability warning: these customArgs are unreliable or ignored with the bundled solver:\n" +
-    `${listed}\n` +
+    "WASM capability warning: these settings need native Clingo (enable aspls.clingo.usePath):\n" +
+    `${listedItems}\n` +
     "Fix: enable aspls.clingo.usePath (and install Clingo) for full CLI support, " +
-    "or remove these flags from aspls.clingo.customArgs / aspls.clingo.json."
+    "or adjust aspls.clingo.threads / aspls.clingo.customArgs / aspls.clingo.json."
   );
 }
 
 /**
- * Non-blocking warnings for the active backend. Empty when PATH or when
- * customArgs look safe for WASM.
+ * Non-blocking WASM → PATH suggestions for the active backend. Empty when PATH
+ * or when customArgs and threads look safe for WASM.
  */
 export function collectBackendCapabilityWarnings(opts: {
   usePath: boolean;
   customArgs: string[];
+  threads?: number;
 }): string[] {
   if (opts.usePath) {
     return [];
   }
+  const lines: string[] = [];
   const fragile = findFragileWasmArgs(opts.customArgs);
-  if (fragile.length === 0) {
+  for (const arg of fragile) {
+    lines.push(`  - ${arg} (unreliable customArg)`);
+  }
+  if (opts.threads !== undefined && opts.threads > 1) {
+    lines.push(`  - threads=${opts.threads} (limited under WASM)`);
+  }
+  if (lines.length === 0) {
     return [];
   }
-  return [formatWasmFragileArgsWarning(fragile)];
+  return [formatWasmToPathSuggestion(lines.join("\n"))];
 }
