@@ -2,7 +2,7 @@
     "name": "aspls",
     "displayName": "aspls — Answer Set Programming (Clingo)",
     "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results sidebar, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "publisher": "pingflood",
     "author": "Paola Guarasci",
     "license": "MIT",
@@ -317,7 +317,6 @@
                     "default": false,
                     "description": "Enable learner Information hints: recommended rule order and missing preceding comments, plus Fix Order and Add preceding comment quick fixes. Off by default so power users are not noisy."
                 },
-
                 "aspls.clingo.usePath": {
                     "type": "boolean",
                     "default": false,

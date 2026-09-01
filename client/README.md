@@ -34,17 +34,17 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and othe
 
 The language server parses a growing **subset** of Clingo / ASP-Core-2. Unsupported constructs get syntax diagnostics even when Clingo itself would accept them.
 
-| Construct | Status |
-|-----------|--------|
-| Facts, rules, integrity constraints | Supported |
-| Default negation (`not`) | Supported |
-| Comparisons and `#count` / `#sum` / `#max` / `#min` | Supported |
-| `#const`, `#show`, `#minimize` | Supported |
+| Construct                                                                | Status    |
+| ------------------------------------------------------------------------ | --------- |
+| Facts, rules, integrity constraints                                      | Supported |
+| Default negation (`not`)                                                 | Supported |
+| Comparisons and `#count` / `#sum` / `#max` / `#min`                      | Supported |
+| `#const`, `#show`, `#minimize`                                           | Supported |
 | Choice rules `{ … }` (optional INT bounds, `literal` / `literal : body`) | Supported |
-| Weak constraints (`:~ … . [w@p, …]`) | Supported |
-| `#maximize` | Not yet |
-| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet |
-| VARIABLE bounds on choice (`L { … } U` with variables) | Supported |
+| Weak constraints (`:~ … . [w@p, …]`)                                     | Supported |
+| `#maximize`                                                              | Not yet   |
+| `#include`, `#external`, `#heuristic`, `#script`, `#program`             | Not yet   |
+| VARIABLE bounds on choice (`L { … } U` with variables)                   | Supported |
 
 Snippets and the Code Cookbook may show patterns ahead of the parser; prefer this table when diagnostics disagree with Clingo.
 
@@ -110,15 +110,15 @@ Before every run, aspls **preflights** the request: missing `additionalFiles`, i
 
 ### Capability matrix (WASM vs PATH)
 
-| Feature | Bundled WASM | Native PATH |
-|---------|--------------|-------------|
-| Basic programs / answer sets | yes | yes |
-| Multi-file via `additionalFiles` | limited (concatenated sources) | yes (real multi-file) |
-| models / `-n` (via aspls UI) | yes | yes |
-| `--const` / `-c` | yes | yes |
-| Threads (`-t`) | limited | yes |
-| Output control (`--outf`, `-q`, `--stats`, `--verbose`) | no | yes |
-| Advanced CLI (`--parallel-mode`, `--configuration`, Lua, limits) | no | yes |
+| Feature                                                          | Bundled WASM                   | Native PATH           |
+| ---------------------------------------------------------------- | ------------------------------ | --------------------- |
+| Basic programs / answer sets                                     | yes                            | yes                   |
+| Multi-file via `additionalFiles`                                 | limited (concatenated sources) | yes (real multi-file) |
+| models / `-n` (via aspls UI)                                     | yes                            | yes                   |
+| `--const` / `-c`                                                 | yes                            | yes                   |
+| Threads (`-t`)                                                   | limited                        | yes                   |
+| Output control (`--outf`, `-q`, `--stats`, `--verbose`)          | no                             | yes                   |
+| Advanced CLI (`--parallel-mode`, `--configuration`, Lua, limits) | no                             | yes                   |
 
 When WASM is active and `customArgs` include fragile flags, the Solver panel shows a **WASM capability warning** and suggests enabling `aspls.clingo.usePath`.
 
@@ -218,19 +218,19 @@ ok :- bird(X).   % bird/1 appears only once in a rule body — check for a typo 
 
 ## Settings
 
-| Setting                        | Default             | Description                                                                                                       |
-| ------------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `aspls.pythonPath`             | `""`                | Path to Python 3. Empty = auto-detect `python3` / `python`.                                                       |
-| `aspls.rainbowPredicates`      | `true`              | Rainbow underline per predicate name (role colors stay from semantic highlighting).                               |
+| Setting                        | Default             | Description                                                                                                                           |
+| ------------------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `aspls.pythonPath`             | `""`                | Path to Python 3. Empty = auto-detect `python3` / `python`.                                                                           |
+| `aspls.rainbowPredicates`      | `true`              | Rainbow underline per predicate name (role colors stay from semantic highlighting).                                                   |
 | `aspls.diagnostics.onceUsed`   | `true`              | Warn when a predicate appears only once as a use (body/constraint); skips lone definitions and `#show`/`#minimize`-linked predicates. |
-| `aspls.learnerMode`            | `false`             | Learner Information hints: construct order + missing comments; enables **Fix Order** and **Add preceding comment** quick fixes. |
-| `aspls.clingo.usePath`         | `false`             | Use PATH / `aspls.clingo.path` instead of bundled WASM.                                                           |
-| `aspls.clingo.path`            | `""`                | Optional absolute path to the Clingo binary.                                                                      |
-| `aspls.clingo.models`          | `1`                 | Default model count for config runs (`0` = all).                                                                  |
-| `aspls.clingo.threads`         | `1`                 | Clingo `-t` thread count.                                                                                         |
-| `aspls.clingo.customArgs`      | `""`                | Extra CLI args (quoted tokens supported).                                                                         |
-| `aspls.clingo.additionalFiles` | `[]`                | **Deprecated.** Migrated into `aspls.clingo.json` on init/ensure only; not used at runtime. |
-| `aspls.clingo.configFile`      | `aspls.clingo.json` | Workspace config file name.                                                                                       |
+| `aspls.learnerMode`            | `false`             | Learner Information hints: construct order + missing comments; enables **Fix Order** and **Add preceding comment** quick fixes.       |
+| `aspls.clingo.usePath`         | `false`             | Use PATH / `aspls.clingo.path` instead of bundled WASM.                                                                               |
+| `aspls.clingo.path`            | `""`                | Optional absolute path to the Clingo binary.                                                                                          |
+| `aspls.clingo.models`          | `1`                 | Default model count for config runs (`0` = all).                                                                                      |
+| `aspls.clingo.threads`         | `1`                 | Clingo `-t` thread count.                                                                                                             |
+| `aspls.clingo.customArgs`      | `""`                | Extra CLI args (quoted tokens supported).                                                                                             |
+| `aspls.clingo.additionalFiles` | `[]`                | **Deprecated.** Migrated into `aspls.clingo.json` on init/ensure only; not used at runtime.                                           |
+| `aspls.clingo.configFile`      | `aspls.clingo.json` | Workspace config file name.                                                                                                           |
 
 Semantic highlighting for ASP is enabled by default (`editor.semanticHighlighting.enabled` for `[asp]`).
 
