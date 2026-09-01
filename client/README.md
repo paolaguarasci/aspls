@@ -63,11 +63,10 @@ The language server parses a growing **subset** of Clingo / ASP-Core-2. Unsuppor
 | Facts, rules, integrity constraints                          | Supported |
 | Default negation (`not`)                                     | Supported |
 | Comparisons and `#count` / `#sum` / `#max` / `#min`          | Supported |
-| `#const`, `#show`, `#minimize`                               | Supported |
+| `#const`, `#show`, `#minimize`, `#maximize`                    | Supported |
 | Choice rules `{ … }`                                         | Supported |
 | Weak constraints (`:~ … . [w@p, …]`)                         | Supported |
 | `#include`, `#external`, `#heuristic`, `#script`, `#program` | Supported |
-| `#maximize`                                                  | Not yet   |
 | Variable bounds on choice                                    | Supported |
 
 Snippets and the Code Cookbook may show patterns ahead of the parser; prefer this table when diagnostics disagree with Clingo.

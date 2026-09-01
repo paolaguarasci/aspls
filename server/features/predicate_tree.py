@@ -4,7 +4,7 @@ from lsprotocol.types import DocumentSymbol, Position, Range, SymbolKind
 
 from symbols import DEFINING_ROLES, Occurrence
 
-ROLE_ORDER = ("fact", "rule_head", "rule_body", "constraint", "show", "minimize", "weak")
+ROLE_ORDER = ("fact", "rule_head", "rule_body", "constraint", "show", "minimize", "maximize", "weak")
 
 
 def _name_range(line: int, column: int, name: str) -> Range:

@@ -117,7 +117,7 @@ def build_diagnostics(
                 non_dir = [o for o in occurrences if o.role not in DIRECTIVE_ROLES]
                 if len(non_dir) != 1:
                     continue
-                # #show / #minimize counts as a use alongside the sole occurrence.
+                # #show / #minimize / #maximize counts as a use alongside the sole occurrence.
                 if any(o.role in DIRECTIVE_ROLES for o in occurrences):
                     continue
                 occ = non_dir[0]

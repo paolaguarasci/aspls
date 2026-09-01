@@ -173,12 +173,11 @@ The LSP parses a growing **subset** of Clingo / ASP-Core-2. Unsupported construc
 | Facts, rules, integrity constraints | Supported |
 | Default negation (`not`) | Supported |
 | Comparisons, `#count` / `#sum` / `#max` / `#min` | Supported |
-| `#const`, `#show`, `#minimize` | Supported |
+| `#const`, `#show`, `#minimize`, `#maximize` | Supported |
 | Choice rules `{ … }` | Supported |
 | Weak constraints (`:~ … . [w@p, …]`) | Supported |
 | Variable bounds on choice | Supported |
-| `#maximize` | Not yet |
-| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet |
+| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Supported |
 
 Prefer this table when diagnostics disagree with Clingo. Snippets and the Cookbook may preview patterns ahead of the parser.
 

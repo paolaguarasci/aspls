@@ -91,15 +91,15 @@ def test_parses_include_directive():
     assert result.tree is not None
 
 
-def test_parses_external_directive():
-    text = (FIXTURES / "external_directive.lp").read_text()
+def test_parses_minimize_directive():
+    text = (FIXTURES / "minimize_directive.lp").read_text()
     result = parse_document(text)
     assert result.errors == []
     assert result.tree is not None
 
 
-def test_parses_minimize_directive():
-    text = (FIXTURES / "minimize_directive.lp").read_text()
+def test_parses_maximize_directive():
+    text = (FIXTURES / "maximize_directive.lp").read_text()
     result = parse_document(text)
     assert result.errors == []
     assert result.tree is not None
@@ -142,6 +142,13 @@ fact(x).
 
 def test_parses_aggregates():
     text = (FIXTURES / "aggregates.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
+def test_parses_external_directive():
+    text = (FIXTURES / "external_directive.lp").read_text()
     result = parse_document(text)
     assert result.errors == []
     assert result.tree is not None

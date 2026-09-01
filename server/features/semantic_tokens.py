@@ -24,6 +24,7 @@ _ROLE_TO_TYPE = {
     "constraint": "aspConstraint",
     "show": "aspShow",
     "minimize": "aspMinimize",
+    "maximize": "aspMinimize",
     "weak": "aspMinimize",
 }
 
