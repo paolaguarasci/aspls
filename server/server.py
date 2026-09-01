@@ -14,6 +14,8 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DOCUMENT_SYMBOL,
     TEXT_DOCUMENT_DEFINITION,
     TEXT_DOCUMENT_REFERENCES,
+    TEXT_DOCUMENT_RENAME,
+    TEXT_DOCUMENT_PREPARE_RENAME,
     TEXT_DOCUMENT_COMPLETION,
     TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
@@ -29,6 +31,8 @@ from lsprotocol.types import (
     DocumentSymbolParams,
     DefinitionParams,
     ReferenceParams,
+    RenameParams,
+    PrepareRenameParams,
     CompletionParams,
     CodeActionParams,
     SemanticTokensParams,
@@ -41,6 +45,7 @@ from features.document_symbols import build_document_symbols
 from features.hover import build_hover_from_index
 from features.definition import build_definitions_from_index
 from features.references import build_references_from_index
+from features.rename import build_prepare_rename_from_index, build_rename_edit_from_index
 from features.completion import build_completions_from_index
 from features.code_actions import build_code_actions
 from features.semantic_tokens import (
@@ -400,6 +405,31 @@ def references(ls: LanguageServer, params: ReferenceParams):
         _merged_for(uri),
         params.position.line,
         params.position.character,
+        uri,
+        document_index=_document_index_for(uri),
+    )
+
+
+@server.feature(TEXT_DOCUMENT_PREPARE_RENAME)
+def prepare_rename(ls: LanguageServer, params: PrepareRenameParams):
+    uri = params.text_document.uri
+    return build_prepare_rename_from_index(
+        _merged_for(uri),
+        params.position.line,
+        params.position.character,
+        uri,
+        document_index=_document_index_for(uri),
+    )
+
+
+@server.feature(TEXT_DOCUMENT_RENAME)
+def rename(ls: LanguageServer, params: RenameParams):
+    uri = params.text_document.uri
+    return build_rename_edit_from_index(
+        _merged_for(uri),
+        params.position.line,
+        params.position.character,
+        params.new_name,
         uri,
         document_index=_document_index_for(uri),
     )
