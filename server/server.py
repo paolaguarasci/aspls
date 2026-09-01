@@ -18,6 +18,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_PREPARE_RENAME,
     TEXT_DOCUMENT_COMPLETION,
     TEXT_DOCUMENT_SIGNATURE_HELP,
+    TEXT_DOCUMENT_DOCUMENT_LINK,
     TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
@@ -36,6 +37,7 @@ from lsprotocol.types import (
     PrepareRenameParams,
     CompletionParams,
     SignatureHelpParams,
+    DocumentLinkParams,
     CodeActionParams,
     SemanticTokensParams,
     SemanticTokensLegend,
@@ -50,6 +52,7 @@ from features.references import build_references_from_index
 from features.rename import build_prepare_rename_from_index, build_rename_edit_from_index
 from features.completion import build_completions_from_index
 from features.signature_help import build_signature_help_from_index
+from features.document_links import build_document_links
 from features.code_actions import build_code_actions
 from features.semantic_tokens import (
     TOKEN_MODIFIERS,
@@ -456,6 +459,13 @@ def signature_help(ls: LanguageServer, params: SignatureHelpParams):
         document_index=_document_index_for(uri),
         source=doc.source,
     )
+
+
+@server.feature(TEXT_DOCUMENT_DOCUMENT_LINK)
+def document_link(ls: LanguageServer, params: DocumentLinkParams):
+    uri = params.text_document.uri
+    doc = ls.workspace.get_text_document(uri)
+    return build_document_links(doc.source, uri, WORKSPACE_ROOTS)
 
 
 @server.feature(TEXT_DOCUMENT_CODE_ACTION)
