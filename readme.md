@@ -110,6 +110,19 @@ flies(X) :- bird(X), not penguin(X).
 | `not penguin` | Negation in body — muted / italic |
 | `#show` | Directive — gold |
 
+## Tutorial examples
+
+Progressive tutorials under [`examples/`](examples/). Open a file in the editor and run Clingo from the title bar or **ASP → Solver**.
+
+| Tutorial | Path | Topic |
+| --- | --- | --- |
+| **1 — Basics** | [`examples/01_basics/birds.lp`](examples/01_basics/birds.lp) | Facts, rules, default negation |
+| **2 — Choice** | [`examples/02_choice/menu.lp`](examples/02_choice/menu.lp) | Choice rules (pick exactly one) |
+| **3 — Optimization** | [`examples/03_optimization/budget.lp`](examples/03_optimization/budget.lp) | `#minimize` and hard constraints |
+| **4 — Multi-file** | [`examples/04_multi_file/rules.lp`](examples/04_multi_file/rules.lp) | Pool via `aspls.clingo.json` + `additionalFiles` |
+
+Reference catalogs (grammar coverage, not tutorials): [`grammar_tour.lp`](examples/grammar_tour.lp), [`test.lp`](examples/test.lp).
+
 ## Clingo config
 
 Workspace file **`aspls.clingo.json`** (name configurable via `aspls.clingo.configFile`) is the **canonical source** for `additionalFiles`, `models`, `threads`, and `customArgs` for both the LSP and the runner.
@@ -214,7 +227,7 @@ Semantic highlighting for ASP is enabled by default for `[asp]`.
 | --- | --- |
 | [`client/`](client/) | Publishable VS Code extension (TypeScript) |
 | [`server/`](server/) | Python LSP server (pygls, Lark) |
-| [`examples/`](examples/) | Sample `.lp` files |
+| [`examples/`](examples/) | Tutorial projects + grammar reference files |
 | [`docs/images/`](docs/images/) | README illustrations |
 
 The extension README for Marketplace / Open VSX lives in [`client/README.md`](client/README.md).
