@@ -103,6 +103,25 @@ def test_external_role_is_a_using_role():
     assert "external" in USING_ROLES
 
 
+def test_indexes_heuristic_directive_atoms():
+    text = "#heuristic p(X) : q(X), not r(X). [10@1, level]\np(a). q(a)."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert ("p", 1) in index
+    assert index[("p", 1)][0].role == "heuristic"
+    assert ("q", 1) in index
+    roles = {o.role for o in index[("q", 1)]}
+    assert "heuristic" in roles
+    assert "fact" in roles
+    assert ("r", 1) in index
+    assert index[("r", 1)][0].role == "heuristic"
+
+
+def test_heuristic_role_is_a_using_role():
+    assert "heuristic" in USING_ROLES
+
+
 def test_weak_weight_terms_are_not_indexed_as_atoms():
     """Weight bracket has only terms (e.g. X) — no atom occurrences from weight."""
     text = ":~ q. [X]"

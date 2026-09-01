@@ -11,6 +11,11 @@ directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#minimize" "{" minimize_elem (";" minimize_elem)* "}" "." -> minimize_directive
          | "#include" STRING "." -> include_directive
          | "#external" literal (":" body)? "." -> external_directive
+         | "#heuristic" literal (":" body)? "." HEURISTIC_SUFFIX? -> heuristic_directive
+         | "#program" IDENTIFIER ("(" term ("," term)* ")")? "." -> program_directive
+
+// Optional [weight@priority, modifier] after #heuristic (tolerant inner text).
+HEURISTIC_SUFFIX: /\s*\[[^\]]*\]/
 
 // Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
 minimize_elem: term ("@" INT)? ("," term)* ":" body
