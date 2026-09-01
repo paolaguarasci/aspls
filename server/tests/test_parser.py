@@ -100,6 +100,13 @@ def test_weak_constraint_syntax_error_reports_line():
     assert "RSQB" in result.errors[0].message
 
 
+def test_parses_choice_rules_with_variable_bounds():
+    text = "size(N).\nlimit(M).\nN { chosen(X) : candidate(X) } M :- size(N), limit(M).\n"
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
 def test_cookbook_choice_and_weak_recipes_parse():
     """Recipes that previously red-squiggled must parse clean."""
     samples = [

@@ -16,6 +16,11 @@ item(pear).
 ok.
 1 { picked(X) : candidate(X) } 1 :- ok.
 
+% Variable bounds on choice (scheduling / assignment pattern)
+size(2).
+limit(3).
+N { chosen(X) : candidate(X) } M :- size(N), limit(M).
+
 #show chosen/1.
 #show selected/1.
 #show picked/1.

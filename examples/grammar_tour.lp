@@ -93,6 +93,9 @@ candidate(2).
 { a; b }.
 { selected(X) : candidate(X) }.
 1 { picked(X) : candidate(X) } 1 :- ok.
+size(2).
+limit(3).
+N { chosen(X) : candidate(X) } M :- size(N), limit(M).
 
 % --- mixed rule body: literal, not, comparison, aggregate -------------------
 valid(X) :-

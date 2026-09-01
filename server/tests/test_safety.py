@@ -140,3 +140,15 @@ def test_weak_negated_only_var_is_unsafe():
     findings = find_unsafe_variables(parse_document(":~ not p(X). [1, X]").tree)
     assert len(findings) == 1
     assert findings[0].variables == ["X"]
+
+
+def test_choice_variable_bounds_safe_when_bound_in_body():
+    text = "N { a; b } M :- size(N), limit(M)."
+    assert find_unsafe_variables(parse_document(text).tree) == []
+
+
+def test_choice_variable_bounds_unbound_is_unsafe():
+    text = "N { a } M :- pick."
+    findings = find_unsafe_variables(parse_document(text).tree)
+    assert len(findings) == 1
+    assert set(findings[0].variables) == {"M", "N"}
