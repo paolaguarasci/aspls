@@ -128,6 +128,16 @@ def test_parses_choice_rules_with_variable_bounds():
     assert result.tree is not None
 
 
+def test_tutorial_examples_parse():
+  """Every .lp file under examples/*/ must parse without errors."""
+  examples = Path(__file__).resolve().parents[2] / "examples"
+  paths = sorted(examples.glob("*/*.lp"))
+  assert paths, "expected tutorial .lp files under examples/*/"
+  for path in paths:
+    result = parse_document(path.read_text())
+    assert result.errors == [], f"{path.relative_to(examples.parent)}: {result.errors}"
+
+
 def test_cookbook_choice_and_weak_recipes_parse():
     """Recipes that previously red-squiggled must parse clean."""
     samples = [
