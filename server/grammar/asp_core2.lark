@@ -19,8 +19,8 @@ head: disjunction
 
 disjunction: literal (";" literal)*
 
-// Clingo choice: [lower] { elem ; elem ; ... } [upper]
-choice: INT? "{" choice_elem (";" choice_elem)* "}" INT?
+// Clingo choice: [lower] { elem ; elem ; ... } [upper] (bounds: INT | IDENTIFIER | VARIABLE)
+choice: range_bound? "{" choice_elem (";" choice_elem)* "}" range_bound?
 choice_elem: literal (":" body)?
 
 fact: head "."
