@@ -12,6 +12,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DID_CHANGE,
     TEXT_DOCUMENT_HOVER,
     TEXT_DOCUMENT_DOCUMENT_SYMBOL,
+    WORKSPACE_SYMBOL,
     TEXT_DOCUMENT_DEFINITION,
     TEXT_DOCUMENT_REFERENCES,
     TEXT_DOCUMENT_RENAME,
@@ -31,6 +32,7 @@ from lsprotocol.types import (
     DidChangeWorkspaceFoldersParams,
     HoverParams,
     DocumentSymbolParams,
+    WorkspaceSymbolParams,
     DefinitionParams,
     ReferenceParams,
     RenameParams,
@@ -60,6 +62,7 @@ from features.semantic_tokens import (
     build_semantic_tokens,
 )
 from features.workspace_predicates import build_workspace_predicate_nodes
+from features.workspace_symbols import build_workspace_symbols
 from workspace_index import WorkspaceIndex, resolve_pool
 
 server = LanguageServer("aspls", "v0.1.0")
@@ -367,6 +370,16 @@ def document_symbol(ls: LanguageServer, params: DocumentSymbolParams):
     uri = params.text_document.uri
     doc = ls.workspace.get_text_document(uri)
     return build_document_symbols(doc.source)
+
+
+@server.feature(WORKSPACE_SYMBOL)
+def workspace_symbol(ls: LanguageServer, params: WorkspaceSymbolParams):
+    _refresh_workspace_scan(ls)
+    for uri in DISCOVERED:
+        if not WORKSPACE.has(uri):
+            _ensure_indexed(uri)
+    merged = WORKSPACE.merged(DISCOVERED)
+    return build_workspace_symbols(merged, params.query)
 
 
 @server.feature("aspls/workspacePredicates")
