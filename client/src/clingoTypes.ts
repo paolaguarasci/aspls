@@ -16,6 +16,9 @@ export interface ClingoRunSuccess {
   modelCount: number;
   solver?: string;
   timeTotal?: number;
+  timeSolve?: number;
+  timeGrounding?: number;
+  atomCount?: number;
   warnings: string[];
   raw: string;
   commandSummary: string;
