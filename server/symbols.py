@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import lark
 
 DEFINING_ROLES = frozenset({"fact", "rule_head"})
-USING_ROLES = frozenset({"rule_body", "constraint", "minimize", "weak", "external"})
+USING_ROLES = frozenset({"rule_body", "constraint", "minimize", "weak", "external", "heuristic"})
 DIRECTIVE_ROLES = frozenset({"show", "minimize"})
 
 
@@ -168,6 +168,10 @@ def collect_occurrences(tree: lark.Tree | None) -> list[Occurrence]:
             _collect_atoms_with_role(statement.children[0], "external", occurrences)
             if len(statement.children) > 1:
                 _collect_atoms_with_role(statement.children[1], "external", occurrences)
+        elif statement.data == "heuristic_directive":
+            _collect_atoms_with_role(statement.children[0], "heuristic", occurrences)
+            if len(statement.children) > 1 and isinstance(statement.children[1], lark.Tree):
+                _collect_atoms_with_role(statement.children[1], "heuristic", occurrences)
         elif statement.data == "weak_constraint":
             # children: [body, weak_weight]
             _collect_atoms_with_role(statement.children[0], "weak", occurrences)
