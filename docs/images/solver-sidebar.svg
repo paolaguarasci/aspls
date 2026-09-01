@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-label="ASP Solver sidebar">
+  <rect width="720" height="360" rx="10" fill="#1e2430"/>
+  <rect x="0" y="0" width="520" height="360" fill="#181c24"/>
+  <rect x="0" y="0" width="520" height="32" fill="#252b38"/>
+  <text x="16" y="21" fill="#9aa8b8" font-family="ui-monospace, monospace" font-size="12">program.lp</text>
+
+  <text x="24" y="64" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="12">color</text>
+  <text x="72" y="64" fill="#e8edf4" font-family="ui-monospace, monospace" font-size="12">(red). </text>
+  <text x="24" y="88" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="12">color</text>
+  <text x="72" y="88" fill="#e8edf4" font-family="ui-monospace, monospace" font-size="12">(blue). </text>
+  <text x="24" y="112" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="12">color</text>
+  <text x="72" y="112" fill="#e8edf4" font-family="ui-monospace, monospace" font-size="12">(green).</text>
+
+  <rect x="520" y="0" width="200" height="360" fill="#252b38"/>
+  <text x="536" y="24" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="12" font-weight="600">ASP : Solver</text>
+
+  <rect x="536" y="40" width="72" height="26" rx="4" fill="#3d7dd8"/>
+  <text x="548" y="57" fill="#fff" font-family="system-ui, sans-serif" font-size="11">First</text>
+  <rect x="596" y="40" width="72" height="26" rx="4" fill="#3d4654"/>
+  <text x="608" y="57" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="11">All</text>
+
+  <text x="536" y="96" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="10" font-weight="600">ANSWER SETS</text>
+  <rect x="536" y="104" width="168" height="52" rx="4" fill="#1e2430" stroke="#3d4654"/>
+  <text x="544" y="122" fill="#7eb8f0" font-family="ui-monospace, monospace" font-size="10">Model 1</text>
+  <text x="544" y="140" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="10">color(red) color(blue)</text>
+
+  <text x="536" y="172" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="10" font-weight="600">CONTROLS</text>
+  <text x="536" y="192" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="10">models: 1</text>
+  <text x="536" y="210" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="10">backend: WASM</text>
+  <text x="536" y="228" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="10">additional: facts.lp</text>
+
+  <text x="536" y="260" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="10">Preflight � capability warnings</text>
+  <text x="536" y="276" fill="#6b7a8f" font-family="system-ui, sans-serif" font-size="9">Missing files fail fast with</text>
+  <text x="536" y="288" fill="#6b7a8f" font-family="system-ui, sans-serif" font-size="9">actionable Solver messages</text>
+</svg>
