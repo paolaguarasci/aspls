@@ -1,7 +1,10 @@
 import * as assert from "assert";
 import * as path from "path";
 import {
+  asConstantsArray,
   asStringArray,
+  buildClingoCustomArgs,
+  constantsToArgv,
   dedupePaths,
   isValidModels,
   mergeClingoFileConfig,
@@ -26,16 +29,45 @@ function testMergeClingoFileConfig(): void {
     models: 0,
     threads: 1,
     customArgs: "",
+    constants: [],
     additionalFiles: ["a.lp"],
   };
   const merged = mergeClingoFileConfig(base, {
     models: 5,
     additionalFiles: ["b.lp"],
+    constants: [{ name: "n", value: "3" }],
   });
   assert.strictEqual(merged.models, 5);
   assert.deepStrictEqual(merged.additionalFiles, ["b.lp"]);
+  assert.deepStrictEqual(merged.constants, [{ name: "n", value: "3" }]);
   assert.strictEqual(merged.threads, 1);
   assert.strictEqual(merged.customArgs, "");
+}
+
+function testConstantsHelpers(): void {
+  assert.deepStrictEqual(
+    constantsToArgv([
+      { name: "n", value: "3" },
+      { name: "width", value: "2" },
+    ]),
+    ["-c", "n=3", "-c", "width=2"],
+  );
+  assert.deepStrictEqual(constantsToArgv([{ name: "  ", value: "1" }]), []);
+  assert.deepStrictEqual(
+    buildClingoCustomArgs({
+      constants: [{ name: "n", value: "1" }],
+      customArgs: "--stats",
+    }),
+    ["-c", "n=1", "--stats"],
+  );
+  assert.deepStrictEqual(
+    asConstantsArray([
+      { name: "n", value: "3" },
+      { name: 1, value: "x" },
+      null,
+    ]),
+    [{ name: "n", value: "3" }],
+  );
 }
 
 function testToWorkspaceRelativePath(): void {
@@ -145,6 +177,7 @@ function testAsStringArray(): void {
 function main(): void {
   testIsValidModels();
   testMergeClingoFileConfig();
+  testConstantsHelpers();
   testToWorkspaceRelativePath();
   testDedupeAndRemove();
   testResolvePool();

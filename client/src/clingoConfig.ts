@@ -3,6 +3,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import {
   DEFAULT_CONFIG_FILE,
+  asConstantsArray,
   asStringArray,
   formatClingoConfigFile,
   isValidModels,
@@ -10,6 +11,7 @@ import {
   resolveConfigAdditionalFiles,
   SAMPLE_CLINGO_CONFIG,
   splitCustomArgs,
+  type ClingoConstant,
   type ClingoFileSeed,
 } from "./clingoConfigCore";
 import type { ClingoResolvedConfig } from "./clingoTypes";
@@ -20,6 +22,7 @@ interface FileConfig {
   models?: number;
   threads?: number;
   customArgs?: string;
+  constants?: unknown;
   additionalFiles?: string[];
 }
 
@@ -71,6 +74,7 @@ function clingoSettingsSeed(): ClingoFileSeed {
     models: cfg.get<number>("clingo.models", 1),
     threads: cfg.get<number>("clingo.threads", 1),
     customArgs: cfg.get<string>("clingo.customArgs", "") ?? "",
+    constants: [],
     additionalFiles: asStringArray(cfg.get("clingo.additionalFiles", [])),
   };
 }
@@ -103,6 +107,7 @@ export function resolveClingoConfig(options?: {
     threads: file?.threads ?? cfg.get<number>("clingo.threads", 1),
     customArgs:
       file?.customArgs ?? cfg.get<string>("clingo.customArgs", "") ?? "",
+    constants: asConstantsArray(file?.constants),
     additionalFiles,
     additionalFilesExplicit,
     usePath: cfg.get<boolean>("clingo.usePath", false),
@@ -193,6 +198,7 @@ export async function ensureClingoConfigFile(
 export async function patchClingoConfigFile(patch: {
   models?: number;
   additionalFiles?: string[];
+  constants?: ClingoConstant[];
 }): Promise<void> {
   if (patch.models !== undefined && !isValidModels(patch.models)) {
     throw new Error(`Invalid models value: ${String(patch.models)}`);

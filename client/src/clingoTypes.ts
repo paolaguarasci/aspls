@@ -52,10 +52,13 @@ export interface ClingoRunRequest {
   clingoPath: string;
 }
 
+import type { ClingoConstant } from "./clingoConfigCore";
+
 export interface ClingoResolvedConfig {
   models: number;
   threads: number;
   customArgs: string;
+  constants: ClingoConstant[];
   additionalFiles: string[];
   /** True when `additionalFiles` came from an explicit config key (even if empty). */
   additionalFilesExplicit: boolean;

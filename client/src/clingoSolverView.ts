@@ -10,6 +10,8 @@ import {
   isValidModels,
   removePathEntry,
   toWorkspaceRelativePath,
+  asConstantsArray,
+  type ClingoConstant,
 } from "./clingoConfigCore";
 import type { ClingoResolvedConfig, ClingoRunOutcome } from "./clingoTypes";
 
@@ -83,6 +85,8 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
     usePath?: unknown;
     path?: unknown;
     text?: unknown;
+    index?: unknown;
+    constants?: unknown;
   }): Promise<void> {
     try {
       switch (message?.type) {
@@ -151,6 +155,33 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
           const cfg = resolveClingoConfig();
           const next = removePathEntry(cfg.additionalFiles, message.path);
           await patchClingoConfigFile({ additionalFiles: next });
+          break;
+        }
+        case "addConstant": {
+          const cfg = resolveClingoConfig();
+          const next: ClingoConstant[] = [
+            ...cfg.constants,
+            { name: "", value: "" },
+          ];
+          await patchClingoConfigFile({ constants: next });
+          break;
+        }
+        case "removeConstant": {
+          if (typeof message.index !== "number" || !Number.isInteger(message.index)) {
+            return;
+          }
+          const cfg = resolveClingoConfig();
+          const next = cfg.constants.filter((_, i) => i !== message.index);
+          await patchClingoConfigFile({ constants: next });
+          break;
+        }
+        case "setConstants": {
+          if (!Array.isArray(message.constants)) {
+            return;
+          }
+          await patchClingoConfigFile({
+            constants: asConstantsArray(message.constants),
+          });
           break;
         }
         default:
@@ -321,6 +352,28 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
       padding: 2px 6px;
       border-radius: 4px;
     }
+    .controls input[type="text"].const-name,
+    .controls input[type="text"].const-value {
+      font: inherit;
+      background: var(--vscode-input-background);
+      color: var(--vscode-input-foreground);
+      border: 1px solid var(--vscode-input-border, transparent);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .controls input.const-name { width: 5rem; }
+    .controls input.const-value { flex: 1 1 4rem; min-width: 3rem; }
+    .controls .const-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .controls .const-list li {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
     .controls .dimmed { opacity: 0.55; }
     .controls .path-text {
       flex: 1 1 100%;
@@ -363,11 +416,27 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
         vscode.postMessage({ type: 'clearPath' });
       } else if (action === 'addFiles') {
         vscode.postMessage({ type: 'addFiles' });
+      } else if (action === 'addConstant') {
+        vscode.postMessage({ type: 'addConstant' });
       } else if (action === 'removeFile') {
         const p = t.getAttribute('data-path') || '';
         vscode.postMessage({ type: 'removeFile', path: p });
+      } else if (action === 'removeConstant') {
+        const idx = Number(t.getAttribute('data-index'));
+        vscode.postMessage({ type: 'removeConstant', index: idx });
       }
     });
+    function postConstants() {
+      const rows = document.querySelectorAll('[data-constant-row]');
+      const constants = [];
+      rows.forEach((row) => {
+        const nameEl = row.querySelector('[data-field="name"]');
+        const valueEl = row.querySelector('[data-field="value"]');
+        if (!(nameEl instanceof HTMLInputElement) || !(valueEl instanceof HTMLInputElement)) return;
+        constants.push({ name: nameEl.value, value: valueEl.value });
+      });
+      vscode.postMessage({ type: 'setConstants', constants });
+    }
     document.addEventListener('change', (e) => {
       const t = e.target;
       if (!(t instanceof HTMLInputElement)) return;
@@ -377,6 +446,8 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
       } else if (action === 'models') {
         const n = Number(t.value);
         vscode.postMessage({ type: 'setModels', models: n });
+      } else if (action === 'constantField') {
+        postConstants();
       }
     });
   </script>
@@ -416,6 +487,19 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
 </li>`,
             )
             .join("")}</ul>`;
+    const constantsHtml =
+      config.constants.length === 0
+        ? `<p class="empty">None</p>`
+        : `<ul class="const-list">${config.constants
+            .map(
+              (c, i) => `<li data-constant-row data-index="${i}">
+  <input type="text" class="const-name" data-field="name" data-action="constantField" value="${escapeHtml(c.name)}" placeholder="name" ${modelsDisabled} />
+  <span>=</span>
+  <input type="text" class="const-value" data-field="value" data-action="constantField" value="${escapeHtml(c.value)}" placeholder="value" ${modelsDisabled} />
+  <button type="button" data-action="removeConstant" data-index="${i}" ${fileButtonsDisabled}>Remove</button>
+</li>`,
+            )
+            .join("")}</ul>`;
 
     return `<section class="controls">
   <h2>Controls</h2>
@@ -424,6 +508,13 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
     <input type="number" min="0" step="1" value="${config.models}" data-action="models" ${modelsDisabled} />
   </label>
   <p class="hint">Used by Config runs (0 = all). First / All ignore this.</p>
+  <div class="constants">
+    <div class="row"><strong>Constants (-c)</strong>
+      <button type="button" data-action="addConstant" ${fileButtonsDisabled}>Add</button>
+    </div>
+    <p class="hint">Passed as <code>-c name=value</code> to Clingo.</p>
+    ${constantsHtml}
+  </div>
   <label class="row">
     <input type="checkbox" data-action="usePath" ${config.usePath ? "checked" : ""} />
     Use native Clingo
