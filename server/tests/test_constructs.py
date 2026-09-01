@@ -14,6 +14,7 @@ def test_classify_kinds():
     assert classify_statement("flies(X) :- bird(X).") == ConstructKind.DEFINITIONS
     assert classify_statement(":- penguin(X), flies(X).") == ConstructKind.CONSTRAINTS
     assert classify_statement("#minimize { 1, X : cost(X) }.") == ConstructKind.OPTIMIZATION
+    assert classify_statement("#maximize { 1, X : reward(X) }.") == ConstructKind.OPTIMIZATION
     assert classify_statement(":~ cost(X). [1,X]") == ConstructKind.OPTIMIZATION
     assert classify_statement("#show bird/1.") == ConstructKind.SHOW
 

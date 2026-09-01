@@ -8,11 +8,12 @@ statement: directive
 
 directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#show" IDENTIFIER "/" INT "." -> show_directive
-         | "#minimize" "{" minimize_elem (";" minimize_elem)* "}" "." -> minimize_directive
+         | "#minimize" "{" optimize_elem (";" optimize_elem)* "}" "." -> minimize_directive
+         | "#maximize" "{" optimize_elem (";" optimize_elem)* "}" "." -> maximize_directive
          | "#include" STRING "." -> include_directive
 
-// Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
-minimize_elem: term ("@" INT)? ("," term)* ":" body
+// Clingo: #minimize / #maximize { weight@priority, t1, t2, ... : body ; ... }.
+optimize_elem: term ("@" INT)? ("," term)* ":" body
 
 head: disjunction
      | choice

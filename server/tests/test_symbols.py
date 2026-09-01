@@ -69,6 +69,15 @@ def test_indexes_constraint_show_and_minimize():
     assert index[("cost", 1)][0].role == "minimize"
 
 
+def test_indexes_maximize_directive():
+    text = "item(a).\n#maximize { 1, X : item(X) }."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert index[("item", 1)][0].role == "fact"
+    assert index[("item", 1)][1].role == "maximize"
+
+
 def test_indexes_weak_constraint_body_atoms():
     text = "selected(a).\n:~ selected(X). [1@1, X]"
     result = parse_document(text)

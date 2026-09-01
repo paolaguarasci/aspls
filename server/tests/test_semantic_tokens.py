@@ -57,3 +57,10 @@ def test_semantic_tokens_weak_maps_to_minimize_type():
     # One atom token: penalty — type index must be aspMinimize
     minimize_idx = TOKEN_TYPES.index("aspMinimize")
     assert minimize_idx in {data[i] for i in range(3, len(data), 5)}
+
+
+def test_semantic_tokens_maximize_maps_to_minimize_type():
+    text = "#maximize { 1, X : reward(X) }."
+    data = build_semantic_tokens(text).data
+    minimize_idx = TOKEN_TYPES.index("aspMinimize")
+    assert minimize_idx in {data[i] for i in range(3, len(data), 5)}

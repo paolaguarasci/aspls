@@ -91,6 +91,13 @@ def test_parses_include_directive():
     assert result.tree is not None
 
 
+def test_parses_maximize_directive():
+    text = (FIXTURES / "maximize_directive.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+
+
 def test_weak_constraint_syntax_error_reports_line():
     # Weight bracket missing closing ]
     text = ":~ selected(X). [1@1, X\n"

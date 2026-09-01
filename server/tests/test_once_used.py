@@ -34,6 +34,12 @@ def test_definition_plus_show_no_once_used():
     assert not any("flies/1" in d.message for d in diags)
 
 
+def test_definition_plus_maximize_no_once_used():
+    text = "reward(X) :- item(X).\nitem(a).\n#maximize { 1, X : reward(X) }.\n"
+    diags = [d for d in build_diagnostics(text, once_used=True) if "only once" in d.message]
+    assert not any("reward/1" in d.message for d in diags)
+
+
 def test_lone_definition_suppressed():
     text = "label(hello).\n"
     diags = [d for d in build_diagnostics(text, once_used=True) if "only once" in d.message]
