@@ -5,6 +5,7 @@ import * as path from "path";
 import {
   PREFLIGHT_PREFIX,
   buildPreflightCommandSummary,
+  collectPreflightWasmPathSuggestions,
   formatInvalidClingoPathError,
   formatInvalidModelsError,
   formatMissingAdditionalFilesError,
@@ -125,6 +126,27 @@ function testFormatMissingHelpers(): void {
   assert.ok(msg.includes("/b.lp"));
 }
 
+function testWasmPathSuggestions(): void {
+  assert.deepStrictEqual(
+    collectPreflightWasmPathSuggestions(baseRequest()),
+    [],
+  );
+  assert.deepStrictEqual(
+    collectPreflightWasmPathSuggestions(
+      baseRequest({ usePath: true, customArgs: ["--outf=2"], threads: 4 }),
+    ),
+    [],
+  );
+  const warnings = collectPreflightWasmPathSuggestions(
+    baseRequest({ customArgs: ["--outf=2"], threads: 4 }),
+  );
+  assert.strictEqual(warnings.length, 1);
+  assert.ok(warnings[0].includes("WASM capability warning"));
+  assert.ok(warnings[0].includes("--outf=2"));
+  assert.ok(warnings[0].includes("threads=4"));
+  assert.ok(warnings[0].includes("aspls.clingo.usePath"));
+}
+
 function main(): void {
   testResolveBackend();
   testCommandSummary();
@@ -134,6 +156,7 @@ function main(): void {
   testInvalidConfiguredPath();
   testEmptyConfiguredPathSkipsPathExistsCheck();
   testFormatMissingHelpers();
+  testWasmPathSuggestions();
   console.log("clingoPreflight.test.ts: ok");
 }
 

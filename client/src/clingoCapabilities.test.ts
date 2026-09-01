@@ -56,10 +56,50 @@ function testCollectWarnings(): void {
   assert.ok(formatWasmFragileArgsWarning(["--stats"]).includes("WASM"));
 }
 
+function testThreadsSuggestion(): void {
+  assert.deepStrictEqual(
+    collectBackendCapabilityWarnings({
+      usePath: false,
+      customArgs: [],
+      threads: 1,
+    }),
+    [],
+  );
+  assert.deepStrictEqual(
+    collectBackendCapabilityWarnings({
+      usePath: true,
+      customArgs: [],
+      threads: 4,
+    }),
+    [],
+  );
+  const warnings = collectBackendCapabilityWarnings({
+    usePath: false,
+    customArgs: [],
+    threads: 4,
+  });
+  assert.strictEqual(warnings.length, 1);
+  assert.ok(warnings[0].includes("threads=4"));
+  assert.ok(warnings[0].includes("aspls.clingo.usePath"));
+}
+
+function testCombinedFragileArgsAndThreads(): void {
+  const warnings = collectBackendCapabilityWarnings({
+    usePath: false,
+    customArgs: ["--outf=2"],
+    threads: 2,
+  });
+  assert.strictEqual(warnings.length, 1);
+  assert.ok(warnings[0].includes("--outf=2"));
+  assert.ok(warnings[0].includes("threads=2"));
+}
+
 function main(): void {
   testMatrixHasRows();
   testFragileDetection();
   testCollectWarnings();
+  testThreadsSuggestion();
+  testCombinedFragileArgsAndThreads();
   console.log("clingoCapabilities.test.ts: ok");
 }
 
