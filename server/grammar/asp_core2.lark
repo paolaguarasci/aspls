@@ -10,6 +10,7 @@ directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#show" IDENTIFIER "/" INT "." -> show_directive
          | "#minimize" "{" minimize_elem (";" minimize_elem)* "}" "." -> minimize_directive
          | "#include" STRING "." -> include_directive
+         | "#external" literal (":" body)? "." -> external_directive
 
 // Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
 minimize_elem: term ("@" INT)? ("," term)* ":" body

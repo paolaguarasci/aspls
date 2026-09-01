@@ -9,6 +9,8 @@ from constructs import (
 
 def test_classify_kinds():
     assert classify_statement("#const n = 3.") == ConstructKind.CONSTANTS
+    assert classify_statement('#include "facts.lp".') == ConstructKind.CONSTANTS
+    assert classify_statement("#external query(T) : step(T).") == ConstructKind.CONSTANTS
     assert classify_statement("bird(tweety).") == ConstructKind.FACTS
     assert classify_statement("{ bird(X) : animal(X) }.") == ConstructKind.CHOICES
     assert classify_statement("flies(X) :- bird(X).") == ConstructKind.DEFINITIONS

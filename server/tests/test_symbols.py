@@ -86,6 +86,23 @@ def test_weak_role_is_a_using_role():
     assert "weak" in USING_ROLES
 
 
+def test_indexes_external_directive_atoms():
+    text = "#external query(T) : step(T).\nstep(1)."
+    result = parse_document(text)
+    index = build_symbol_index(result.tree)
+
+    assert ("query", 1) in index
+    assert index[("query", 1)][0].role == "external"
+    assert ("step", 1) in index
+    roles = {o.role for o in index[("step", 1)]}
+    assert "external" in roles
+    assert "fact" in roles
+
+
+def test_external_role_is_a_using_role():
+    assert "external" in USING_ROLES
+
+
 def test_weak_weight_terms_are_not_indexed_as_atoms():
     """Weight bracket has only terms (e.g. X) — no atom occurrences from weight."""
     text = ":~ q. [X]"
