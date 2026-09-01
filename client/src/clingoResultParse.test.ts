@@ -91,6 +91,30 @@ function testParseStdoutWithStderrWarnings(): void {
   assert.ok(outcome.warnings.some((w) => w.includes("atom does not occur")));
 }
 
+function testNormalizeStats(): void {
+  const outcome = normalizeClingoJson(
+    {
+      Result: "SATISFIABLE",
+      Calls: 1,
+      Call: [{ Witnesses: [{ Value: ["a"] }] }],
+      Models: { Number: 1, More: "no" },
+      Time: { Total: 0.012, Solve: 0.006 },
+      Stats: { LP: { Atoms: 200 } },
+    },
+    "path",
+    "clingo file.lp 1 --outf=2 --stats",
+    "{}",
+  );
+  assert.strictEqual(outcome.ok, true);
+  if (!outcome.ok) {
+    return;
+  }
+  assert.strictEqual(outcome.timeTotal, 0.012);
+  assert.strictEqual(outcome.timeSolve, 0.006);
+  assert.strictEqual(outcome.timeGrounding, 0.006);
+  assert.strictEqual(outcome.atomCount, 200);
+}
+
 function testParseUnsat(): void {
   const stdout = JSON.stringify({
     Result: "UNSATISFIABLE",
@@ -117,6 +141,7 @@ function testParseUnsat(): void {
 testSplitCustomArgs();
 testNormalizeSatisfiable();
 testNormalizeError();
+testNormalizeStats();
 testParseStdoutWithStderrWarnings();
 testParseUnsat();
 console.log("clingoResultParse / clingoConfig tests passed");

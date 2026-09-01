@@ -22,6 +22,12 @@ export interface ClingoJsonResult {
   };
   Time?: {
     Total?: number;
+    Solve?: number;
+  };
+  Stats?: {
+    LP?: {
+      Atoms?: number;
+    };
   };
   Warnings?: string[];
   Error?: string;
@@ -82,6 +88,14 @@ export function normalizeClingoJson(
     .map((w) => w.trim())
     .filter((w) => w.length > 0);
 
+  const timeTotal = json.Time?.Total;
+  const timeSolve = json.Time?.Solve;
+  const timeGrounding =
+    timeTotal !== undefined && timeSolve !== undefined
+      ? timeTotal - timeSolve
+      : undefined;
+  const atomCount = json.Stats?.LP?.Atoms;
+
   return {
     ok: true,
     backend,
@@ -90,7 +104,10 @@ export function normalizeClingoJson(
     more: json.Models?.More === "yes",
     modelCount: json.Models?.Number ?? answerSets.length,
     solver: json.Solver,
-    timeTotal: json.Time?.Total,
+    timeTotal,
+    timeSolve,
+    timeGrounding,
+    atomCount,
     warnings,
     raw,
     commandSummary,

@@ -516,6 +516,10 @@ ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome
       outcome.timeTotal !== undefined
         ? ` · ${outcome.timeTotal.toFixed(3)}s`
         : "";
+    const stats =
+      outcome.backend === "path" && outcome.atomCount !== undefined
+        ? `<br/>grounding ${outcome.timeGrounding?.toFixed(3) ?? "?"}s · solving ${outcome.timeSolve?.toFixed(3) ?? "?"}s · atoms ${outcome.atomCount}`
+        : "";
 
     return `
 <header>
@@ -525,7 +529,7 @@ ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome
     <button data-action="copy" data-text="${encodeCopy(allAtoms)}">Copy all</button>
   </div>
 </header>
-<p class="meta">${escapeHtml(outcome.solver ?? "Clingo")} · ${escapeHtml(outcome.backend)} · models ${outcome.modelCount}${more}${time}<br/>${escapeHtml(outcome.commandSummary)}</p>
+<p class="meta">${escapeHtml(outcome.solver ?? "Clingo")} · ${escapeHtml(outcome.backend)} · models ${outcome.modelCount}${more}${time}${stats}<br/>${escapeHtml(outcome.commandSummary)}</p>
 ${warnings}
 ${setsHtml}`;
   }
