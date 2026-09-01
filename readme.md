@@ -11,8 +11,8 @@
 
 <p align="center">
   <a href="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml"><img src="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=pingflood.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/pingflood.aspls?label=VS%20Marketplace" alt="VS Marketplace version"/></a>
-  <a href="https://open-vsx.org/extension/pingflood/aspls"><img src="https://img.shields.io/open-vsx/v/pingflood/aspls?label=Open%20VSX" alt="Open VSX version"/></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/paolaguarasci.aspls?label=VS%20Marketplace" alt="VS Marketplace version"/></a>
+  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><img src="https://img.shields.io/open-vsx/v/paolaguarasci/aspls?label=Open%20VSX" alt="Open VSX version"/></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
   <img src="https://img.shields.io/badge/VS%20Code-%5E1.85-007ACC?logo=visualstudiocode&logoColor=white" alt="VS Code engine"/>
   <img src="https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white" alt="Python"/>
@@ -20,9 +20,9 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=pingflood.aspls"><strong>Install on VS Marketplace</strong></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><strong>Install on VS Marketplace</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://open-vsx.org/extension/pingflood/aspls"><strong>Install on Open VSX</strong></a>
+  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><strong>Install on Open VSX</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/paolaguarasci/aspls/issues"><strong>Report issue</strong></a>
 </p>
@@ -81,7 +81,7 @@ The TypeScript extension hosts the Clingo runner and UI; a Python LSP server pro
 
 ## Quick start
 
-1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=pingflood.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls).
+1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) or [Open VSX](https://open-vsx.org/extension/paolaguarasci/aspls).
 2. Ensure **Python 3** is on your PATH (or set `aspls.pythonPath`). The language server creates a local venv on first use.
 3. Open a `.lp` file.
 4. Click **play** / **run all** in the editor title bar, or run:

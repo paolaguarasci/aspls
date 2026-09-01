@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=pingflood.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/pingflood.aspls?label=VS%20Marketplace" alt="VS Marketplace"/></a>
-  <a href="https://open-vsx.org/extension/pingflood/aspls"><img src="https://img.shields.io/open-vsx/v/pingflood/aspls?label=Open%20VSX" alt="Open VSX"/></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/paolaguarasci.aspls?label=VS%20Marketplace" alt="VS Marketplace"/></a>
+  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><img src="https://img.shields.io/open-vsx/v/paolaguarasci/aspls?label=Open%20VSX" alt="Open VSX"/></a>
   <a href="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml"><img src="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
 </p>
 
@@ -76,7 +76,7 @@ Snippets and the Code Cookbook may show patterns ahead of the parser; prefer thi
 
 ## Quick start
 
-1. Install **aspls** from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=pingflood.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls).
+1. Install **aspls** from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) or [Open VSX](https://open-vsx.org/extension/paolaguarasci/aspls).
 2. Make sure **Python 3** is available on your PATH (or set `aspls.pythonPath`) for the language server.
 3. Open a `.lp` file — the language server starts on first use and sets up a local venv automatically.
 4. Click the **play** / **run all** icons in the editor title bar, or use the Command Palette:
