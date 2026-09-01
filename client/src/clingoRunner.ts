@@ -1,6 +1,5 @@
 import { execFile } from "child_process";
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 import { promisify } from "util";
 import {
@@ -13,6 +12,7 @@ import {
   preflightClingoRun,
 } from "./clingoPreflight";
 import { collectBackendCapabilityWarnings } from "./clingoCapabilities";
+import { expandIncludesInProgram } from "./clingoIncludes";
 import type { ClingoRunOutcome, ClingoRunRequest } from "./clingoTypes";
 
 const execFileAsync = promisify(execFile);
@@ -87,18 +87,8 @@ async function runPathClingo(
     };
   }
 
-  // Prefer the on-disk primary file so Clingo reports real paths in errors.
-  // Write buffer contents to a temp sibling if the editor is unsaved? We pass
-  // the editor text via stdin when it may differ — here we write a temp file
-  // next to the primary only when needed. Simpler: always write a temp copy
-  // of the buffer as the first input so unsaved edits are included.
-  const tmpPrimary = path.join(
-    os.tmpdir(),
-    `aspls-${Date.now()}-${path.basename(request.primaryFile)}`,
-  );
-  fs.writeFileSync(tmpPrimary, request.program, "utf8");
-
-  const files = [tmpPrimary, ...request.additionalFiles];
+  // Use the saved primary file so Clingo resolves #include relative to it.
+  const files = [request.primaryFile, ...request.additionalFiles];
   const argv = buildArgv(
     files,
     request.models,
@@ -129,24 +119,13 @@ async function runPathClingo(
     };
     // Clingo uses non-zero exit for UNSAT (20) and errors (65+) — still parse JSON.
     if (typeof execErr.stdout === "string" || typeof execErr.stderr === "string") {
-      const outcome = parseClingoJsonStdout(
+      return parseClingoJsonStdout(
         execErr.stdout ?? "",
         execErr.stderr ?? "",
         "path",
         commandSummary,
         typeof execErr.code === "number" ? execErr.code : null,
       );
-      try {
-        fs.unlinkSync(tmpPrimary);
-      } catch {
-        /* ignore */
-      }
-      return outcome;
-    }
-    try {
-      fs.unlinkSync(tmpPrimary);
-    } catch {
-      /* ignore */
     }
     return {
       ok: false,
@@ -154,14 +133,6 @@ async function runPathClingo(
       error: execErr.message ?? String(err),
       commandSummary,
     };
-  } finally {
-    try {
-      if (fs.existsSync(tmpPrimary)) {
-        fs.unlinkSync(tmpPrimary);
-      }
-    } catch {
-      /* ignore */
-    }
   }
 }
 
@@ -169,11 +140,17 @@ async function runWasmClingo(
   request: ClingoRunRequest,
 ): Promise<ClingoRunOutcome> {
   const commandSummary = buildPreflightCommandSummary(request);
+  const workspaceRoot = path.dirname(request.primaryFile);
   let program: string;
   try {
-    program = buildProgramWithIncludes(
+    program = expandIncludesInProgram(
       request.primaryFile,
       request.program,
+      workspaceRoot,
+    );
+    program = buildProgramWithIncludes(
+      request.primaryFile,
+      program,
       request.additionalFiles,
     );
   } catch (err) {

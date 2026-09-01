@@ -9,6 +9,7 @@ statement: directive
 directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#show" IDENTIFIER "/" INT "." -> show_directive
          | "#minimize" "{" minimize_elem (";" minimize_elem)* "}" "." -> minimize_directive
+         | "#include" STRING "." -> include_directive
 
 // Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
 minimize_elem: term ("@" INT)? ("," term)* ":" body
@@ -64,6 +65,7 @@ range_bound: INT | IDENTIFIER | VARIABLE
 VARIABLE: /[A-Z_][a-zA-Z0-9_]*/
 IDENTIFIER: /[a-z][a-zA-Z0-9_]*/
 INT: /-?[0-9]+/
+STRING: /"[^"]*"/
 
 COMMENT: /%[^\n]*/
 %import common.WS

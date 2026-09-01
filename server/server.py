@@ -227,6 +227,14 @@ def _refresh_workspace_scan(ls: LanguageServer | None = None) -> None:
             _ensure_indexed(uri)
 
 
+def _text_for_uri(uri: str) -> str | None:
+    try:
+        doc = server.workspace.get_text_document(uri)
+        return doc.source
+    except Exception:
+        return _load_file_text(uri)
+
+
 def _pool_for(uri: str) -> list[str]:
     pool = resolve_pool(
         active_uri=uri,
@@ -234,6 +242,7 @@ def _pool_for(uri: str) -> list[str]:
         config_path=None,
         additional_files=ADDITIONAL_FILES,
         discovered_uris=DISCOVERED,
+        get_text=_text_for_uri,
     )
     for pool_uri in pool:
         if not WORKSPACE.has(pool_uri):

@@ -364,7 +364,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
-        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",
