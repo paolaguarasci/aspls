@@ -105,6 +105,8 @@ def classify_statement(stmt_text: str) -> ConstructKind:
         return ConstructKind.CONSTANTS
     if code.startswith("#program"):
         return ConstructKind.CONSTANTS
+    if code.startswith("#script"):
+        return ConstructKind.CONSTANTS
     if code.startswith("#show"):
         return ConstructKind.SHOW
     if code.startswith("#minimize") or code.startswith("#maximize"):
