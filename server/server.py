@@ -17,6 +17,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_RENAME,
     TEXT_DOCUMENT_PREPARE_RENAME,
     TEXT_DOCUMENT_COMPLETION,
+    TEXT_DOCUMENT_SIGNATURE_HELP,
     TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
@@ -34,6 +35,7 @@ from lsprotocol.types import (
     RenameParams,
     PrepareRenameParams,
     CompletionParams,
+    SignatureHelpParams,
     CodeActionParams,
     SemanticTokensParams,
     SemanticTokensLegend,
@@ -47,6 +49,7 @@ from features.definition import build_definitions_from_index
 from features.references import build_references_from_index
 from features.rename import build_prepare_rename_from_index, build_rename_edit_from_index
 from features.completion import build_completions_from_index
+from features.signature_help import build_signature_help_from_index
 from features.code_actions import build_code_actions
 from features.semantic_tokens import (
     TOKEN_MODIFIERS,
@@ -439,6 +442,20 @@ def rename(ls: LanguageServer, params: RenameParams):
 def completion(ls: LanguageServer, params: CompletionParams):
     uri = params.text_document.uri
     return build_completions_from_index(_merged_for(uri))
+
+
+@server.feature(TEXT_DOCUMENT_SIGNATURE_HELP)
+def signature_help(ls: LanguageServer, params: SignatureHelpParams):
+    uri = params.text_document.uri
+    doc = ls.workspace.get_text_document(uri)
+    return build_signature_help_from_index(
+        _merged_for(uri),
+        params.position.line,
+        params.position.character,
+        uri,
+        document_index=_document_index_for(uri),
+        source=doc.source,
+    )
 
 
 @server.feature(TEXT_DOCUMENT_CODE_ACTION)
