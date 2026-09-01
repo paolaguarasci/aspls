@@ -23,11 +23,11 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and comp
 ## At a glance
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/paolaguarasci/aspls/main/docs/images/editor-highlighting.svg" width="680" alt="Semantic highlighting"/>
+  <img src="images/editor-highlighting.png" width="680" alt="Semantic highlighting"/>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/paolaguarasci/aspls/main/docs/images/solver-sidebar.svg" width="680" alt="Solver sidebar"/>
+  <img src="images/solver-sidebar.png" width="680" alt="Solver sidebar"/>
 </p>
 
 ---

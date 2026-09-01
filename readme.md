@@ -40,7 +40,7 @@ Works with **`.lp`** and **`.asp`** files.
 Facts, rule heads, negation, and directives each get distinct colors. Optional rainbow underlines keep predicate names visually distinct across a file.
 
 <p align="center">
-  <img src="docs/images/editor-highlighting.svg" width="720" alt="Semantic highlighting example"/>
+  <img src="docs/images/editor-highlighting.png" width="720" alt="Semantic highlighting example"/>
 </p>
 
 ### ASP Solver sidebar
@@ -48,7 +48,7 @@ Facts, rule heads, negation, and directives each get distinct colors. Optional r
 Run Clingo from the editor title bar or the **ASP → Solver** view. Answer sets, errors, and re-run controls stay in the sidebar; **Controls** persist models, native Clingo path, and additional files.
 
 <p align="center">
-  <img src="docs/images/solver-sidebar.svg" width="720" alt="ASP Solver sidebar"/>
+  <img src="docs/images/solver-sidebar.png" width="720" alt="ASP Solver sidebar"/>
 </p>
 
 ### Architecture
@@ -56,7 +56,7 @@ Run Clingo from the editor title bar or the **ASP → Solver** view. Answer sets
 The TypeScript extension hosts the Clingo runner and UI; a Python LSP server provides parsing and IDE features. Both share the same file **pool** via `aspls.clingo.json`.
 
 <p align="center">
-  <img src="docs/images/architecture.svg" width="820" alt="aspls architecture diagram"/>
+  <img src="docs/images/architecture.png" width="820" alt="aspls architecture diagram"/>
 </p>
 
 ## Features

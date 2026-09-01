@@ -7,47 +7,45 @@
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.35"/>
     </filter>
-  </defs>
-  <rect width="820" height="280" rx="12" fill="url(#bg)"/>
-  <text x="410" y="34" text-anchor="middle" fill="#c8d0dc" font-family="system-ui, sans-serif" font-size="15" font-weight="600">aspls architecture</text>
-
-  <g filter="url(#shadow)">
-    <rect x="40" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
-    <text x="150" y="100" text-anchor="middle" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="14" font-weight="600">VS Code / Cursor</text>
-    <text x="150" y="122" text-anchor="middle" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="11">Extension (TypeScript)</text>
-    <text x="150" y="155" text-anchor="middle" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="10">Clingo runner</text>
-    <text x="150" y="172" text-anchor="middle" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="10">Solver sidebar</text>
-    <text x="150" y="189" text-anchor="middle" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="10">Predicates tree</text>
-    <text x="150" y="206" text-anchor="middle" fill="#7dd3a8" font-family="ui-monospace, monospace" font-size="10">Cookbook + snippets</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="310" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
-    <text x="410" y="100" text-anchor="middle" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="14" font-weight="600">LSP server</text>
-    <text x="410" y="122" text-anchor="middle" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="11">Python � pygls � Lark</text>
-    <text x="410" y="155" text-anchor="middle" fill="#7eb8f0" font-family="ui-monospace, monospace" font-size="10">diagnostics</text>
-    <text x="410" y="172" text-anchor="middle" fill="#7eb8f0" font-family="ui-monospace, monospace" font-size="10">completion � hover</text>
-    <text x="410" y="189" text-anchor="middle" fill="#7eb8f0" font-family="ui-monospace, monospace" font-size="10">go-to-def � references</text>
-    <text x="410" y="206" text-anchor="middle" fill="#7eb8f0" font-family="ui-monospace, monospace" font-size="10">semantic tokens</text>
-  </g>
-
-  <g filter="url(#shadow)">
-    <rect x="560" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
-    <text x="640" y="100" text-anchor="middle" fill="#e8edf4" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Clingo</text>
-    <text x="640" y="122" text-anchor="middle" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="11">solver backend</text>
-    <text x="640" y="158" text-anchor="middle" fill="#f0c674" font-family="ui-monospace, monospace" font-size="11">clingo-wasm</text>
-    <text x="640" y="178" text-anchor="middle" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="10">bundled default</text>
-    <text x="640" y="200" text-anchor="middle" fill="#f0c674" font-family="ui-monospace, monospace" font-size="11">PATH binary</text>
-    <text x="640" y="220" text-anchor="middle" fill="#9aa8b8" font-family="system-ui, sans-serif" font-size="10">optional native</text>
-  </g>
-
-  <path d="M240 145 H310" stroke="#6b7a8f" stroke-width="2" marker-end="url(#arrow)"/>
-  <path d="M490 145 H560" stroke="#6b7a8f" stroke-width="2" marker-end="url(#arrow)"/>
-  <defs>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8 Z" fill="#6b7a8f"/>
     </marker>
   </defs>
+  <rect width="820" height="280" rx="12" fill="url(#bg)"/>
+  <text x="410" y="34" text-anchor="middle" fill="#c8d0dc" font-family="sans-serif" font-size="15" font-weight="600">aspls architecture</text>
 
-  <text x="410" y="258" text-anchor="middle" fill="#6b7a8f" font-family="system-ui, sans-serif" font-size="11">Shared pool via aspls.clingo.json � additionalFiles</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
+    <text x="150" y="100" text-anchor="middle" fill="#e8edf4" font-family="sans-serif" font-size="14" font-weight="600">VS Code / Cursor</text>
+    <text x="150" y="122" text-anchor="middle" fill="#9aa8b8" font-family="sans-serif" font-size="11">Extension (TypeScript)</text>
+    <text x="150" y="155" text-anchor="middle" fill="#7dd3a8" font-family="monospace" font-size="10">Clingo runner</text>
+    <text x="150" y="172" text-anchor="middle" fill="#7dd3a8" font-family="monospace" font-size="10">Solver sidebar</text>
+    <text x="150" y="189" text-anchor="middle" fill="#7dd3a8" font-family="monospace" font-size="10">Predicates tree</text>
+    <text x="150" y="206" text-anchor="middle" fill="#7dd3a8" font-family="monospace" font-size="10">Cookbook + snippets</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="310" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
+    <text x="410" y="100" text-anchor="middle" fill="#e8edf4" font-family="sans-serif" font-size="14" font-weight="600">LSP server</text>
+    <text x="410" y="122" text-anchor="middle" fill="#9aa8b8" font-family="sans-serif" font-size="11">Python + pygls + Lark</text>
+    <text x="410" y="155" text-anchor="middle" fill="#7eb8f0" font-family="monospace" font-size="10">diagnostics</text>
+    <text x="410" y="172" text-anchor="middle" fill="#7eb8f0" font-family="monospace" font-size="10">completion + hover</text>
+    <text x="410" y="189" text-anchor="middle" fill="#7eb8f0" font-family="monospace" font-size="10">go-to-def + references</text>
+    <text x="410" y="206" text-anchor="middle" fill="#7eb8f0" font-family="monospace" font-size="10">semantic tokens</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="560" y="70" width="200" height="150" rx="10" fill="#2d3544" stroke="#4a5568"/>
+    <text x="640" y="100" text-anchor="middle" fill="#e8edf4" font-family="sans-serif" font-size="14" font-weight="600">Clingo</text>
+    <text x="640" y="122" text-anchor="middle" fill="#9aa8b8" font-family="sans-serif" font-size="11">solver backend</text>
+    <text x="640" y="158" text-anchor="middle" fill="#f0c674" font-family="monospace" font-size="11">clingo-wasm</text>
+    <text x="640" y="178" text-anchor="middle" fill="#9aa8b8" font-family="sans-serif" font-size="10">bundled default</text>
+    <text x="640" y="200" text-anchor="middle" fill="#f0c674" font-family="monospace" font-size="11">PATH binary</text>
+    <text x="640" y="220" text-anchor="middle" fill="#9aa8b8" font-family="sans-serif" font-size="10">optional native</text>
+  </g>
+
+  <path d="M240 145 H310" stroke="#6b7a8f" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M490 145 H560" stroke="#6b7a8f" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <text x="410" y="258" text-anchor="middle" fill="#6b7a8f" font-family="sans-serif" font-size="11">Shared pool via aspls.clingo.json + additionalFiles</text>
 </svg>
