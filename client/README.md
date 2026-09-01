@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/paolaguarasci.aspls?label=VS%20Marketplace" alt="VS Marketplace"/></a>
-  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><img src="https://img.shields.io/open-vsx/v/paolaguarasci/aspls?label=Open%20VSX" alt="Open VSX"/></a>
+  <a href="https://open-vsx.org/extension/pingflood/aspls"><img src="https://img.shields.io/open-vsx/v/pingflood/aspls?label=Open%20VSX" alt="Open VSX"/></a>
   <a href="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml"><img src="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
 </p>
 
@@ -34,23 +34,23 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and comp
 
 ## Features
 
-| Feature | What you get |
-| --- | --- |
-| **Run Clingo** | Compute first or all answer sets (editor title buttons, context menu, Command Palette) |
-| **ASP sidebar — Solver** | Activity Bar **ASP → Solver**: First / All / Config runs, answer sets, errors, re-run; **Controls** for models, native Clingo path, and additional files |
-| **ASP sidebar — Predicates** | **ASP → Predicates**: active-file predicates nested by role → occurrence (powers **Outline**); toolbar **Show Workspace Predicates** |
-| **PATH or WASM** | Bundled `clingo-wasm` by default; optional Clingo binary from PATH |
-| **Syntax highlighting** | Atoms, variables, comments, directives, operators |
-| **Semantic highlighting** | Different colors for facts, rule heads, rule bodies, constraints, `#show`, `#minimize` |
-| **Rainbow predicates** | Optional underline color per predicate name (stable across the file) |
-| **Diagnostics** | Syntax errors from the ASP parser; optional Clingo-backed checks |
-| **IntelliSense** | Predicate completion from the workspace / config file pool |
-| **Hover** | Name, arity, occurrence counts; asp-lsp-style `%*…*%` docstrings; definition line + preceding comment |
-| **Go to Definition** | Jump to facts and rule heads (cross-file) |
-| **Find References** | All occurrences of a predicate in the pool |
-| **Learner mode** | Optional rule-order and missing-comment **Information** hints, plus quick fixes (off by default) |
-| **Code Cookbook** | Browse working ASP patterns and insert at cursor or open as a new `.lp` file |
-| **Snippets** | Templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints |
+| Feature                      | What you get                                                                                                                                             |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Run Clingo**               | Compute first or all answer sets (editor title buttons, context menu, Command Palette)                                                                   |
+| **ASP sidebar — Solver**     | Activity Bar **ASP → Solver**: First / All / Config runs, answer sets, errors, re-run; **Controls** for models, native Clingo path, and additional files |
+| **ASP sidebar — Predicates** | **ASP → Predicates**: active-file predicates nested by role → occurrence (powers **Outline**); toolbar **Show Workspace Predicates**                     |
+| **PATH or WASM**             | Bundled `clingo-wasm` by default; optional Clingo binary from PATH                                                                                       |
+| **Syntax highlighting**      | Atoms, variables, comments, directives, operators                                                                                                        |
+| **Semantic highlighting**    | Different colors for facts, rule heads, rule bodies, constraints, `#show`, `#minimize`                                                                   |
+| **Rainbow predicates**       | Optional underline color per predicate name (stable across the file)                                                                                     |
+| **Diagnostics**              | Syntax errors from the ASP parser; optional Clingo-backed checks                                                                                         |
+| **IntelliSense**             | Predicate completion from the workspace / config file pool                                                                                               |
+| **Hover**                    | Name, arity, occurrence counts; asp-lsp-style `%*…*%` docstrings; definition line + preceding comment                                                    |
+| **Go to Definition**         | Jump to facts and rule heads (cross-file)                                                                                                                |
+| **Find References**          | All occurrences of a predicate in the pool                                                                                                               |
+| **Learner mode**             | Optional rule-order and missing-comment **Information** hints, plus quick fixes (off by default)                                                         |
+| **Code Cookbook**            | Browse working ASP patterns and insert at cursor or open as a new `.lp` file                                                                             |
+| **Snippets**                 | Templates for `#show`, `#const`, `#minimize`, aggregates, choice rules, weak constraints                                                                 |
 
 ---
 
@@ -58,17 +58,17 @@ Works with **`.lp`** and **`.asp`** files in VS Code, Cursor, VSCodium, and comp
 
 The language server parses a growing **subset** of Clingo / ASP-Core-2. Unsupported constructs get syntax diagnostics even when Clingo itself would accept them.
 
-| Construct | Status |
-| --- | --- |
-| Facts, rules, integrity constraints | Supported |
-| Default negation (`not`) | Supported |
-| Comparisons and `#count` / `#sum` / `#max` / `#min` | Supported |
-| `#const`, `#show`, `#minimize` | Supported |
-| Choice rules `{ … }` | Supported |
-| Weak constraints (`:~ … . [w@p, …]`) | Supported |
-| `#maximize` | Not yet |
-| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet |
-| Variable bounds on choice | Supported |
+| Construct                                                    | Status    |
+| ------------------------------------------------------------ | --------- |
+| Facts, rules, integrity constraints                          | Supported |
+| Default negation (`not`)                                     | Supported |
+| Comparisons and `#count` / `#sum` / `#max` / `#min`          | Supported |
+| `#const`, `#show`, `#minimize`                               | Supported |
+| Choice rules `{ … }`                                         | Supported |
+| Weak constraints (`:~ … . [w@p, …]`)                         | Supported |
+| `#maximize`                                                  | Not yet   |
+| `#include`, `#external`, `#heuristic`, `#script`, `#program` | Not yet   |
+| Variable bounds on choice                                    | Supported |
 
 Snippets and the Code Cookbook may show patterns ahead of the parser; prefer this table when diagnostics disagree with Clingo.
 
@@ -122,11 +122,11 @@ Create it with **aspls: Initialize Clingo config file**.
 }
 ```
 
-| `additionalFiles` in config | LSP pool | Runner file set |
-| --- | --- | --- |
-| Key absent / `null` | Full workspace discovery | Active file only |
-| `[]` (explicit empty) | Active file only | Active file only |
-| `["a.lp", "b.lp"]` | Active + listed files | Active + listed files |
+| `additionalFiles` in config | LSP pool                 | Runner file set       |
+| --------------------------- | ------------------------ | --------------------- |
+| Key absent / `null`         | Full workspace discovery | Active file only      |
+| `[]` (explicit empty)       | Active file only         | Active file only      |
+| `["a.lp", "b.lp"]`          | Active + listed files    | Active + listed files |
 
 Path resolution: active file directory → workspace root → active-directory candidate as-is.
 
@@ -136,15 +136,15 @@ Before every run, aspls **preflights** missing files, invalid `models`, and miss
 
 ### Capability matrix (WASM vs PATH)
 
-| Feature | Bundled WASM | Native PATH |
-| --- | --- | --- |
-| Basic programs / answer sets | yes | yes |
-| Multi-file via `additionalFiles` | limited | yes |
-| models / `-n` | yes | yes |
-| `--const` / `-c` | yes | yes |
-| Threads (`-t`) | limited | yes |
-| Output control (`--outf`, `-q`, stats) | no | yes |
-| Advanced CLI | no | yes |
+| Feature                                | Bundled WASM | Native PATH |
+| -------------------------------------- | ------------ | ----------- |
+| Basic programs / answer sets           | yes          | yes         |
+| Multi-file via `additionalFiles`       | limited      | yes         |
+| models / `-n`                          | yes          | yes         |
+| `--const` / `-c`                       | yes          | yes         |
+| Threads (`-t`)                         | limited      | yes         |
+| Output control (`--outf`, `-q`, stats) | no           | yes         |
+| Advanced CLI                           | no           | yes         |
 
 ---
 
@@ -177,19 +177,19 @@ Warns when a predicate appears only once as a **use** (rule body / constraint). 
 
 ## Settings
 
-| Setting | Default | Description |
-| --- | --- | --- |
-| `aspls.pythonPath` | `""` | Path to Python 3 |
-| `aspls.rainbowPredicates` | `true` | Rainbow underline per predicate |
-| `aspls.diagnostics.onceUsed` | `true` | Warn on single-use body predicates |
-| `aspls.learnerMode` | `false` | Learner Information hints |
-| `aspls.clingo.usePath` | `false` | Use PATH instead of WASM |
-| `aspls.clingo.path` | `""` | Optional Clingo binary path |
-| `aspls.clingo.models` | `1` | Default model count (`0` = all) |
-| `aspls.clingo.threads` | `1` | Clingo `-t` |
-| `aspls.clingo.customArgs` | `""` | Extra CLI args |
-| `aspls.clingo.additionalFiles` | `[]` | **Deprecated** (init migration only) |
-| `aspls.clingo.configFile` | `aspls.clingo.json` | Config file name |
+| Setting                        | Default             | Description                          |
+| ------------------------------ | ------------------- | ------------------------------------ |
+| `aspls.pythonPath`             | `""`                | Path to Python 3                     |
+| `aspls.rainbowPredicates`      | `true`              | Rainbow underline per predicate      |
+| `aspls.diagnostics.onceUsed`   | `true`              | Warn on single-use body predicates   |
+| `aspls.learnerMode`            | `false`             | Learner Information hints            |
+| `aspls.clingo.usePath`         | `false`             | Use PATH instead of WASM             |
+| `aspls.clingo.path`            | `""`                | Optional Clingo binary path          |
+| `aspls.clingo.models`          | `1`                 | Default model count (`0` = all)      |
+| `aspls.clingo.threads`         | `1`                 | Clingo `-t`                          |
+| `aspls.clingo.customArgs`      | `""`                | Extra CLI args                       |
+| `aspls.clingo.additionalFiles` | `[]`                | **Deprecated** (init migration only) |
+| `aspls.clingo.configFile`      | `aspls.clingo.json` | Config file name                     |
 
 ---
 
