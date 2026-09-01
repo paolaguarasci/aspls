@@ -21,14 +21,21 @@ export const SAMPLE_CLINGO_CONFIG = `{
   "models": 0,
   "threads": 1,
   "customArgs": "",
+  "constants": [],
   "additionalFiles": []
 }
 `;
+
+export interface ClingoConstant {
+  name: string;
+  value: string;
+}
 
 export interface ClingoFileSeed {
   models: number;
   threads: number;
   customArgs: string;
+  constants: ClingoConstant[];
   additionalFiles: string[];
 }
 
@@ -42,6 +49,44 @@ export function asStringArray(value: unknown): string[] {
     return [];
   }
   return value.filter((v): v is string => typeof v === "string");
+}
+
+export function asConstantsArray(value: unknown): ClingoConstant[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const out: ClingoConstant[] = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+      continue;
+    }
+    const rec = entry as Record<string, unknown>;
+    if (typeof rec.name !== "string" || typeof rec.value !== "string") {
+      continue;
+    }
+    out.push({ name: rec.name, value: rec.value });
+  }
+  return out;
+}
+
+/** Turn configured constants into Clingo `-c name=value` argv tokens. */
+export function constantsToArgv(constants: ClingoConstant[]): string[] {
+  const argv: string[] = [];
+  for (const { name, value } of constants) {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      continue;
+    }
+    argv.push("-c", `${trimmed}=${value}`);
+  }
+  return argv;
+}
+
+export function buildClingoCustomArgs(opts: {
+  constants: ClingoConstant[];
+  customArgs: string;
+}): string[] {
+  return [...constantsToArgv(opts.constants), ...splitCustomArgs(opts.customArgs)];
 }
 
 /**
@@ -77,7 +122,11 @@ export function isValidModels(value: unknown): value is number {
 
 export function mergeClingoFileConfig(
   existing: Record<string, unknown>,
-  patch: { models?: number; additionalFiles?: string[] },
+  patch: {
+    models?: number;
+    additionalFiles?: string[];
+    constants?: ClingoConstant[];
+  },
 ): Record<string, unknown> {
   const next: Record<string, unknown> = { ...existing };
   if (patch.models !== undefined) {
@@ -85,6 +134,9 @@ export function mergeClingoFileConfig(
   }
   if (patch.additionalFiles !== undefined) {
     next.additionalFiles = patch.additionalFiles;
+  }
+  if (patch.constants !== undefined) {
+    next.constants = patch.constants;
   }
   return next;
 }

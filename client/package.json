@@ -355,7 +355,7 @@
                 "aspls.clingo.configFile": {
                     "type": "string",
                     "default": "aspls.clingo.json",
-                    "description": "Workspace-relative Clingo config file name (models, threads, customArgs, additionalFiles)."
+                    "description": "Workspace-relative Clingo config file name (models, threads, constants, customArgs, additionalFiles)."
                 }
             }
         }

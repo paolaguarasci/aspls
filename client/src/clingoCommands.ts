@@ -2,9 +2,9 @@ import * as vscode from "vscode";
 import {
   resolveAdditionalFiles,
   resolveClingoConfig,
-  splitCustomArgs,
   writeSampleConfigFile,
 } from "./clingoConfig";
+import { buildClingoCustomArgs } from "./clingoConfigCore";
 import { runClingo } from "./clingoRunner";
 import type { ClingoSolverView } from "./clingoSolverView";
 import type { ClingoRunRequest } from "./clingoTypes";
@@ -138,7 +138,10 @@ function buildRequest(
     models,
     additionalFiles,
     threads: config.threads,
-    customArgs: splitCustomArgs(config.customArgs),
+    customArgs: buildClingoCustomArgs({
+      constants: config.constants,
+      customArgs: config.customArgs,
+    }),
     usePath: config.usePath,
     clingoPath: config.clingoPath,
   };
