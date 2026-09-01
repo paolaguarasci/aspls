@@ -2,6 +2,8 @@ from pathlib import Path
 
 from features.completion import build_completions_from_index
 from features.definition import build_definitions_from_index
+from features.hover import build_hover_from_index
+from features.references import build_references_from_index
 from parser import parse_document
 from workspace_index import (
     WorkspaceIndex,
@@ -12,6 +14,8 @@ from workspace_index import (
 )
 
 FIXTURES = Path(__file__).parent / "fixtures"
+INCLUDE_MAIN = FIXTURES / "include_main.lp"
+INCLUDE_FACTS = FIXTURES / "include_facts.lp"
 
 
 def test_parses_include_directive():
@@ -83,22 +87,78 @@ def test_expand_include_closure_is_transitive():
     assert uris == {a, b, c}
 
 
-def test_cross_file_nav_through_include():
+def _fixture_include_pool():
+    """Load include fixtures from disk and build an indexed pool."""
+    main_uri = INCLUDE_MAIN.resolve().as_uri()
+    facts_uri = INCLUDE_FACTS.resolve().as_uri()
+    workspace_root = str(FIXTURES.parent.parent.parent.resolve())
+
+    texts = {
+        main_uri: INCLUDE_MAIN.read_text(),
+        facts_uri: INCLUDE_FACTS.read_text(),
+    }
+
+    pool = resolve_pool(
+        active_uri=main_uri,
+        workspace_roots=[workspace_root],
+        config_path=None,
+        additional_files=[],
+        discovered_uris=[main_uri, facts_uri],
+        get_text=lambda uri: texts.get(uri),
+    )
+    assert facts_uri in pool
+
     idx = WorkspaceIndex()
-    idx.upsert("file:///main.lp", '#include "facts.lp".\nok :- bird(X).')
-    idx.upsert("file:///facts.lp", "bird(tweety).")
-    pool = ["file:///main.lp", "file:///facts.lp"]
+    for uri in pool:
+        idx.upsert(uri, texts[uri])
     merged = idx.merged(pool)
+    doc_main = idx.merged([main_uri])
+    return main_uri, facts_uri, pool, merged, doc_main
+
+
+def test_cross_file_nav_through_include():
+    main_uri, facts_uri, pool, merged, doc_main = _fixture_include_pool()
+
     items = build_completions_from_index(merged)
     labels = {i.label for i in items}
     assert "bird/1" in labels
 
-    doc_main = idx.merged(["file:///main.lp"])
+    # Cursor on bird in "ok :- bird(X)." (line 2, column 6)
     locs = build_definitions_from_index(
         merged,
-        line=1,
+        line=2,
         column=6,
-        uri="file:///main.lp",
+        uri=main_uri,
         document_index=doc_main,
     )
-    assert any(l.uri == "file:///facts.lp" for l in locs)
+    assert any(l.uri == facts_uri for l in locs)
+
+
+def test_references_cross_file_through_include_fixture():
+    main_uri, facts_uri, pool, merged, doc_main = _fixture_include_pool()
+
+    refs = build_references_from_index(
+        merged,
+        line=2,
+        column=6,
+        uri=main_uri,
+        document_index=doc_main,
+    )
+    uris = {r.uri for r in refs}
+    assert main_uri in uris
+    assert facts_uri in uris
+
+
+def test_hover_cross_file_through_include_fixture():
+    main_uri, facts_uri, pool, merged, doc_main = _fixture_include_pool()
+
+    hover = build_hover_from_index(
+        merged,
+        line=2,
+        column=6,
+        uri=main_uri,
+        document_index=doc_main,
+    )
+    assert hover is not None
+    assert "bird/1" in hover.contents.value
+    assert "1 head" in hover.contents.value
