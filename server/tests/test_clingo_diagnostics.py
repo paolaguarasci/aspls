@@ -1,6 +1,10 @@
+from pathlib import Path
+
 from clingo_check import check_with_clingo
 from features.diagnostics import build_diagnostics
 from parser import parse_document
+
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def test_returns_empty_list_for_safe_program():
@@ -56,3 +60,25 @@ def test_diagnostics_surface_clingo_grounding_errors():
     text = "has_any :- #count{ node(X) } > 0."
     diagnostics = build_diagnostics(text)
     assert any(d.source == "aspls (clingo)" for d in diagnostics)
+
+
+def test_clingo_path_validates_script_directive():
+    """#script (lua) programs validate via the clingo binary on PATH."""
+    import shutil
+
+    import clingo_check
+
+    if not shutil.which("clingo"):
+        import pytest
+
+        pytest.skip("clingo not on PATH")
+
+    prev = clingo_check._CLINGO_MODULE
+    try:
+        clingo_check._CLINGO_MODULE = False
+        text = (FIXTURES / "script_directive.lp").read_text()
+        result = check_with_clingo(text)
+        assert result == []
+    finally:
+        clingo_check._CLINGO_MODULE = prev
+

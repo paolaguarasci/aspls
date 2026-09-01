@@ -28,7 +28,7 @@
             "name": "comment.line.percentage.asp"
         },
         "directives": {
-            "match": "#(const|show|minimize|maximize|include|external|heuristic|program|count|sum|max|min)\\b",
+            "match": "#(const|show|minimize|maximize|include|external|heuristic|program|script|end|count|sum|max|min)\\b",
             "name": "keyword.control.directive.asp"
         },
         "numbers": {

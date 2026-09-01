@@ -13,6 +13,7 @@ def test_classify_kinds():
     assert classify_statement("#external query(T) : step(T).") == ConstructKind.CONSTANTS
     assert classify_statement("#heuristic a. [1,sign]") == ConstructKind.CONSTANTS
     assert classify_statement("#program base.") == ConstructKind.CONSTANTS
+    assert classify_statement("#script (lua)\nend\n#end.") == ConstructKind.CONSTANTS
     assert classify_statement("bird(tweety).") == ConstructKind.FACTS
     assert classify_statement("{ bird(X) : animal(X) }.") == ConstructKind.CHOICES
     assert classify_statement("flies(X) :- bird(X).") == ConstructKind.DEFINITIONS

@@ -119,6 +119,27 @@ def test_parses_program_directive():
     assert result.tree is not None
 
 
+def test_parses_script_directive():
+    text = (FIXTURES / "script_directive.lp").read_text()
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+    assert len(result.tree.children) == 2  # script block + p(a).
+
+
+def test_script_directive_tolerates_dots_in_lua_body():
+    text = """#script(lua)
+local t = "a.b.c"
+function main(prg) prg:solve() end
+#end.
+fact(x).
+"""
+    result = parse_document(text)
+    assert result.errors == []
+    assert result.tree is not None
+    assert len(result.tree.children) == 2
+
+
 def test_parses_aggregates():
     text = (FIXTURES / "aggregates.lp").read_text()
     result = parse_document(text)

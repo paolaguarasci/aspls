@@ -13,9 +13,13 @@ directive: "#const" IDENTIFIER "=" INT "." -> const_directive
          | "#external" literal (":" body)? "." -> external_directive
          | "#heuristic" literal (":" body)? "." HEURISTIC_SUFFIX? -> heuristic_directive
          | "#program" IDENTIFIER ("(" term ("," term)* ")")? "." -> program_directive
+         | "#script" "(" "lua" ")" SCRIPT_BODY -> script_directive
 
 // Optional [weight@priority, modifier] after #heuristic (tolerant inner text).
 HEURISTIC_SUFFIX: /\s*\[[^\]]*\]/
+
+// Clingo: #script (lua) ... #end. — Lua body is opaque to the ASP grammar.
+SCRIPT_BODY: /[\s\S]*?#end\./
 
 // Clingo: #minimize { weight@priority, t1, t2, ... : body ; ... }.
 minimize_elem: term ("@" INT)? ("," term)* ":" body

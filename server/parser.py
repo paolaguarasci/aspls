@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -99,16 +100,28 @@ def format_parse_error(exc: UnexpectedInput, fragment: str) -> str:
     return " ".join(parts)
 
 
+_SCRIPT_START_RE = re.compile(r"^\s*#script\b", re.IGNORECASE)
+_SCRIPT_END_RE = re.compile(r"^\s*#end\s*\.\s*(?:%.*)?$", re.IGNORECASE)
+
+
 def _split_top_level_statements(text: str) -> list[tuple[str, int]]:
     statements = []
     line_offset = 0
     current = []
     current_start_line = 0
+    in_script = False
     for line in text.split("\n"):
         if not current:
             current_start_line = line_offset
         current.append(line)
-        if "." in line:
+        if in_script:
+            if _SCRIPT_END_RE.match(line):
+                statements.append(("\n".join(current), current_start_line))
+                current = []
+                in_script = False
+        elif _SCRIPT_START_RE.match(line):
+            in_script = True
+        elif "." in line:
             statements.append(("\n".join(current), current_start_line))
             current = []
         line_offset += 1
