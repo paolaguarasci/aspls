@@ -21,15 +21,46 @@ import {
 
 const execFileAsync = promisify(execFile);
 
-export type GroundingDebugLaunchArgs = DebugProtocol.LaunchRequestArguments & {
-  program: string;
+async function runGroundingScript(
+  pythonPath: string,
+  scriptPath: string,
+  program: string,
+): Promise<{ stdout: string; stderr: string }> {
+  try {
+    const result = await execFileAsync(pythonPath, [scriptPath, program], {
+      maxBuffer: 10 * 1024 * 1024,
+    });
+    return { stdout: result.stdout, stderr: result.stderr };
+  } catch (err) {
+    const failure = err as NodeJS.ErrnoException & {
+      stdout?: string | Buffer;
+      stderr?: string | Buffer;
+    };
+    return {
+      stdout: failure.stdout?.toString() ?? "",
+      stderr: failure.stderr?.toString() ?? failure.message ?? String(err),
+    };
+  }
+}
+
+export type GroundingDebugSessionOptions = {
   pythonPath: string;
   scriptPath: string;
+};
+
+export type GroundingDebugLaunchArgs = DebugProtocol.LaunchRequestArguments & {
+  program: string;
+  pythonPath?: string;
+  scriptPath?: string;
 };
 
 export class GroundingDebugSession extends DebugSession {
   private steps: GroundingStep[] = [];
   private stepIndex = -1;
+
+  constructor(private readonly sessionOptions: GroundingDebugSessionOptions) {
+    super();
+  }
 
   protected initializeRequest(response: DebugProtocol.Response): void {
     response.body = response.body ?? {};
@@ -50,7 +81,17 @@ export class GroundingDebugSession extends DebugSession {
     args: GroundingDebugLaunchArgs,
   ): Promise<void> {
     try {
-      this.steps = await loadGroundingSteps(args);
+      const launchArgs: GroundingDebugLaunchArgs = {
+        ...args,
+        pythonPath: args.pythonPath ?? this.sessionOptions.pythonPath,
+        scriptPath: args.scriptPath ?? this.sessionOptions.scriptPath,
+      };
+      if (!launchArgs.program?.trim()) {
+        throw new Error(
+          "Debug Grounding: missing program path. Open an .lp/.asp file or set \"program\" in launch.json.",
+        );
+      }
+      this.steps = await loadGroundingSteps(launchArgs);
       this.stepIndex = this.steps.length > 0 ? 0 : -1;
       this.sendResponse(response);
       if (isSessionFinished(this.stepIndex, this.steps.length)) {
@@ -169,16 +210,40 @@ export class GroundingDebugSession extends DebugSession {
 export async function loadGroundingSteps(
   args: GroundingDebugLaunchArgs,
 ): Promise<GroundingStep[]> {
-  const { stdout, stderr } = await execFileAsync(
-    args.pythonPath,
-    [args.scriptPath, args.program],
-    { maxBuffer: 10 * 1024 * 1024 },
-  );
-  if (stderr.trim()) {
-    throw new Error(stderr.trim());
+  const pythonPath = args.pythonPath?.trim();
+  const scriptPath = args.scriptPath?.trim();
+  const program = args.program?.trim();
+  if (!pythonPath) {
+    throw new Error(
+      "Debug Grounding: Python interpreter not configured. Set aspls.pythonPath or install python3 on PATH.",
+    );
   }
-  const payload = parseGroundingDebugPayload(stdout.trim());
-  return payload.steps;
+  if (!scriptPath) {
+    throw new Error("Debug Grounding: grounding_debug.py path is missing.");
+  }
+  if (!program) {
+    throw new Error("Debug Grounding: program path is missing.");
+  }
+
+  const { stdout, stderr } = await runGroundingScript(
+    pythonPath,
+    scriptPath,
+    program,
+  );
+  const raw = stdout.trim();
+  if (!raw) {
+    throw new Error(
+      stderr.trim() || "Debug Grounding: grounding_debug.py produced no output.",
+    );
+  }
+  try {
+    return parseGroundingDebugPayload(raw).steps;
+  } catch (err) {
+    if (stderr.trim() && !String(err).includes("\n")) {
+      throw new Error(`${String(err)}\n\n${stderr.trim()}`);
+    }
+    throw err;
+  }
 }
 
 export function resolveGroundingDebugScript(extensionPath: string): string {

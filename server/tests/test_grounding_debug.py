@@ -49,3 +49,19 @@ def test_cli_json_output(tmp_path: Path):
     data = json.loads(proc.stdout)
     assert data["ok"] is True
     assert any(s["kind"] == "fact" for s in data["steps"])
+
+
+def test_cli_reports_clingo_grounding_errors(tmp_path: Path):
+    program = tmp_path / "unsafe.lp"
+    program.write_text("neq(X) :- X != 0.\n", encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "grounding_debug.py"), str(program)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0
+    data = json.loads(proc.stdout)
+    assert data["ok"] is False
+    assert "grounding stopped" in data["error"]
+    assert data["clingoMessages"]

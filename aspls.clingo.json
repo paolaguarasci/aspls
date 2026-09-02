@@ -3,7 +3,5 @@
   "threads": 1,
   "customArgs": "",
   "constants": [],
-  "additionalFiles": [
-    "examples/04_multi_file/facts.lp"
-  ]
+  "additionalFiles": []
 }

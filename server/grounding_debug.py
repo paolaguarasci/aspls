@@ -23,6 +23,20 @@ class GroundingStep:
     detail: str
 
 
+class GroundingError(Exception):
+    """Raised when clingo stops grounding; carries CLI messages and partial steps."""
+
+    def __init__(
+        self,
+        summary: str,
+        messages: list[str],
+        steps: list[GroundingStep],
+    ) -> None:
+        super().__init__(summary)
+        self.messages = messages
+        self.steps = steps
+
+
 def _format_literals(ids: list[int], atoms: dict[int, str]) -> list[str]:
     out: list[str] = []
     for lit in ids:
@@ -87,12 +101,29 @@ def collect_grounding_steps(program_path: str | Path) -> list[GroundingStep]:
     if not path.is_file():
         raise FileNotFoundError(f"Program file not found: {path}")
 
+    messages: list[str] = []
+
+    def logger(_code: int, message: str) -> None:
+        messages.append(message)
+
     collector = _StepCollector()
-    ctl = clingo.Control()
+    ctl = clingo.Control(logger=logger)
     ctl.register_observer(collector)
     ctl.load(str(path))
-    ctl.ground([("base", [])])
+    try:
+        ctl.ground([("base", [])])
+    except RuntimeError as exc:
+        summary = str(exc).strip() or "grounding stopped because of errors"
+        detail = _format_clingo_failure(summary, messages)
+        raise GroundingError(detail, messages, collector.steps) from exc
     return collector.steps
+
+
+def _format_clingo_failure(summary: str, messages: list[str]) -> str:
+    if not messages:
+        return summary
+    body = "\n".join(line for line in messages if line.strip())
+    return f"{summary}\n\n{body}" if body else summary
 
 
 def steps_to_json(steps: list[GroundingStep]) -> list[dict[str, Any]]:
@@ -110,9 +141,21 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         steps = collect_grounding_steps(args[0])
+    except GroundingError as exc:
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "error": str(exc),
+                    "clingoMessages": exc.messages,
+                    "steps": steps_to_json(exc.steps),
+                }
+            )
+        )
+        return 0
     except Exception as exc:
-        print(json.dumps({"ok": False, "error": str(exc), "steps": []}))
-        return 1
+        print(json.dumps({"ok": False, "error": str(exc), "clingoMessages": [], "steps": []}))
+        return 0
 
     print(json.dumps({"ok": True, "error": None, "steps": steps_to_json(steps)}))
     return 0

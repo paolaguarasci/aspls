@@ -72,12 +72,13 @@ class GroundingDebugAdapterFactory
       );
     }
 
-    session.configuration.pythonPath = pythonInterpreter;
-    session.configuration.scriptPath = resolveGroundingDebugScript(
-      this.context.extensionPath,
+    const scriptPath = resolveGroundingDebugScript(this.context.extensionPath);
+    return new vscode.DebugAdapterInlineImplementation(
+      new GroundingDebugSession({
+        pythonPath: pythonInterpreter,
+        scriptPath,
+      }),
     );
-
-    return new vscode.DebugAdapterInlineImplementation(new GroundingDebugSession());
   }
 }
 
