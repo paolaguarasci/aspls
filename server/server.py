@@ -22,6 +22,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_DOCUMENT_LINK,
     TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
+    TEXT_DOCUMENT_INLAY_HINT,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
     WORKSPACE_DID_CHANGE_WORKSPACE_FOLDERS,
     WORKSPACE_DID_CHANGE_WATCHED_FILES,
@@ -43,6 +44,7 @@ from lsprotocol.types import (
     CodeActionParams,
     SemanticTokensParams,
     SemanticTokensLegend,
+    InlayHintParams,
     InitializedParams,
 )
 
@@ -63,6 +65,7 @@ from features.semantic_tokens import (
 )
 from features.workspace_predicates import build_workspace_predicate_nodes
 from features.workspace_symbols import build_workspace_symbols
+from features.inlay_hints import build_inlay_hints
 from workspace_index import WorkspaceIndex, resolve_pool
 
 server = LanguageServer("aspls", "v0.1.0")
@@ -502,6 +505,12 @@ def code_action(ls: LanguageServer, params: CodeActionParams):
 def semantic_tokens_full(ls: LanguageServer, params: SemanticTokensParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
     return build_semantic_tokens(doc.source)
+
+
+@server.feature(TEXT_DOCUMENT_INLAY_HINT)
+def inlay_hint(ls: LanguageServer, params: InlayHintParams):
+    doc = ls.workspace.get_text_document(params.text_document.uri)
+    return build_inlay_hints(doc.source, params.range)
 
 
 if __name__ == "__main__":
