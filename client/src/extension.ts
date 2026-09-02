@@ -6,6 +6,7 @@ import {
   ServerOptions,
 } from "vscode-languageclient/node";
 import { registerClingoCommands } from "./clingoCommands";
+import { registerClingoWatch } from "./clingoWatch";
 import { registerAdditionalFilesDeprecationWarning } from "./clingoConfigDeprecation";
 import { registerCookbookCommands } from "./cookbook/cookbookCommands";
 import { ClingoSolverView } from "./clingoSolverView";
@@ -31,6 +32,7 @@ export async function activate(
     ),
   );
   registerClingoCommands(context, solverView);
+  registerClingoWatch(context, solverView);
   registerAdditionalFilesDeprecationWarning(context);
   registerCookbookCommands(context);
 
