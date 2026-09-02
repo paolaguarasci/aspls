@@ -151,6 +151,10 @@ aspls tutorials and the **Code Cookbook** follow the progression used in the [Po
 
 Open any row’s `.lp` file or run **aspls: Open Code Cookbook** to explore the pattern in the editor with highlighting, hover, and the Solver sidebar.
 
+## Standalone language server
+
+Use the Python LSP in **Neovim**, **Emacs**, or **Zed** without the VS Code extension — diagnostics, completion, hover, navigation, semantic tokens, and more. See [`docs/lsp-standalone.md`](docs/lsp-standalone.md).
+
 ## Clingo config
 
 Workspace file **`aspls.clingo.json`** (name configurable via `aspls.clingo.configFile`) is the **canonical source** for `additionalFiles`, `models`, `threads`, and `customArgs` for both the LSP and the runner.
@@ -276,6 +280,7 @@ Semantic highlighting for ASP is enabled by default for `[asp]`.
 | [`examples/`](examples/) | Tutorial projects + grammar reference files |
 | [`docs/images/`](docs/images/) | README illustrations |
 | [`docs/walkthrough.md`](docs/walkthrough.md) | 5-minute video recording script |
+| [`docs/lsp-standalone.md`](docs/lsp-standalone.md) | Language server setup for Neovim, Emacs, and Zed |
 
 The extension README for Marketplace / Open VSX lives in [`client/README.md`](client/README.md).
 
