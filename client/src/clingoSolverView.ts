@@ -317,6 +317,31 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
       padding: 2px 7px;
       border-radius: 4px;
     }
+    .atom.hidden { display: none; }
+    .set.filter-hidden { display: none; }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: var(--gap);
+    }
+    .filter-row label { font-size: 0.9em; }
+    .filter-row input[type="text"] {
+      flex: 1 1 8rem;
+      min-width: 6rem;
+      font: inherit;
+      background: var(--vscode-input-background);
+      color: var(--vscode-input-foreground);
+      border: 1px solid var(--vscode-input-border, transparent);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .filter-empty {
+      color: var(--vscode-descriptionForeground);
+      font-size: 0.9em;
+      margin: 0 0 var(--gap);
+    }
     .empty {
       color: var(--vscode-descriptionForeground);
     }
@@ -450,6 +475,45 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
         postConstants();
       }
     });
+    function applyAtomFilter(query) {
+      const q = query.trim().toLowerCase();
+      let totalVisible = 0;
+      document.querySelectorAll('.set').forEach((set) => {
+        const atoms = set.querySelectorAll('.atom');
+        if (atoms.length === 0) {
+          set.classList.remove('filter-hidden');
+          return;
+        }
+        let visibleInSet = 0;
+        atoms.forEach((atom) => {
+          const text = (atom.textContent || '').toLowerCase();
+          const match = !q || text.includes(q);
+          atom.classList.toggle('hidden', !match);
+          if (match) {
+            visibleInSet++;
+          }
+        });
+        set.classList.toggle('filter-hidden', q.length > 0 && visibleInSet === 0);
+        totalVisible += visibleInSet;
+      });
+      const emptyMsg = document.getElementById('filter-empty');
+      if (emptyMsg) {
+        emptyMsg.hidden = !(q.length > 0 && totalVisible === 0);
+      }
+      const prev = vscode.getState() || {};
+      vscode.setState({ ...prev, atomFilter: query });
+    }
+    const filterInput = document.getElementById('atom-filter');
+    if (filterInput instanceof HTMLInputElement) {
+      const saved = vscode.getState();
+      if (saved && typeof saved.atomFilter === 'string') {
+        filterInput.value = saved.atomFilter;
+      }
+      applyAtomFilter(filterInput.value);
+      filterInput.addEventListener('input', () => {
+        applyAtomFilter(filterInput.value);
+      });
+    }
   </script>
 </body>
 </html>`;
@@ -622,6 +686,11 @@ ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome
 </header>
 <p class="meta">${escapeHtml(outcome.solver ?? "Clingo")} · ${escapeHtml(outcome.backend)} · models ${outcome.modelCount}${more}${time}${stats}<br/>${escapeHtml(outcome.commandSummary)}</p>
 ${warnings}
+<div class="filter-row">
+  <label for="atom-filter">Filter atoms</label>
+  <input type="text" id="atom-filter" placeholder="Search in current models…" autocomplete="off" spellcheck="false" />
+</div>
+<p id="filter-empty" class="filter-empty" hidden>No atoms match the filter.</p>
 ${setsHtml}`;
   }
 }
