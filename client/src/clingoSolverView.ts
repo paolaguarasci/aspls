@@ -13,7 +13,12 @@ import {
   asConstantsArray,
   type ClingoConstant,
 } from "./clingoConfigCore";
-import type { ClingoResolvedConfig, ClingoRunOutcome } from "./clingoTypes";
+import { diffAtomSets } from "./answerSetDiff";
+import type {
+  ClingoAnswerSet,
+  ClingoResolvedConfig,
+  ClingoRunOutcome,
+} from "./clingoTypes";
 
 type RerunMode = "first" | "all" | "config";
 
@@ -24,6 +29,7 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
   private lastOutcome?: ClingoRunOutcome;
   private lastMode: RerunMode = "first";
   private lastFile?: string;
+  private pinnedIndices = new Set<number>();
 
   constructor(private readonly extensionUri: vscode.Uri) {}
 
@@ -59,6 +65,7 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
     this.lastOutcome = outcome;
     this.lastMode = mode;
     this.lastFile = file;
+    this.pinnedIndices.clear();
     await vscode.commands.executeCommand("workbench.view.extension.aspls");
     try {
       await vscode.commands.executeCommand(
@@ -183,6 +190,18 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
             constants: asConstantsArray(message.constants),
           });
           break;
+        }
+        case "togglePin": {
+          if (typeof message.index !== "number" || !Number.isInteger(message.index)) {
+            return;
+          }
+          if (this.pinnedIndices.has(message.index)) {
+            this.pinnedIndices.delete(message.index);
+          } else {
+            this.pinnedIndices.add(message.index);
+          }
+          this.refreshHtml();
+          return;
         }
         default:
           return;
@@ -318,6 +337,59 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
       border-radius: 4px;
     }
     .atom.hidden { display: none; }
+    .atom.added {
+      background: color-mix(in srgb, #3f9d6a 45%, transparent);
+      border: 1px solid color-mix(in srgb, #3f9d6a 70%, transparent);
+    }
+    .atom.removed {
+      background: color-mix(in srgb, #d4775a 35%, transparent);
+      border: 1px dashed color-mix(in srgb, #d4775a 65%, transparent);
+      text-decoration: line-through;
+      opacity: 0.85;
+    }
+    .atom.unchanged {
+      opacity: 0.72;
+    }
+    .diff-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.8em;
+      color: var(--vscode-descriptionForeground);
+      margin: 0 0 var(--gap);
+    }
+    .diff-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .compare-panel {
+      border: 1px solid var(--vscode-panel-border, rgba(127,127,127,0.35));
+      border-radius: var(--radius);
+      padding: 10px;
+      margin-bottom: var(--gap);
+      background: var(--vscode-editor-background);
+    }
+    .compare-panel h2 {
+      font-size: 0.95rem;
+      margin: 0 0 8px;
+    }
+    .compare-row {
+      margin-bottom: 8px;
+    }
+    .compare-row:last-child { margin-bottom: 0; }
+    .compare-row strong {
+      display: block;
+      font-size: 0.85em;
+      margin-bottom: 4px;
+      color: var(--vscode-descriptionForeground);
+    }
+    .set.pinned {
+      border-color: color-mix(in srgb, #c9a227 55%, transparent);
+    }
+    button.pinned-active {
+      background: color-mix(in srgb, #c9a227 35%, var(--vscode-button-secondaryBackground));
+    }
     .set.filter-hidden { display: none; }
     .filter-row {
       display: flex;
@@ -449,6 +521,9 @@ export class ClingoSolverView implements vscode.WebviewViewProvider {
       } else if (action === 'removeConstant') {
         const idx = Number(t.getAttribute('data-index'));
         vscode.postMessage({ type: 'removeConstant', index: idx });
+      } else if (action === 'togglePin') {
+        const idx = Number(t.getAttribute('data-index'));
+        vscode.postMessage({ type: 'togglePin', index: idx });
       }
     });
     function postConstants() {
@@ -638,28 +713,27 @@ ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome
       outcome.answerSets.length === 0
         ? `<p class="empty">No answer sets.</p>`
         : outcome.answerSets
-            .map((set) => {
-              const text = set.atoms.join(" ");
-              const atoms =
-                set.atoms.length === 0
-                  ? `<span class="empty">(empty)</span>`
-                  : `<div class="atoms">${set.atoms
-                      .map((a) => `<span class="atom">${escapeHtml(a)}</span>`)
-                      .join("")}</div>`;
-              const cost =
-                set.costs && set.costs.length > 0
-                  ? `<div class="meta">Cost: ${escapeHtml(set.costs.join(" "))}</div>`
-                  : "";
-              return `<section class="set">
-  <div class="set-head">
-    <strong>Answer set ${set.index}</strong>
-    <button data-action="copy" data-text="${encodeCopy(text)}">Copy</button>
-  </div>
-  ${atoms}
-  ${cost}
-</section>`;
-            })
+            .map((set, i) =>
+              this.renderAnswerSetCard(
+                set,
+                i > 0 ? outcome.answerSets[i - 1] : undefined,
+                this.pinnedIndices.has(set.index),
+              ),
+            )
             .join("");
+
+    const compareHtml =
+      this.pinnedIndices.size >= 2
+        ? this.renderComparePanel(outcome.answerSets)
+        : "";
+
+    const diffLegend =
+      outcome.answerSets.length > 1
+        ? `<div class="diff-legend">
+  <span><span class="atom added">+</span> added vs previous</span>
+  <span><span class="atom removed">−</span> removed vs previous</span>
+</div>`
+        : "";
 
     const warnings =
       outcome.warnings.length > 0
@@ -686,12 +760,99 @@ ${outcome.raw ? `<details><summary>Raw output</summary><pre>${escapeHtml(outcome
 </header>
 <p class="meta">${escapeHtml(outcome.solver ?? "Clingo")} · ${escapeHtml(outcome.backend)} · models ${outcome.modelCount}${more}${time}${stats}<br/>${escapeHtml(outcome.commandSummary)}</p>
 ${warnings}
+${compareHtml}
+${diffLegend}
 <div class="filter-row">
   <label for="atom-filter">Filter atoms</label>
   <input type="text" id="atom-filter" placeholder="Search in current models…" autocomplete="off" spellcheck="false" />
 </div>
 <p id="filter-empty" class="filter-empty" hidden>No atoms match the filter.</p>
 ${setsHtml}`;
+  }
+
+  private renderAnswerSetCard(
+    set: ClingoAnswerSet,
+    prev: ClingoAnswerSet | undefined,
+    pinned: boolean,
+  ): string {
+    const text = set.atoms.join(" ");
+    const diff = prev ? diffAtomSets(prev.atoms, set.atoms) : undefined;
+    const atoms =
+      set.atoms.length === 0 && (!diff || diff.removed.length === 0)
+        ? `<span class="empty">(empty)</span>`
+        : `<div class="atoms">${this.renderDiffAtoms(set.atoms, diff)}${diff && diff.removed.length > 0 ? diff.removed.map((a) => `<span class="atom removed" title="Removed vs previous">${escapeHtml(a)}</span>`).join("") : ""}</div>`;
+    const cost =
+      set.costs && set.costs.length > 0
+        ? `<div class="meta">Cost: ${escapeHtml(set.costs.join(" "))}</div>`
+        : "";
+    const pinClass = pinned ? " pinned-active" : "";
+    const setClass = pinned ? " set pinned" : " set";
+    return `<section class="${setClass.trim()}" data-set-index="${set.index}">
+  <div class="set-head">
+    <strong>Answer set ${set.index}</strong>
+    <div class="actions">
+      <button type="button" class="${pinClass.trim()}" data-action="togglePin" data-index="${set.index}">${pinned ? "Unpin" : "Pin"}</button>
+      <button data-action="copy" data-text="${encodeCopy(text)}">Copy</button>
+    </div>
+  </div>
+  ${atoms}
+  ${cost}
+</section>`;
+  }
+
+  private renderDiffAtoms(
+    atoms: string[],
+    diff: ReturnType<typeof diffAtomSets> | undefined,
+  ): string {
+    if (!diff) {
+      return atoms
+        .map((a) => `<span class="atom">${escapeHtml(a)}</span>`)
+        .join("");
+    }
+    const addedSet = new Set(diff.added);
+    const unchangedSet = new Set(diff.unchanged);
+    return atoms
+      .map((a) => {
+        let cls = "atom";
+        if (addedSet.has(a)) {
+          cls += " added";
+        } else if (unchangedSet.has(a)) {
+          cls += " unchanged";
+        }
+        const title =
+          addedSet.has(a)
+            ? ' title="Added vs previous"'
+            : unchangedSet.has(a)
+              ? ' title="Unchanged vs previous"'
+              : "";
+        return `<span class="${cls}"${title}>${escapeHtml(a)}</span>`;
+      })
+      .join("");
+  }
+
+  private renderComparePanel(answerSets: ClingoAnswerSet[]): string {
+    const pinned = answerSets
+      .filter((s) => this.pinnedIndices.has(s.index))
+      .sort((a, b) => a.index - b.index);
+    if (pinned.length < 2) {
+      return "";
+    }
+    const [left, right] = pinned.slice(0, 2);
+    const diff = diffAtomSets(left.atoms, right.atoms);
+    const renderBucket = (
+      label: string,
+      items: string[],
+      cls: string,
+    ): string =>
+      items.length === 0
+        ? ""
+        : `<div class="compare-row"><strong>${label}</strong><div class="atoms">${items.map((a) => `<span class="atom ${cls}">${escapeHtml(a)}</span>`).join("")}</div></div>`;
+    return `<section class="compare-panel">
+  <h2>Compare pinned: set ${left.index} → set ${right.index}</h2>
+  ${renderBucket(`Only in set ${left.index}`, diff.removed, "removed")}
+  ${renderBucket(`Only in set ${right.index}`, diff.added, "added")}
+  ${renderBucket(`In both`, diff.unchanged, "unchanged")}
+</section>`;
   }
 }
 
