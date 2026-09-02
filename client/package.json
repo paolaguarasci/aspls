@@ -377,6 +377,16 @@
                     "default": 500,
                     "minimum": 0,
                     "description": "Debounce delay in milliseconds before a watch-mode re-run starts after save."
+                },
+                "aspls.telemetry.enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Send anonymous usage events (features used, parser syntax errors) to help prioritize the roadmap. Off by default; no data is collected until you enable this."
+                },
+                "aspls.telemetry.endpoint": {
+                    "type": "string",
+                    "default": "",
+                    "description": "HTTPS URL that receives anonymous telemetry batches when aspls.telemetry.enabled is true. Leave empty to keep events local (nothing is sent)."
                 }
             }
         }
@@ -384,7 +394,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
-        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoRunnerMultiFileParity.smoke.test.js && node out/extensionPackage.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js && node out/clingoWatch.test.js",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoRunnerMultiFileParity.smoke.test.js && node out/extensionPackage.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js && node out/clingoWatch.test.js && node out/telemetry.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",

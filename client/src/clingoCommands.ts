@@ -8,6 +8,7 @@ import { buildClingoCustomArgs } from "./clingoConfigCore";
 import { runClingo } from "./clingoRunner";
 import type { ClingoSolverView } from "./clingoSolverView";
 import type { ClingoRunRequest } from "./clingoTypes";
+import { trackFeature } from "./telemetry";
 
 type RunMode = "first" | "all" | "config";
 
@@ -16,21 +17,26 @@ export function registerClingoCommands(
   panel: ClingoSolverView,
 ): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand("aspls.clingo.computeFirst", () =>
-      runFromEditor(panel, "first"),
-    ),
-    vscode.commands.registerCommand("aspls.clingo.computeAll", () =>
-      runFromEditor(panel, "all"),
-    ),
-    vscode.commands.registerCommand("aspls.clingo.computeWithConfig", () =>
-      runFromEditor(panel, "config"),
-    ),
-    vscode.commands.registerCommand("aspls.clingo.rerun", () =>
-      rerun(panel),
-    ),
-    vscode.commands.registerCommand("aspls.clingo.initConfig", () =>
-      initConfig(),
-    ),
+    vscode.commands.registerCommand("aspls.clingo.computeFirst", () => {
+      trackFeature("clingo.computeFirst");
+      return runFromEditor(panel, "first");
+    }),
+    vscode.commands.registerCommand("aspls.clingo.computeAll", () => {
+      trackFeature("clingo.computeAll");
+      return runFromEditor(panel, "all");
+    }),
+    vscode.commands.registerCommand("aspls.clingo.computeWithConfig", () => {
+      trackFeature("clingo.computeWithConfig");
+      return runFromEditor(panel, "config");
+    }),
+    vscode.commands.registerCommand("aspls.clingo.rerun", () => {
+      trackFeature("clingo.rerun");
+      return rerun(panel);
+    }),
+    vscode.commands.registerCommand("aspls.clingo.initConfig", () => {
+      trackFeature("clingo.initConfig");
+      return initConfig();
+    }),
   );
 }
 

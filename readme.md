@@ -268,6 +268,8 @@ With **`aspls.learnerMode`** enabled, Information hints suggest rule order and m
 | `aspls.clingo.customArgs` | `""` | Extra CLI args |
 | `aspls.clingo.additionalFiles` | `[]` | **Deprecated** — migrated on init only |
 | `aspls.clingo.configFile` | `aspls.clingo.json` | Workspace config file name |
+| `aspls.telemetry.enabled` | `false` | Anonymous opt-in usage events |
+| `aspls.telemetry.endpoint` | `""` | HTTPS collector URL (required to send) |
 
 Semantic highlighting for ASP is enabled by default for `[asp]`.
 
