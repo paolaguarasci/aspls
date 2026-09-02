@@ -83,6 +83,16 @@
                 "title": "Show Workspace Predicates",
                 "category": "aspls",
                 "icon": "$(folder-library)"
+            },
+            {
+                "command": "aspls.codeLens.runFile",
+                "title": "Run this file",
+                "category": "aspls"
+            },
+            {
+                "command": "aspls.codeLens.showReferences",
+                "title": "Show references",
+                "category": "aspls"
             }
         ],
         "menus": {

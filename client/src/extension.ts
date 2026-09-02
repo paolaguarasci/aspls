@@ -6,6 +6,7 @@ import {
   ServerOptions,
 } from "vscode-languageclient/node";
 import { registerClingoCommands } from "./clingoCommands";
+import { registerCodeLensCommands } from "./codeLensCommands";
 import { registerClingoWatch } from "./clingoWatch";
 import { registerAdditionalFilesDeprecationWarning } from "./clingoConfigDeprecation";
 import { registerCookbookCommands } from "./cookbook/cookbookCommands";
@@ -32,6 +33,7 @@ export async function activate(
     ),
   );
   registerClingoCommands(context, solverView);
+  registerCodeLensCommands(context, solverView);
   registerClingoWatch(context, solverView);
   registerAdditionalFilesDeprecationWarning(context);
   registerCookbookCommands(context);
