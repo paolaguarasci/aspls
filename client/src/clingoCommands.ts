@@ -58,56 +58,83 @@ async function rerun(panel: ClingoSolverView): Promise<void> {
   await runFromEditor(panel, mode);
 }
 
-async function runFromEditor(
+export async function runFromDocument(
   panel: ClingoSolverView,
+  document: vscode.TextDocument,
   mode: RunMode,
+  options?: { quiet?: boolean },
 ): Promise<void> {
-  const editor = vscode.window.activeTextEditor;
-  if (!editor || editor.document.languageId !== "asp") {
-    void vscode.window.showErrorMessage(
-      "Open an ASP (.lp / .asp) file to run Clingo.",
-    );
+  if (document.languageId !== "asp") {
+    if (!options?.quiet) {
+      void vscode.window.showErrorMessage(
+        "Open an ASP (.lp / .asp) file to run Clingo.",
+      );
+    }
     return;
   }
 
-  if (editor.document.isDirty) {
-    const saved = await editor.document.save();
+  if (document.isDirty) {
+    const saved = await document.save();
     if (!saved) {
-      void vscode.window.showWarningMessage(
-        "Save the file before running Clingo.",
-      );
+      if (!options?.quiet) {
+        void vscode.window.showWarningMessage(
+          "Save the file before running Clingo.",
+        );
+      }
       return;
     }
   }
 
+  const run = async (): Promise<void> => {
+    const request = buildRequest(document, mode);
+    const outcome = await runClingo(request);
+    await panel.showOutcome(outcome, mode, document.uri.fsPath);
+    const capWarn = (outcome.ok ? outcome.warnings : outcome.warnings ?? [])
+      .find((w) => w.startsWith("WASM capability warning"));
+    if (capWarn && !options?.quiet) {
+      void vscode.window.showWarningMessage(
+        "Some customArgs are limited under WASM. Enable aspls.clingo.usePath for full Clingo CLI support.",
+      );
+    }
+    if (!outcome.ok && !options?.quiet) {
+      void vscode.window.showErrorMessage(
+        `Clingo: ${outcome.error.split("\n")[0]}`,
+      );
+    }
+  };
+
   try {
+    if (options?.quiet) {
+      await run();
+      return;
+    }
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
         title: "Running Clingo…",
         cancellable: false,
       },
-      async () => {
-        const request = buildRequest(editor.document, mode);
-        const outcome = await runClingo(request);
-        await panel.showOutcome(outcome, mode, editor.document.uri.fsPath);
-        const capWarn = (outcome.ok ? outcome.warnings : outcome.warnings ?? [])
-          .find((w) => w.startsWith("WASM capability warning"));
-        if (capWarn) {
-          void vscode.window.showWarningMessage(
-            "Some customArgs are limited under WASM. Enable aspls.clingo.usePath for full Clingo CLI support.",
-          );
-        }
-        if (!outcome.ok) {
-          void vscode.window.showErrorMessage(
-            `Clingo: ${outcome.error.split("\n")[0]}`,
-          );
-        }
-      },
+      async () => run(),
     );
   } catch (err) {
-    void vscode.window.showErrorMessage(String(err));
+    if (!options?.quiet) {
+      void vscode.window.showErrorMessage(String(err));
+    }
   }
+}
+
+async function runFromEditor(
+  panel: ClingoSolverView,
+  mode: RunMode,
+): Promise<void> {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    void vscode.window.showErrorMessage(
+      "Open an ASP (.lp / .asp) file to run Clingo.",
+    );
+    return;
+  }
+  await runFromDocument(panel, editor.document, mode);
 }
 
 function buildRequest(

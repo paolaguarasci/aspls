@@ -356,6 +356,17 @@
                     "type": "string",
                     "default": "aspls.clingo.json",
                     "description": "Workspace-relative Clingo config file name (models, threads, constants, customArgs, additionalFiles)."
+                },
+                "aspls.clingo.watchOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled, saving a file from the last Clingo run pool automatically re-runs with the same mode (First / All / Config)."
+                },
+                "aspls.clingo.watchDebounceMs": {
+                    "type": "number",
+                    "default": 500,
+                    "minimum": 0,
+                    "description": "Debounce delay in milliseconds before a watch-mode re-run starts after save."
                 }
             }
         }
@@ -363,7 +374,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
-        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js && node out/clingoWatch.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",
