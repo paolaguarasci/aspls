@@ -14,6 +14,7 @@ import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
 import { registerPredicatesTree } from "./predicatesTree";
+import { registerTelemetry } from "./telemetry";
 
 let client: LanguageClient | undefined;
 let rainbow: PredicateRainbow | undefined;
@@ -36,6 +37,7 @@ export async function activate(
   registerCodeLensCommands(context, solverView);
   registerClingoWatch(context, solverView);
   registerAdditionalFilesDeprecationWarning(context);
+  registerTelemetry(context);
   registerCookbookCommands(context);
 
   const predicatesProvider = registerPredicatesTree(context, () => client);
@@ -99,11 +101,11 @@ async function startLanguageServer(
       configurationSection: "aspls",
       ...(configWatchers.length > 0
         ? {
-            fileEvents:
-              configWatchers.length === 1
-                ? configWatchers[0]
-                : configWatchers,
-          }
+          fileEvents:
+            configWatchers.length === 1
+              ? configWatchers[0]
+              : configWatchers,
+        }
         : {}),
     },
   };

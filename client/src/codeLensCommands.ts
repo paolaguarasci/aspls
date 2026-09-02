@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { runFromDocument } from "./clingoCommands";
 import type { ClingoSolverView } from "./clingoSolverView";
+import { trackFeature } from "./telemetry";
 
 export function registerCodeLensCommands(
   context: vscode.ExtensionContext,
@@ -10,6 +11,7 @@ export function registerCodeLensCommands(
     vscode.commands.registerCommand(
       "aspls.codeLens.runFile",
       async (uriString: string) => {
+        trackFeature("codeLens.runFile");
         const uri = vscode.Uri.parse(uriString);
         const doc = await vscode.workspace.openTextDocument(uri);
         await runFromDocument(panel, doc, "config");
@@ -18,6 +20,7 @@ export function registerCodeLensCommands(
     vscode.commands.registerCommand(
       "aspls.codeLens.showReferences",
       async (uriString: string, line: number, character: number) => {
+        trackFeature("codeLens.showReferences");
         const uri = vscode.Uri.parse(uriString);
         const doc = await vscode.workspace.openTextDocument(uri);
         const editor = await vscode.window.showTextDocument(doc);

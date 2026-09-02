@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { LanguageClient } from "vscode-languageclient/node";
+import { trackFeature } from "./telemetry";
 import {
   mapDocumentSymbols,
   mapWorkspaceNodes,
@@ -20,8 +21,7 @@ function rangeLikeToVscode(range: RangeLike): vscode.Range {
 }
 
 export class PredicatesTreeProvider
-  implements vscode.TreeDataProvider<PredicateTreeNode>
-{
+  implements vscode.TreeDataProvider<PredicateTreeNode> {
   private readonly _onDidChangeTreeData = new vscode.EventEmitter<
     PredicateTreeNode | undefined | void
   >();
@@ -31,7 +31,7 @@ export class PredicatesTreeProvider
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly getClient: () => LanguageClient | undefined,
-  ) {}
+  ) { }
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
@@ -189,6 +189,7 @@ export function registerPredicatesTree(
     vscode.commands.registerCommand(
       "aspls.predicates.toggleWorkspace",
       async () => {
+        trackFeature("predicates.toggleWorkspace");
         const cur = context.workspaceState.get<boolean>(STATE_KEY, false);
         await context.workspaceState.update(STATE_KEY, !cur);
         await syncContext();

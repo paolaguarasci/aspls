@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { COOKBOOK_RECIPES, type CookbookRecipe } from "./recipes";
+import { trackFeature } from "../telemetry";
 
 type RecipeQuickPickItem = vscode.QuickPickItem & {
   recipe: CookbookRecipe;
@@ -13,9 +14,10 @@ export function registerCookbookCommands(
   context: vscode.ExtensionContext,
 ): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand("aspls.cookbook.open", () =>
-      openCookbook(),
-    ),
+    vscode.commands.registerCommand("aspls.cookbook.open", () => {
+      trackFeature("cookbook.open");
+      return openCookbook();
+    }),
   );
 }
 

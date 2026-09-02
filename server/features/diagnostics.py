@@ -13,6 +13,7 @@ from symbols import DEFINING_ROLES, DIRECTIVE_ROLES, build_symbol_index
 
 CODE_RULE_ORDER = "learner.ruleOrder"
 CODE_MISSING_COMMENT = "learner.missingComment"
+CODE_PARSER_SYNTAX = "parser.syntax"
 
 
 def _learner_diagnostics(text: str, tree=None) -> list[Diagnostic]:
@@ -88,6 +89,7 @@ def build_diagnostics(
                 message=error.message,
                 severity=DiagnosticSeverity.Error,
                 source="aspls",
+                code=CODE_PARSER_SYNTAX,
             )
         )
 
