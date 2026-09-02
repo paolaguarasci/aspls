@@ -85,6 +85,7 @@ DISCOVERED: list[str] = []
 WORKSPACE_ROOTS: list[str] = []
 ADDITIONAL_FILES: list[str] | None = None
 CONFIG_FILE_NAME = "aspls.clingo.json"
+_discovery_dirty = True
 
 _SKIP_DIRS = frozenset({"node_modules", ".git", ".venv", "out", "__pycache__"})
 _ASP_SUFFIXES = frozenset({".lp", ".asp"})
@@ -231,14 +232,30 @@ def _ensure_indexed(uri: str) -> None:
         WORKSPACE.upsert(uri, text)
 
 
+def _mark_discovery_dirty() -> None:
+    global _discovery_dirty
+    _discovery_dirty = True
+
+
+def _ensure_discovery(ls: LanguageServer | None = None) -> None:
+    global _discovery_dirty
+    if _discovery_dirty:
+        _refresh_workspace_scan(ls)
+        _discovery_dirty = False
+
+
 def _refresh_workspace_scan(ls: LanguageServer | None = None) -> None:
     global DISCOVERED, WORKSPACE_ROOTS, ADDITIONAL_FILES
     if ls is not None:
         WORKSPACE_ROOTS = _workspace_root_paths(ls)
+    previous = set(DISCOVERED)
     DISCOVERED = _discover_asp_files(WORKSPACE_ROOTS)
+    current = set(DISCOVERED)
     # Always assign: None/empty config clears stale ADDITIONAL_FILES so
     # resolve_pool falls back to discovered-only.
     ADDITIONAL_FILES = _read_additional_files_from_config(WORKSPACE_ROOTS)
+    for uri in previous - current:
+        WORKSPACE.remove(uri)
     open_uris: set[str] = set()
     if ls is not None:
         try:
@@ -246,7 +263,7 @@ def _refresh_workspace_scan(ls: LanguageServer | None = None) -> None:
         except Exception:
             pass
     for uri in DISCOVERED:
-        if uri not in open_uris:
+        if uri not in open_uris and not WORKSPACE.has(uri):
             _ensure_indexed(uri)
 
 
@@ -310,14 +327,16 @@ def _republish_open_diagnostics(ls: LanguageServer) -> None:
 
 @server.feature(INITIALIZED)
 def on_initialized(ls: LanguageServer, params: InitializedParams):
-    _refresh_workspace_scan(ls)
+    _mark_discovery_dirty()
+    _ensure_discovery(ls)
 
 
 @server.feature(WORKSPACE_DID_CHANGE_WORKSPACE_FOLDERS)
 def did_change_workspace_folders(
     ls: LanguageServer, params: DidChangeWorkspaceFoldersParams
 ):
-    _refresh_workspace_scan(ls)
+    _mark_discovery_dirty()
+    _ensure_discovery(ls)
 
 
 @server.feature(WORKSPACE_DID_CHANGE_CONFIGURATION)
@@ -334,23 +353,48 @@ def did_change_configuration(ls: LanguageServer, params: DidChangeConfigurationP
         CONFIG_FILE_NAME = config_name
     # Pool comes only from aspls.clingo.json additionalFiles (or full workspace).
     # Never drive ADDITIONAL_FILES from VS Code setting aspls.clingo.additionalFiles.
-    _refresh_workspace_scan(ls)
+    _mark_discovery_dirty()
+    _ensure_discovery(ls)
     _republish_open_diagnostics(ls)
+
+
+def _is_asp_file_change(uri: str) -> bool:
+    try:
+        return _uri_to_path(uri).suffix.lower() in _ASP_SUFFIXES
+    except Exception:
+        return False
 
 
 @server.feature(WORKSPACE_DID_CHANGE_WATCHED_FILES)
 def did_change_watched_files(ls: LanguageServer, params: DidChangeWatchedFilesParams):
-    relevant = any(is_config_file_change(change.uri) for change in params.changes)
-    if not relevant:
+    config_changed = False
+    asp_changed = False
+    for change in params.changes:
+        if is_config_file_change(change.uri):
+            config_changed = True
+        if _is_asp_file_change(change.uri):
+            asp_changed = True
+            change_type = getattr(change, "type", None)
+            if change_type == 3:  # Deleted
+                WORKSPACE.remove(change.uri)
+            elif change_type in (1, 2):  # Created or Changed
+                if change.uri not in DISCOVERED:
+                    DISCOVERED.append(change.uri)
+                if change.uri not in ls.workspace.text_documents:
+                    _ensure_indexed(change.uri)
+    if not config_changed and not asp_changed:
         return
-    _refresh_workspace_scan(ls)
-    _republish_open_diagnostics(ls)
+    if config_changed:
+        _mark_discovery_dirty()
+        _ensure_discovery(ls)
+        _republish_open_diagnostics(ls)
 
 
 @server.feature(TEXT_DOCUMENT_DID_OPEN)
 def did_open(ls: LanguageServer, params: DidOpenTextDocumentParams):
     if not WORKSPACE_ROOTS:
-        _refresh_workspace_scan(ls)
+        _mark_discovery_dirty()
+        _ensure_discovery(ls)
     _publish_diagnostics(params.text_document.uri, params.text_document.text)
 
 
@@ -383,7 +427,7 @@ def document_symbol(ls: LanguageServer, params: DocumentSymbolParams):
 
 @server.feature(WORKSPACE_SYMBOL)
 def workspace_symbol(ls: LanguageServer, params: WorkspaceSymbolParams):
-    _refresh_workspace_scan(ls)
+    _ensure_discovery(ls)
     for uri in DISCOVERED:
         if not WORKSPACE.has(uri):
             _ensure_indexed(uri)
@@ -397,7 +441,7 @@ def workspace_predicates(ls: LanguageServer, params):
 
     params: {"uri": str | None}
     """
-    _refresh_workspace_scan(ls)
+    _ensure_discovery(ls)
     uri = None
     if isinstance(params, dict):
         uri = params.get("uri")

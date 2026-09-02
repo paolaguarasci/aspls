@@ -127,19 +127,29 @@ def resolve_pool(
 class WorkspaceIndex:
     def __init__(self) -> None:
         self._docs: dict[str, dict[tuple[str, int], list[Occurrence]]] = {}
+        self._merged_cache: dict[
+            frozenset[str], dict[tuple[str, int], list[IndexedOccurrence]]
+        ] = {}
 
     def upsert(self, uri: str, text: str) -> None:
         tree = parse_document(text).tree
         self._docs[uri] = build_symbol_index(tree)
+        self._invalidate_cache_for({uri})
 
     def remove(self, uri: str) -> None:
         self._docs.pop(uri, None)
+        self._invalidate_cache_for({uri})
 
     def has(self, uri: str) -> bool:
         return uri in self._docs
 
-    def merged(self, uris: list[str] | None = None) -> dict[tuple[str, int], list[IndexedOccurrence]]:
-        keys = uris if uris is not None else list(self._docs.keys())
+    def _invalidate_cache_for(self, uris: set[str]) -> None:
+        for key in [k for k in self._merged_cache if k & uris]:
+            del self._merged_cache[key]
+
+    def _merge_uncached(
+        self, keys: list[str]
+    ) -> dict[tuple[str, int], list[IndexedOccurrence]]:
         out: dict[tuple[str, int], list[IndexedOccurrence]] = {}
         for uri in keys:
             index = self._docs.get(uri)
@@ -160,3 +170,13 @@ class WorkspaceIndex:
                         )
                     )
         return out
+
+    def merged(self, uris: list[str] | None = None) -> dict[tuple[str, int], list[IndexedOccurrence]]:
+        keys = uris if uris is not None else list(self._docs.keys())
+        cache_key = frozenset(keys)
+        cached = self._merged_cache.get(cache_key)
+        if cached is not None:
+            return cached
+        merged = self._merge_uncached(keys)
+        self._merged_cache[cache_key] = merged
+        return merged
