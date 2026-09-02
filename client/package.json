@@ -457,7 +457,8 @@
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",
-        "publish:openvsx": "ovsx publish"
+        "publish:openvsx": "bash scripts/publish-openvsx.sh",
+        "publish:openvsx-old": "ovsx publish"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
