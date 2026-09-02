@@ -110,3 +110,4 @@ valid(X) :-
 #show has_nodes/0.
 #show cell/1.
 #show pair/2.
+

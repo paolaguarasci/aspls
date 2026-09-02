@@ -147,6 +147,15 @@ Before every run, aspls **preflights** missing files, invalid `models`, and miss
 | Output control (`--outf`, `-q`, stats) | no           | yes         |
 | Advanced CLI                           | no           | yes         |
 
+#### WASM multi-file limits
+
+Bundled `clingo-wasm` accepts a **single program string** — not separate input files. When `aspls.clingo.usePath` is `false`, aspls:
+
+1. Expands `#include "…"` in the active file before the run.
+2. Concatenates `additionalFiles` after the primary source (`% === filename ===` markers).
+
+Typical fact/rule splits (e.g. `examples/04_multi_file/`) work; per-file `#program` boundaries and advanced modular encodings may differ from native Clingo. Enable `aspls.clingo.usePath` for native multi-file semantics.
+
 ---
 
 ## Docstrings & learner mode

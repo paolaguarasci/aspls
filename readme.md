@@ -192,6 +192,25 @@ Before every run, aspls **preflights** the request: missing `additionalFiles`, i
 
 When WASM cannot honor `customArgs`, the Solver shows a **capability warning** and suggests `aspls.clingo.usePath`.
 
+#### WASM multi-file limits
+
+**Evaluation:** bundled `clingo-wasm` exposes a single-program API — it accepts one source string, not separate input files. Native multi-file grounding (per-file module boundaries, Clingo resolving `#include` itself) is **not available** under WASM without switching backends.
+
+**What aspls does instead** when `aspls.clingo.usePath` is `false`:
+
+1. **`#include "…"`** in the active file is expanded recursively before the run (PATH Clingo resolves these natively at load time).
+2. **`additionalFiles`** from `aspls.clingo.json` are read and appended after the primary source, separated by `% === filename ===` markers.
+
+This covers typical modular encodings — see [`examples/04_multi_file/`](examples/04_multi_file/) — but is not identical to native Clingo:
+
+| Scenario | WASM (concatenated) | PATH (native files) |
+| --- | --- | --- |
+| Facts + rules in separate files | Usually equivalent | Separate CLI inputs |
+| `#program` / modular boundaries per file | Single merged program | Per-file module semantics |
+| Mixing `#include` and `additionalFiles` | Both inlined then concatenated | Includes resolved by Clingo; extras passed as separate args |
+
+**When to enable `aspls.clingo.usePath`:** per-file `#program` blocks, `#script`, or any case where concatenation differs from native Clingo. Install [Clingo](https://potassco.org/clingo/) on PATH and set `aspls.clingo.usePath` to `true`.
+
 ## Grammar coverage
 
 The LSP parses a growing **subset** of Clingo / ASP-Core-2. Unsupported constructs may show syntax diagnostics even when Clingo accepts them.
