@@ -15,7 +15,7 @@ export const COOKBOOK_RECIPES: readonly CookbookRecipe[] = [
     id: "basics-facts-rules",
     title: "Facts and rules (birds / penguins)",
     category: "Basics",
-    description: "Facts, default negation, and a derived predicate",
+    description: "Facts, default negation, and a derived predicate (Potassco bird.lp)",
     code: `% Birds fly unless they are penguins
 bird(tweety).
 bird(pingu).
@@ -42,7 +42,7 @@ cell(X) :- domain(X).
     id: "choice-exact-one",
     title: "Choice rule (pick exactly one)",
     category: "Choice",
-    description: "Bounded choice over a domain",
+    description: "Bounded choice over a domain (Potassco Language §3.1)",
     code: `% Choose exactly one candidate
 candidate(1).
 candidate(2).
@@ -115,7 +115,7 @@ total(S) :- S = #sum{ W, X : selected(X), weight(X, W) }.
     id: "optimization-minimize",
     title: "Minimize directive",
     category: "Optimization",
-    description: "Prefer lower-cost chosen atoms",
+    description: "Prefer lower-cost chosen atoms (Potassco #minimize; cf. TSP §5.2)",
     code: `% Prefer cheaper choices
 option(a).
 option(b).
@@ -160,7 +160,7 @@ label(hello).
     id: "graphs-coloring",
     title: "Graph 3-coloring",
     category: "Graphs",
-    description: "Assign colors so adjacent nodes differ",
+    description: "Assign colors so adjacent nodes differ (Potassco Guide §5.1 n-Coloring)",
     code: `% Undirected edges; each node gets exactly one color
 edge(1, 2). edge(2, 3). edge(3, 1). edge(1, 4).
 edge(X, Y) :- edge(Y, X).
@@ -215,7 +215,7 @@ slot(1..3).
     id: "puzzles-sudoku-4x4",
     title: "4x4 Sudoku",
     category: "Puzzles",
-    description: "One value per cell; unique in rows, columns, and 2x2 boxes",
+    description: "One value per cell; unique in rows/columns/boxes (ASP course assignment 1)",
     code: `% Mini Sudoku with a few givens
 #const n = 4.
 val(1..n).
@@ -238,7 +238,7 @@ value(2, 2, 4).
     id: "planning-strips-schema",
     title: "STRIPS action schema",
     category: "Planning",
-    description: "Declare actions with preconditions, add and delete lists",
+    description: "STRIPS operators with pre/add/del lists (Potassco §5.3 blocks world)",
     code: `% Blocks-world style STRIPS operators (schema only)
 block(a; b).
 
@@ -264,7 +264,7 @@ del(putdown(X), holding(X)) :- action(putdown(X)).
     id: "planning-horizon",
     title: "Bounded planning horizon",
     category: "Planning",
-    description: "STRIPS-like move actions to reach a goal within T steps",
+    description: "Bounded planning horizon (Potassco §5.3 incremental solving)",
     code: `% Move a token along a line until it reaches the goal
 #const horizon = 3.
 step(0..horizon).

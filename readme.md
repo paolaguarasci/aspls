@@ -128,6 +128,29 @@ Progressive tutorials under [`examples/`](examples/). Open a file in the editor 
 
 Reference catalogs (grammar coverage, not tutorials): [`grammar_tour.lp`](examples/grammar_tour.lp), [`test.lp`](examples/test.lp).
 
+## Learning path (Potassco & ASP courses)
+
+aspls tutorials and the **Code Cookbook** follow the progression used in the [Potassco Guide](https://potassco.org/guide/) and graduate ASP courses such as [Answer set solving in practice](https://teaching.potassco.org/) (University of Potsdam) and typical university lab sequences (facts → choice → optimization → classic encodings).
+
+| Step | aspls material | Potassco Guide / course topic |
+| --- | --- | --- |
+| **Language — facts & rules** | [`examples/01_basics/birds.lp`](examples/01_basics/birds.lp), Cookbook *Facts and rules* | Language §3.1; flying-birds example (`bird.lp` / default negation) |
+| **Language — choice rules** | [`examples/02_choice/menu.lp`](examples/02_choice/menu.lp), Cookbook *Choice rule* | Language §3.1 choice rules; assignment / menu encodings |
+| **Language — optimization** | [`examples/03_optimization/budget.lp`](examples/03_optimization/budget.lp), Cookbook *Minimize* / *Weak constraint* | `#minimize` / weak constraints; TSP §5.2 cost minimization |
+| **Multi-file programs** | [`examples/04_multi_file/`](examples/04_multi_file/) | `#include` and modular encodings (Guide Language §3.1) |
+| **Modeling — graph coloring** | Cookbook *Graph 3-coloring* | Guide §5.1 n-Coloring; common lab exercise |
+| **Modeling — puzzles** | Cookbook *4×4 Sudoku* | Course assignment 1 (Sudoku ↔ n-Queens); Guide `queensC.lp` |
+| **Modeling — scheduling** | Cookbook *Job scheduling* / *Precedences* | Scheduling encodings in Modeling track |
+| **Modeling — planning** | Cookbook *STRIPS schema* / *Bounded horizon* | Guide §5.3 Blocks World Planning |
+
+**External references**
+
+- [Potassco Guide](https://potassco.org/guide/) — language, options, classic examples (coloring, TSP, blocks world)
+- [Answer set solving in practice](https://teaching.potassco.org/) — lectures, exercises, assignments
+- [Clingo](https://potassco.org/clingo/) — install, docs, release binaries
+
+Open any row’s `.lp` file or run **aspls: Open Code Cookbook** to explore the pattern in the editor with highlighting, hover, and the Solver sidebar.
+
 ## Clingo config
 
 Workspace file **`aspls.clingo.json`** (name configurable via `aspls.clingo.configFile`) is the **canonical source** for `additionalFiles`, `models`, `threads`, and `customArgs` for both the LSP and the runner.

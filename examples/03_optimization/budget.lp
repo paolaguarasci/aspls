@@ -3,6 +3,9 @@
 %
 % Run:  clingo examples/03_optimization/budget.lp 0
 % Goal: pick items within budget, minimizing total cost.
+%
+% Potassco Guide: Language §3.1 (#minimize); cf. §5.2 TSP cost minimization.
+% See readme.md learning path.
 % =============================================================================
 
 #const budget = 10.

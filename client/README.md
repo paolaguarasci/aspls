@@ -104,6 +104,8 @@ flies(X) :- bird(X), not penguin(X).
 - **Rule body** — muted; `not penguin` italic when negated
 - **`#show`** — gold
 
+Tutorial projects under `examples/` and the **Code Cookbook** align with the [Potassco Guide](https://potassco.org/guide/) and ASP courses ([teaching.potassco.org](https://teaching.potassco.org/)): birds → choice → optimization → graph coloring, Sudoku, planning. Full mapping table in the [repository README](https://github.com/paolaguarasci/aspls#learning-path-potassco--asp-courses).
+
 ---
 
 ## Clingo config

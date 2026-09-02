@@ -3,6 +3,8 @@
 %
 % Run:  clingo examples/02_choice/menu.lp 0
 % Goal: each guest picks exactly one main course from the menu.
+%
+% Potassco Guide: Language §3.1 choice rules. See readme.md learning path.
 % =============================================================================
 
 guest(alice).
