@@ -7,6 +7,7 @@ from constructs import (
 )
 from parser import parse_document
 from clingo_check import check_with_clingo
+from features.learner_hints import build_learner_hints
 from safety import find_unsafe_variables
 from symbols import DEFINING_ROLES, DIRECTIVE_ROLES, build_symbol_index
 
@@ -14,7 +15,7 @@ CODE_RULE_ORDER = "learner.ruleOrder"
 CODE_MISSING_COMMENT = "learner.missingComment"
 
 
-def _learner_diagnostics(text: str) -> list[Diagnostic]:
+def _learner_diagnostics(text: str, tree=None) -> list[Diagnostic]:
     constructs = collect_constructs(text)
     diagnostics: list[Diagnostic] = []
 
@@ -61,6 +62,7 @@ def _learner_diagnostics(text: str) -> list[Diagnostic]:
             )
         )
 
+    diagnostics.extend(build_learner_hints(text, tree))
     return diagnostics
 
 
@@ -179,6 +181,6 @@ def build_diagnostics(
     # Learner-mode warnings are source-based and still useful when some
     # statements fail to parse (order/comments apply to recoverable constructs).
     if learner_mode:
-        diagnostics.extend(_learner_diagnostics(text))
+        diagnostics.extend(_learner_diagnostics(text, result.tree))
 
     return diagnostics
