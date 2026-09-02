@@ -14,6 +14,7 @@ import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
 import { registerPredicatesTree } from "./predicatesTree";
+import { registerGroundingDebug } from "./groundingDebug";
 import { registerTelemetry } from "./telemetry";
 
 let client: LanguageClient | undefined;
@@ -38,6 +39,7 @@ export async function activate(
   registerClingoWatch(context, solverView);
   registerAdditionalFilesDeprecationWarning(context);
   registerTelemetry(context);
+  registerGroundingDebug(context);
   registerCookbookCommands(context);
 
   const predicatesProvider = registerPredicatesTree(context, () => client);
