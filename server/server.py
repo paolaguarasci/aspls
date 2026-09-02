@@ -21,6 +21,7 @@ from lsprotocol.types import (
     TEXT_DOCUMENT_SIGNATURE_HELP,
     TEXT_DOCUMENT_DOCUMENT_LINK,
     TEXT_DOCUMENT_CODE_ACTION,
+    TEXT_DOCUMENT_FORMATTING,
     TEXT_DOCUMENT_SEMANTIC_TOKENS_FULL,
     TEXT_DOCUMENT_INLAY_HINT,
     WORKSPACE_DID_CHANGE_CONFIGURATION,
@@ -42,6 +43,7 @@ from lsprotocol.types import (
     SignatureHelpParams,
     DocumentLinkParams,
     CodeActionParams,
+    DocumentFormattingParams,
     SemanticTokensParams,
     SemanticTokensLegend,
     InlayHintParams,
@@ -58,6 +60,7 @@ from features.completion import build_completions_from_index
 from features.signature_help import build_signature_help_from_index
 from features.document_links import build_document_links
 from features.code_actions import build_code_actions
+from features.formatting import build_format_edits
 from features.semantic_tokens import (
     TOKEN_MODIFIERS,
     TOKEN_TYPES,
@@ -482,6 +485,13 @@ def document_link(ls: LanguageServer, params: DocumentLinkParams):
     uri = params.text_document.uri
     doc = ls.workspace.get_text_document(uri)
     return build_document_links(doc.source, uri, WORKSPACE_ROOTS)
+
+
+@server.feature(TEXT_DOCUMENT_FORMATTING)
+def formatting(ls: LanguageServer, params: DocumentFormattingParams):
+    doc = ls.workspace.get_text_document(params.text_document.uri)
+    edits = build_format_edits(doc.source)
+    return edits if edits else []
 
 
 @server.feature(TEXT_DOCUMENT_CODE_ACTION)
