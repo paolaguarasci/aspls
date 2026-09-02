@@ -3,6 +3,9 @@
 %
 % Run:  clingo examples/01_basics/birds.lp 0
 % Goal: see which birds can fly (all except penguins).
+%
+% Potassco Guide: Language §3.1 (facts, rules, default negation); flying-birds
+% example (bird.lp). See readme.md "Learning path (Potassco & ASP courses)".
 % =============================================================================
 
 % Facts: ground atoms we know are true.
