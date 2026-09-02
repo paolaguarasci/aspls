@@ -2,7 +2,7 @@
     "name": "aspls",
     "displayName": "aspls — Answer Set Programming (Clingo)",
     "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results sidebar, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "publisher": "paolaguarasci",
     "author": "Paola Guarasci",
     "license": "MIT",
@@ -38,7 +38,7 @@
         "onLanguage:asp",
         "onView:aspls.solver",
         "onView:aspls.predicates",
-        "onCommand:aspls.cookbook.open"
+        "onCommand:aspls.grounding.debug"
     ],
     "main": "./out/extension.js",
     "contributes": {
@@ -73,6 +73,12 @@
                 "category": "aspls"
             },
             {
+                "command": "aspls.grounding.debug",
+                "title": "Debug Grounding",
+                "category": "aspls",
+                "icon": "$(debug-alt)"
+            },
+            {
                 "command": "aspls.cookbook.open",
                 "title": "Open Code Cookbook",
                 "category": "aspls",
@@ -99,6 +105,11 @@
             "editor/context": [
                 {
                     "when": "resourceLangId == asp",
+                    "command": "aspls.grounding.debug",
+                    "group": "aspls@0"
+                },
+                {
+                    "when": "resourceLangId == asp",
                     "command": "aspls.clingo.computeFirst",
                     "group": "aspls@1"
                 },
@@ -119,6 +130,11 @@
                 }
             ],
             "editor/title": [
+                {
+                    "when": "resourceLangId == asp",
+                    "command": "aspls.grounding.debug",
+                    "group": "navigation@0"
+                },
                 {
                     "when": "resourceLangId == asp",
                     "command": "aspls.clingo.computeFirst",
@@ -211,6 +227,49 @@
             {
                 "language": "asp",
                 "path": "./snippets/asp.json"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "aspls-grounding",
+                "label": "ASP Grounding",
+                "languages": [
+                    "asp"
+                ],
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "Path to the .lp/.asp program to debug.",
+                                "default": "${file}"
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "aspls-grounding",
+                        "request": "launch",
+                        "name": "Debug Grounding",
+                        "program": "${file}"
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "ASP: Debug Grounding",
+                        "description": "Step through Clingo grounding directives.",
+                        "body": {
+                            "type": "aspls-grounding",
+                            "request": "launch",
+                            "name": "Debug Grounding",
+                            "program": "^\"\\${file}\""
+                        }
+                    }
+                ]
             }
         ],
         "semanticTokenTypes": [
@@ -394,7 +453,7 @@
     "scripts": {
         "compile": "bash scripts/copy-server.sh && tsc -p .",
         "watch": "tsc -watch -p .",
-        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoRunnerMultiFileParity.smoke.test.js && node out/extensionPackage.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js && node out/clingoWatch.test.js && node out/telemetry.test.js",
+        "test": "npm run compile && node out/predicateRainbow.test.js && node out/clingoResultParse.test.js && node out/atomFilter.test.js && node out/answerSetDiff.test.js && node out/clingoConfigCore.test.js && node out/clingoPreflight.test.js && node out/clingoCapabilities.test.js && node out/stabilityBd.regression.test.js && node out/clingoRunnerParity.smoke.test.js && node out/clingoRunnerMultiFileParity.smoke.test.js && node out/extensionPackage.smoke.test.js && node out/clingoIncludes.test.js && node out/cookbook/recipes.test.js && node out/predicatesTreeMap.test.js && node out/clingoWatch.test.js && node out/telemetry.test.js && node out/groundingDebug.test.js",
         "vscode:prepublish": "npm run compile",
         "package": "vsce package",
         "publish:marketplace": "vsce publish",
@@ -408,6 +467,7 @@
         "typescript": "^5.4.0"
     },
     "dependencies": {
+        "@vscode/debugadapter": "^1.68.0",
         "clingo-wasm": "^0.3.2",
         "vscode-languageclient": "^9.0.1"
     }
