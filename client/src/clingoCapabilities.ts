@@ -23,7 +23,8 @@ export const CLINGO_CAPABILITY_MATRIX: readonly CapabilityRow[] = [
     feature: "Multi-file via additionalFiles",
     wasm: "limited",
     path: "yes",
-    notes: "WASM concatenates sources; PATH passes real files to Clingo",
+    notes:
+      "clingo-wasm accepts one program string; WASM concatenates additionalFiles and inlines #include; PATH passes real files",
   },
   {
     feature: "models / -n (via aspls UI)",
