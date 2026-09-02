@@ -2,7 +2,7 @@
     "name": "aspls",
     "displayName": "aspls — Answer Set Programming (Clingo)",
     "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results sidebar, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "publisher": "paolaguarasci",
     "author": "Paola Guarasci",
     "license": "MIT",
