@@ -79,6 +79,11 @@ The TypeScript extension hosts the Clingo runner and UI; a Python LSP server pro
 | **Code Cookbook** | Browse ASP patterns; insert at cursor or open as new `.lp` |
 | **Snippets** | Templates for directives, aggregates, choice rules, weak constraints |
 
+## Video walkthrough
+
+~5-minute screencast script: **install → first answer set → multi-file pool**.  
+Recording guide: [`docs/walkthrough.md`](docs/walkthrough.md) (uses `examples/01_basics/` and `examples/04_multi_file/`).
+
 ## Quick start
 
 1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) or [Open VSX](https://open-vsx.org/extension/paolaguarasci/aspls).
@@ -228,6 +233,7 @@ Semantic highlighting for ASP is enabled by default for `[asp]`.
 | [`server/`](server/) | Python LSP server (pygls, Lark) |
 | [`examples/`](examples/) | Tutorial projects + grammar reference files |
 | [`docs/images/`](docs/images/) | README illustrations |
+| [`docs/walkthrough.md`](docs/walkthrough.md) | 5-minute video recording script |
 
 The extension README for Marketplace / Open VSX lives in [`client/README.md`](client/README.md).
 
