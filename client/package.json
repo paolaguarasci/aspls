@@ -3,7 +3,7 @@
     "displayName": "aspls — Answer Set Programming (Clingo)",
     "description": "Language support for Answer Set Programming (ASP-Core-2 / Clingo): run Clingo, answer-set results sidebar, syntax highlighting, diagnostics, completion, hover, go-to-definition, find-references.",
     "version": "0.8.0",
-    "publisher": "paolaguarasci",
+    "publisher": "pingflood",
     "author": "Paola Guarasci",
     "license": "MIT",
     "repository": {
@@ -464,7 +464,7 @@
         "@types/node": "^20.0.0",
         "@types/vscode": "^1.85.0",
         "@vscode/vsce": "^3.9.2",
-        "ovsx": "^0.10.12",
+        "ovsx": "^1.2.0",
         "typescript": "^5.4.0"
     },
     "dependencies": {

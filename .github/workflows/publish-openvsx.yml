@@ -41,4 +41,5 @@ jobs:
       - name: Package and publish with OIDC
         run: |
           npx --yes @vscode/vsce package -o /tmp/aspls-openvsx.vsix
-          npx --yes ovsx publish /tmp/aspls-openvsx.vsix --trusted-publishing
+          # Need ovsx >= 1.x for --trusted-publishing (local dep was 0.10.x)
+          npx --yes ovsx@1.2.0 publish /tmp/aspls-openvsx.vsix --trusted-publishing
