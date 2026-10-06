@@ -32,6 +32,14 @@
 
 Works with **`.lp`** and **`.asp`** files.
 
+<p align="center">
+  <a href="docs/media/aspls-overview.mp4">
+    <img src="docs/media/aspls-overview.png" width="720" alt="aspls in the editor — 44 second overview"/>
+  </a>
+</p>
+
+<p align="center"><a href="docs/media/aspls-overview.mp4">44s overview (MP4)</a></p>
+
 ## Screenshots
 
 ### Semantic highlighting
@@ -86,12 +94,6 @@ The TypeScript extension hosts the Clingo runner and UI; a Python LSP server pro
 | [Open VSX](https://open-vsx.org/extension/pingflood/aspls) | `pingflood.aspls` | **1 834** downloads (v0.7.1) |
 
 aspls is MIT-licensed tooling for the ASP / Clingo ecosystem (editor intelligence + runner), used for teaching and day-to-day encoding work. Tutorial examples and the in-editor **Code Cookbook** follow Potassco Guide progressions and typical university lab sequences.
-
-## Promo video
-
-~44s overview (1080p H.264): language intelligence + Clingo runner in one extension.
-
-![aspls promo — language intelligence and Clingo runner](docs/media/aspls-promo.mp4)
 
 ## Quick start
 
