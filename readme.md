@@ -12,17 +12,16 @@
 <p align="center">
   <a href="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml"><img src="https://github.com/paolaguarasci/aspls/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
   <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><img src="https://img.shields.io/visual-studio-marketplace/v/paolaguarasci.aspls?label=VS%20Marketplace" alt="VS Marketplace version"/></a>
-  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><img src="https://img.shields.io/open-vsx/v/paolaguarasci/aspls?label=Open%20VSX" alt="Open VSX version"/></a>
+  <a href="https://open-vsx.org/extension/pingflood/aspls"><img src="https://img.shields.io/open-vsx/v/pingflood/aspls?label=Open%20VSX" alt="Open VSX version"/></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
   <img src="https://img.shields.io/badge/VS%20Code-%5E1.85-007ACC?logo=visualstudiocode&logoColor=white" alt="VS Code engine"/>
-  <img src="https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white" alt="Python"/>
-  <img src="https://img.shields.io/badge/Node.js-20-339933?logo=node.js&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white" alt="Python"/>
 </p>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls"><strong>Install on VS Marketplace</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://open-vsx.org/extension/paolaguarasci/aspls"><strong>Install on Open VSX</strong></a>
+  <a href="https://open-vsx.org/extension/pingflood/aspls"><strong>Install on Open VSX</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/paolaguarasci/aspls/issues"><strong>Report issue</strong></a>
 </p>
@@ -79,14 +78,24 @@ The TypeScript extension hosts the Clingo runner and UI; a Python LSP server pro
 | **Code Cookbook** | Browse ASP patterns; insert at cursor or open as new `.lp` |
 | **Snippets** | Templates for directives, aggregates, choice rules, weak constraints |
 
-## Video walkthrough
+## Impact
 
-~5-minute screencast script: **install → first answer set → multi-file pool**.  
-Recording guide: [`docs/walkthrough.md`](docs/walkthrough.md) (uses `examples/01_basics/` and `examples/04_multi_file/`).
+| Channel | Identifier | Downloads / installs (as of 2026-10-06) |
+| --- | --- | --- |
+| [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) | `paolaguarasci.aspls` | **236** downloads · **22** installs (v0.7.0 published) |
+| [Open VSX](https://open-vsx.org/extension/pingflood/aspls) | `pingflood.aspls` | **1 834** downloads (v0.7.1) |
+
+aspls is MIT-licensed tooling for the ASP / Clingo ecosystem (editor intelligence + runner), used for teaching and day-to-day encoding work. Tutorial examples and the in-editor **Code Cookbook** follow Potassco Guide progressions and typical university lab sequences.
+
+## Promo video
+
+~44s overview (1080p H.264): language intelligence + Clingo runner in one extension.
+
+![aspls promo — language intelligence and Clingo runner](docs/media/aspls-promo.mp4)
 
 ## Quick start
 
-1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) or [Open VSX](https://open-vsx.org/extension/paolaguarasci/aspls).
+1. Install from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=paolaguarasci.aspls) or [Open VSX](https://open-vsx.org/extension/pingflood/aspls).
 2. Ensure **Python 3** is on your PATH (or set `aspls.pythonPath`). The language server creates a local venv on first use.
 3. Open a `.lp` file.
 4. Click **play** / **run all** in the editor title bar, or run:
@@ -125,6 +134,9 @@ Progressive tutorials under [`examples/`](examples/). Open a file in the editor 
 | **2 — Choice** | [`examples/02_choice/menu.lp`](examples/02_choice/menu.lp) | Choice rules (pick exactly one) |
 | **3 — Optimization** | [`examples/03_optimization/budget.lp`](examples/03_optimization/budget.lp) | `#minimize` and hard constraints |
 | **4 — Multi-file** | [`examples/04_multi_file/rules.lp`](examples/04_multi_file/rules.lp) | Pool via `aspls.clingo.json` + `additionalFiles` |
+| **5 — Weak constraints** | [`examples/05_weak_constraint/soft_menu.lp`](examples/05_weak_constraint/soft_menu.lp) | Soft preferences with `:~` |
+| **6 — Graph coloring** | [`examples/06_graph_coloring/color.lp`](examples/06_graph_coloring/color.lp) | Classic modeling / lab exercise |
+| **7 — N-Queens** | [`examples/07_nqueens/queens.lp`](examples/07_nqueens/queens.lp) | Guess-and-check puzzle |
 
 Reference catalogs (grammar coverage, not tutorials): [`grammar_tour.lp`](examples/grammar_tour.lp), [`test.lp`](examples/test.lp).
 
@@ -137,9 +149,11 @@ aspls tutorials and the **Code Cookbook** follow the progression used in the [Po
 | **Language — facts & rules** | [`examples/01_basics/birds.lp`](examples/01_basics/birds.lp), Cookbook *Facts and rules* | Language §3.1; flying-birds example (`bird.lp` / default negation) |
 | **Language — choice rules** | [`examples/02_choice/menu.lp`](examples/02_choice/menu.lp), Cookbook *Choice rule* | Language §3.1 choice rules; assignment / menu encodings |
 | **Language — optimization** | [`examples/03_optimization/budget.lp`](examples/03_optimization/budget.lp), Cookbook *Minimize* / *Weak constraint* | `#minimize` / weak constraints; TSP §5.2 cost minimization |
+| **Language — weak constraints** | [`examples/05_weak_constraint/soft_menu.lp`](examples/05_weak_constraint/soft_menu.lp), Cookbook *Weak constraint* | Soft preferences with `:~` |
 | **Multi-file programs** | [`examples/04_multi_file/`](examples/04_multi_file/) | `#include` and modular encodings (Guide Language §3.1) |
-| **Modeling — graph coloring** | Cookbook *Graph 3-coloring* | Guide §5.1 n-Coloring; common lab exercise |
-| **Modeling — puzzles** | Cookbook *4×4 Sudoku* | Course assignment 1 (Sudoku ↔ n-Queens); Guide `queensC.lp` |
+| **Modeling — graph coloring** | [`examples/06_graph_coloring/color.lp`](examples/06_graph_coloring/color.lp), Cookbook *Graph 3-coloring* | Guide §5.1 n-Coloring; common lab exercise |
+| **Modeling — puzzles** | [`examples/07_nqueens/queens.lp`](examples/07_nqueens/queens.lp), Cookbook *N-Queens* / *4×4 Sudoku* | Course assignment 1 (Sudoku ↔ n-Queens); Guide `queensC.lp` |
+| **Teaching patterns** | Cookbook *Guess-and-check* / *Graph reachability* | First-week lab schemas |
 | **Modeling — scheduling** | Cookbook *Job scheduling* / *Precedences* | Scheduling encodings in Modeling track |
 | **Modeling — planning** | Cookbook *STRIPS schema* / *Bounded horizon* | Guide §5.3 Blocks World Planning |
 
@@ -273,66 +287,9 @@ With **`aspls.learnerMode`** enabled, Information hints suggest rule order and m
 
 Semantic highlighting for ASP is enabled by default for `[asp]`.
 
-## Repository layout
-
-| Path | Purpose |
-| --- | --- |
-| [`client/`](client/) | Publishable VS Code extension (TypeScript) |
-| [`server/`](server/) | Python LSP server (pygls, Lark) |
-| [`examples/`](examples/) | Tutorial projects + grammar reference files |
-| [`docs/images/`](docs/images/) | README illustrations |
-| [`docs/walkthrough.md`](docs/walkthrough.md) | 5-minute video recording script |
-| [`docs/lsp-standalone.md`](docs/lsp-standalone.md) | Language server setup for Neovim, Emacs, and Zed |
-
-The extension README for Marketplace / Open VSX lives in [`client/README.md`](client/README.md).
-
-## Development
-
-### Prerequisites
-
-- Node.js 20+
-- Python 3.12+
-- Optional: [Clingo](https://potassco.org/clingo/) on PATH for PATH smoke tests
-
-### Client
-
-```bash
-cd client
-npm ci
-npm test          # unit + regression + WASM/PATH smoke
-npm run compile
-```
-
-### Server
-
-```bash
-cd server
-pip install pytest==8.3.3 pygls==1.3.1 lark==1.2.2 clingo
-PYTHONPATH=. pytest -q
-```
-
-CI runs both jobs on every push/PR to `main` / `master` — see [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
-
-### Extension development
-
-Open the repo in VS Code, run the **Run Extension** launch config from [`client/.vscode/launch.json`](client/.vscode/launch.json), or:
-
-```bash
-npm run compile   # from repo root
-```
-
-### Publish (maintainers)
-
-```bash
-npm run publish:marketplace   # VS Marketplace
-npm run publish:openvsx       # Open VSX
-```
-
-See [`client/README.md`](client/README.md) for the release checklist.
-
 ## Contributing
 
-Issues and pull requests are welcome at [github.com/paolaguarasci/aspls](https://github.com/paolaguarasci/aspls).
+Issues and pull requests are welcome at [github.com/paolaguarasci/aspls](https://github.com/paolaguarasci/aspls). Contributor and maintainer notes live in [`client/README.md`](client/README.md).
 
 ## License
 
