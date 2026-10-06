@@ -1,0 +1,958 @@
+{
+  "total_duration_s": 43.84,
+  "width": 1920,
+  "height": 1080,
+  "groups": [
+    {
+      "id": "caption-group-0",
+      "frame": 1,
+      "start": 0.08,
+      "end": 0.38,
+      "text": "Where do",
+      "words": [
+        {
+          "id": "caption-word-0-0",
+          "text": "Where",
+          "start": 0.08,
+          "end": 0.27
+        },
+        {
+          "id": "caption-word-0-1",
+          "text": "do",
+          "start": 0.27,
+          "end": 0.38
+        }
+      ]
+    },
+    {
+      "id": "caption-group-1",
+      "frame": 1,
+      "start": 0.38,
+      "end": 0.81,
+      "text": "you write",
+      "words": [
+        {
+          "id": "caption-word-1-0",
+          "text": "you",
+          "start": 0.38,
+          "end": 0.54
+        },
+        {
+          "id": "caption-word-1-1",
+          "text": "write",
+          "start": 0.54,
+          "end": 0.81
+        }
+      ]
+    },
+    {
+      "id": "caption-group-2",
+      "frame": 1,
+      "start": 0.81,
+      "end": 1.92,
+      "text": "answer set programming",
+      "words": [
+        {
+          "id": "caption-word-2-0",
+          "text": "answer",
+          "start": 0.81,
+          "end": 1.13
+        },
+        {
+          "id": "caption-word-2-1",
+          "text": "set",
+          "start": 1.13,
+          "end": 1.27
+        },
+        {
+          "id": "caption-word-2-2",
+          "text": "programming",
+          "start": 1.39,
+          "end": 1.92
+        }
+      ]
+    },
+    {
+      "id": "caption-group-3",
+      "frame": 1,
+      "start": 1.92,
+      "end": 2.64,
+      "text": "today,",
+      "words": [
+        {
+          "id": "caption-word-3-0",
+          "text": "today,",
+          "start": 1.92,
+          "end": 2.58
+        }
+      ]
+    },
+    {
+      "id": "caption-group-4",
+      "frame": 1,
+      "start": 2.64,
+      "end": 4.02,
+      "text": "scattered tools,",
+      "words": [
+        {
+          "id": "caption-word-4-0",
+          "text": "scattered",
+          "start": 2.64,
+          "end": 3.08
+        },
+        {
+          "id": "caption-word-4-1",
+          "text": "tools,",
+          "start": 3.15,
+          "end": 3.9
+        }
+      ]
+    },
+    {
+      "id": "caption-group-5",
+      "frame": 1,
+      "start": 4.02,
+      "end": 4.97,
+      "text": "or one editor?",
+      "words": [
+        {
+          "id": "caption-word-5-0",
+          "text": "or",
+          "start": 4.02,
+          "end": 4.05
+        },
+        {
+          "id": "caption-word-5-1",
+          "text": "one",
+          "start": 4.05,
+          "end": 4.27
+        },
+        {
+          "id": "caption-word-5-2",
+          "text": "editor?",
+          "start": 4.27,
+          "end": 4.85
+        }
+      ]
+    },
+    {
+      "id": "caption-group-6",
+      "frame": 2,
+      "start": 5.096,
+      "end": 6.386,
+      "text": "Meet ASPLS,",
+      "words": [
+        {
+          "id": "caption-word-6-0",
+          "text": "Meet",
+          "start": 5.096,
+          "end": 5.536
+        },
+        {
+          "id": "caption-word-6-1",
+          "text": "ASPLS,",
+          "start": 5.536,
+          "end": 6.266
+        }
+      ]
+    },
+    {
+      "id": "caption-group-7",
+      "frame": 2,
+      "start": 6.406,
+      "end": 8.196,
+      "text": "Language Intelligence and Clingo",
+      "words": [
+        {
+          "id": "caption-word-7-0",
+          "text": "Language",
+          "start": 6.406,
+          "end": 6.796
+        },
+        {
+          "id": "caption-word-7-1",
+          "text": "Intelligence",
+          "start": 6.796,
+          "end": 7.596
+        },
+        {
+          "id": "caption-word-7-2",
+          "text": "and",
+          "start": 7.596,
+          "end": 7.746
+        },
+        {
+          "id": "caption-word-7-3",
+          "text": "Clingo",
+          "start": 7.816,
+          "end": 8.136
+        }
+      ]
+    },
+    {
+      "id": "caption-group-8",
+      "frame": 2,
+      "start": 8.196,
+      "end": 8.766,
+      "text": "together",
+      "words": [
+        {
+          "id": "caption-word-8-0",
+          "text": "together",
+          "start": 8.196,
+          "end": 8.646
+        }
+      ]
+    },
+    {
+      "id": "caption-group-9",
+      "frame": 2,
+      "start": 8.976,
+      "end": 10.076,
+      "text": "in VS Code,",
+      "words": [
+        {
+          "id": "caption-word-9-0",
+          "text": "in",
+          "start": 8.976,
+          "end": 9.076
+        },
+        {
+          "id": "caption-word-9-1",
+          "text": "VS",
+          "start": 9.076,
+          "end": 9.326
+        },
+        {
+          "id": "caption-word-9-2",
+          "text": "Code,",
+          "start": 9.326,
+          "end": 9.956
+        }
+      ]
+    },
+    {
+      "id": "caption-group-10",
+      "frame": 2,
+      "start": 10.126,
+      "end": 10.906,
+      "text": "Cursor and",
+      "words": [
+        {
+          "id": "caption-word-10-0",
+          "text": "Cursor",
+          "start": 10.126,
+          "end": 10.636
+        },
+        {
+          "id": "caption-word-10-1",
+          "text": "and",
+          "start": 10.636,
+          "end": 10.906
+        }
+      ]
+    },
+    {
+      "id": "caption-group-11",
+      "frame": 2,
+      "start": 10.906,
+      "end": 11.856,
+      "text": "VS Codeium.",
+      "words": [
+        {
+          "id": "caption-word-11-0",
+          "text": "VS",
+          "start": 10.906,
+          "end": 11.086
+        },
+        {
+          "id": "caption-word-11-1",
+          "text": "Codeium.",
+          "start": 11.086,
+          "end": 11.736
+        }
+      ]
+    },
+    {
+      "id": "caption-group-12",
+      "frame": 3,
+      "start": 11.9,
+      "end": 13.66,
+      "text": "semantic highlighting,",
+      "words": [
+        {
+          "id": "caption-word-12-0",
+          "text": "semantic",
+          "start": 11.9,
+          "end": 12.51
+        },
+        {
+          "id": "caption-word-12-1",
+          "text": "highlighting,",
+          "start": 12.51,
+          "end": 13.63
+        }
+      ]
+    },
+    {
+      "id": "caption-group-13",
+      "frame": 3,
+      "start": 13.66,
+      "end": 14.15,
+      "text": "facts,",
+      "words": [
+        {
+          "id": "caption-word-13-0",
+          "text": "facts,",
+          "start": 13.66,
+          "end": 14.06
+        }
+      ]
+    },
+    {
+      "id": "caption-group-14",
+      "frame": 3,
+      "start": 14.15,
+      "end": 14.56,
+      "text": "heads,",
+      "words": [
+        {
+          "id": "caption-word-14-0",
+          "text": "heads,",
+          "start": 14.15,
+          "end": 14.56
+        }
+      ]
+    },
+    {
+      "id": "caption-group-15",
+      "frame": 3,
+      "start": 14.56,
+      "end": 15.33,
+      "text": "negation,",
+      "words": [
+        {
+          "id": "caption-word-15-0",
+          "text": "negation,",
+          "start": 14.56,
+          "end": 15.26
+        }
+      ]
+    },
+    {
+      "id": "caption-group-16",
+      "frame": 3,
+      "start": 15.33,
+      "end": 15.93,
+      "text": "each color",
+      "words": [
+        {
+          "id": "caption-word-16-0",
+          "text": "each",
+          "start": 15.33,
+          "end": 15.56
+        },
+        {
+          "id": "caption-word-16-1",
+          "text": "color",
+          "start": 15.56,
+          "end": 15.93
+        }
+      ]
+    },
+    {
+      "id": "caption-group-17",
+      "frame": 3,
+      "start": 15.93,
+      "end": 17.1,
+      "text": "means something.",
+      "words": [
+        {
+          "id": "caption-word-17-0",
+          "text": "means",
+          "start": 15.93,
+          "end": 16.32
+        },
+        {
+          "id": "caption-word-17-1",
+          "text": "something.",
+          "start": 16.32,
+          "end": 17.04
+        }
+      ]
+    },
+    {
+      "id": "caption-group-18",
+      "frame": 3,
+      "start": 17.1,
+      "end": 17.5,
+      "text": "You read",
+      "words": [
+        {
+          "id": "caption-word-18-0",
+          "text": "You",
+          "start": 17.1,
+          "end": 17.24
+        },
+        {
+          "id": "caption-word-18-1",
+          "text": "read",
+          "start": 17.24,
+          "end": 17.5
+        }
+      ]
+    },
+    {
+      "id": "caption-group-19",
+      "frame": 3,
+      "start": 17.5,
+      "end": 18.28,
+      "text": "the program,",
+      "words": [
+        {
+          "id": "caption-word-19-0",
+          "text": "the",
+          "start": 17.5,
+          "end": 17.69
+        },
+        {
+          "id": "caption-word-19-1",
+          "text": "program,",
+          "start": 17.7,
+          "end": 18.28
+        }
+      ]
+    },
+    {
+      "id": "caption-group-20",
+      "frame": 3,
+      "start": 18.28,
+      "end": 18.45,
+      "text": "not",
+      "words": [
+        {
+          "id": "caption-word-20-0",
+          "text": "not",
+          "start": 18.28,
+          "end": 18.33
+        }
+      ]
+    },
+    {
+      "id": "caption-group-21",
+      "frame": 3,
+      "start": 18.54,
+      "end": 19.196,
+      "text": "the noise.",
+      "words": [
+        {
+          "id": "caption-word-21-0",
+          "text": "the",
+          "start": 18.54,
+          "end": 18.69
+        },
+        {
+          "id": "caption-word-21-1",
+          "text": "noise.",
+          "start": 18.86,
+          "end": 19.23
+        }
+      ]
+    },
+    {
+      "id": "caption-group-22",
+      "frame": 4,
+      "start": 19.196,
+      "end": 20.306,
+      "text": "Run Clingo without",
+      "words": [
+        {
+          "id": "caption-word-22-0",
+          "text": "Run",
+          "start": 19.196,
+          "end": 19.356
+        },
+        {
+          "id": "caption-word-22-1",
+          "text": "Clingo",
+          "start": 19.356,
+          "end": 19.786
+        },
+        {
+          "id": "caption-word-22-2",
+          "text": "without",
+          "start": 19.786,
+          "end": 20.256
+        }
+      ]
+    },
+    {
+      "id": "caption-group-23",
+      "frame": 4,
+      "start": 20.306,
+      "end": 21.766,
+      "text": "leaving the editor.",
+      "words": [
+        {
+          "id": "caption-word-23-0",
+          "text": "leaving",
+          "start": 20.306,
+          "end": 20.746
+        },
+        {
+          "id": "caption-word-23-1",
+          "text": "the",
+          "start": 20.836,
+          "end": 21.026
+        },
+        {
+          "id": "caption-word-23-2",
+          "text": "editor.",
+          "start": 21.026,
+          "end": 21.716
+        }
+      ]
+    },
+    {
+      "id": "caption-group-24",
+      "frame": 4,
+      "start": 21.766,
+      "end": 23.486,
+      "text": "Bundled Wasm or your",
+      "words": [
+        {
+          "id": "caption-word-24-0",
+          "text": "Bundled",
+          "start": 21.766,
+          "end": 22.446
+        },
+        {
+          "id": "caption-word-24-1",
+          "text": "Wasm",
+          "start": 22.446,
+          "end": 22.836
+        },
+        {
+          "id": "caption-word-24-2",
+          "text": "or",
+          "start": 22.886,
+          "end": 23.066
+        },
+        {
+          "id": "caption-word-24-3",
+          "text": "your",
+          "start": 23.066,
+          "end": 23.486
+        }
+      ]
+    },
+    {
+      "id": "caption-group-25",
+      "frame": 4,
+      "start": 23.486,
+      "end": 23.846,
+      "text": "path",
+      "words": [
+        {
+          "id": "caption-word-25-0",
+          "text": "path",
+          "start": 23.486,
+          "end": 23.726
+        }
+      ]
+    },
+    {
+      "id": "caption-group-26",
+      "frame": 4,
+      "start": 24.336,
+      "end": 24.646,
+      "text": "binary.",
+      "words": [
+        {
+          "id": "caption-word-26-0",
+          "text": "binary.",
+          "start": 24.336,
+          "end": 24.596
+        }
+      ]
+    },
+    {
+      "id": "caption-group-27",
+      "frame": 4,
+      "start": 24.646,
+      "end": 25.366,
+      "text": "Models land",
+      "words": [
+        {
+          "id": "caption-word-27-0",
+          "text": "Models",
+          "start": 24.646,
+          "end": 25.056
+        },
+        {
+          "id": "caption-word-27-1",
+          "text": "land",
+          "start": 25.056,
+          "end": 25.366
+        }
+      ]
+    },
+    {
+      "id": "caption-group-28",
+      "frame": 4,
+      "start": 25.366,
+      "end": 25.766,
+      "text": "in the",
+      "words": [
+        {
+          "id": "caption-word-28-0",
+          "text": "in",
+          "start": 25.366,
+          "end": 25.506
+        },
+        {
+          "id": "caption-word-28-1",
+          "text": "the",
+          "start": 25.546,
+          "end": 25.716
+        }
+      ]
+    },
+    {
+      "id": "caption-group-29",
+      "frame": 4,
+      "start": 25.766,
+      "end": 27.013,
+      "text": "solve or sidebar.",
+      "words": [
+        {
+          "id": "caption-word-29-0",
+          "text": "solve",
+          "start": 25.766,
+          "end": 26.136
+        },
+        {
+          "id": "caption-word-29-1",
+          "text": "or",
+          "start": 26.136,
+          "end": 26.206
+        },
+        {
+          "id": "caption-word-29-2",
+          "text": "sidebar.",
+          "start": 26.296,
+          "end": 27.096
+        }
+      ]
+    },
+    {
+      "id": "caption-group-30",
+      "frame": 5,
+      "start": 27.013,
+      "end": 28.203,
+      "text": "Diagnostics,",
+      "words": [
+        {
+          "id": "caption-word-30-0",
+          "text": "Diagnostics,",
+          "start": 27.013,
+          "end": 28.203
+        }
+      ]
+    },
+    {
+      "id": "caption-group-31",
+      "frame": 5,
+      "start": 28.203,
+      "end": 29.133,
+      "text": "completion,",
+      "words": [
+        {
+          "id": "caption-word-31-0",
+          "text": "completion,",
+          "start": 28.203,
+          "end": 29.083
+        }
+      ]
+    },
+    {
+      "id": "caption-group-32",
+      "frame": 5,
+      "start": 29.133,
+      "end": 30.563,
+      "text": "go to definition,",
+      "words": [
+        {
+          "id": "caption-word-32-0",
+          "text": "go",
+          "start": 29.133,
+          "end": 29.263
+        },
+        {
+          "id": "caption-word-32-1",
+          "text": "to",
+          "start": 29.263,
+          "end": 29.393
+        },
+        {
+          "id": "caption-word-32-2",
+          "text": "definition,",
+          "start": 29.393,
+          "end": 30.563
+        }
+      ]
+    },
+    {
+      "id": "caption-group-33",
+      "frame": 5,
+      "start": 30.563,
+      "end": 31.823,
+      "text": "find references,",
+      "words": [
+        {
+          "id": "caption-word-33-0",
+          "text": "find",
+          "start": 30.563,
+          "end": 30.893
+        },
+        {
+          "id": "caption-word-33-1",
+          "text": "references,",
+          "start": 30.893,
+          "end": 31.763
+        }
+      ]
+    },
+    {
+      "id": "caption-group-34",
+      "frame": 5,
+      "start": 31.823,
+      "end": 33.003,
+      "text": "one extension not",
+      "words": [
+        {
+          "id": "caption-word-34-0",
+          "text": "one",
+          "start": 31.823,
+          "end": 32.043
+        },
+        {
+          "id": "caption-word-34-1",
+          "text": "extension",
+          "start": 32.043,
+          "end": 32.763
+        },
+        {
+          "id": "caption-word-34-2",
+          "text": "not",
+          "start": 32.763,
+          "end": 33.003
+        }
+      ]
+    },
+    {
+      "id": "caption-group-35",
+      "frame": 5,
+      "start": 33.003,
+      "end": 34.003,
+      "text": "a highlighter plus",
+      "words": [
+        {
+          "id": "caption-word-35-0",
+          "text": "a",
+          "start": 33.003,
+          "end": 33.083
+        },
+        {
+          "id": "caption-word-35-1",
+          "text": "highlighter",
+          "start": 33.083,
+          "end": 33.723
+        },
+        {
+          "id": "caption-word-35-2",
+          "text": "plus",
+          "start": 33.813,
+          "end": 34.003
+        }
+      ]
+    },
+    {
+      "id": "caption-group-36",
+      "frame": 5,
+      "start": 34.003,
+      "end": 35.176,
+      "text": "a separate runner.",
+      "words": [
+        {
+          "id": "caption-word-36-0",
+          "text": "a",
+          "start": 34.003,
+          "end": 34.053
+        },
+        {
+          "id": "caption-word-36-1",
+          "text": "separate",
+          "start": 34.063,
+          "end": 34.553
+        },
+        {
+          "id": "caption-word-36-2",
+          "text": "runner.",
+          "start": 34.683,
+          "end": 35.083
+        }
+      ]
+    },
+    {
+      "id": "caption-group-37",
+      "frame": 6,
+      "start": 35.176,
+      "end": 36.586,
+      "text": "Install Aspils on the",
+      "words": [
+        {
+          "id": "caption-word-37-0",
+          "text": "Install",
+          "start": 35.176,
+          "end": 35.686
+        },
+        {
+          "id": "caption-word-37-1",
+          "text": "Aspils",
+          "start": 35.746,
+          "end": 36.186
+        },
+        {
+          "id": "caption-word-37-2",
+          "text": "on",
+          "start": 36.186,
+          "end": 36.346
+        },
+        {
+          "id": "caption-word-37-3",
+          "text": "the",
+          "start": 36.346,
+          "end": 36.576
+        }
+      ]
+    },
+    {
+      "id": "caption-group-38",
+      "frame": 6,
+      "start": 36.586,
+      "end": 39.596,
+      "text": "VS Marketplace or OpenVSX.",
+      "words": [
+        {
+          "id": "caption-word-38-0",
+          "text": "VS",
+          "start": 36.586,
+          "end": 36.746
+        },
+        {
+          "id": "caption-word-38-1",
+          "text": "Marketplace",
+          "start": 36.746,
+          "end": 37.696
+        },
+        {
+          "id": "caption-word-38-2",
+          "text": "or",
+          "start": 37.696,
+          "end": 38.106
+        },
+        {
+          "id": "caption-word-38-3",
+          "text": "OpenVSX.",
+          "start": 38.106,
+          "end": 39.556
+        }
+      ]
+    },
+    {
+      "id": "caption-group-39",
+      "frame": 6,
+      "start": 39.596,
+      "end": 40.616,
+      "text": "Search Aspils,",
+      "words": [
+        {
+          "id": "caption-word-39-0",
+          "text": "Search",
+          "start": 39.596,
+          "end": 40.006
+        },
+        {
+          "id": "caption-word-39-1",
+          "text": "Aspils,",
+          "start": 40.006,
+          "end": 40.616
+        }
+      ]
+    },
+    {
+      "id": "caption-group-40",
+      "frame": 6,
+      "start": 40.616,
+      "end": 42.076,
+      "text": "then OpenA,",
+      "words": [
+        {
+          "id": "caption-word-40-0",
+          "text": "then",
+          "start": 40.616,
+          "end": 41.146
+        },
+        {
+          "id": "caption-word-40-1",
+          "text": "OpenA,",
+          "start": 41.146,
+          "end": 42.076
+        }
+      ]
+    },
+    {
+      "id": "caption-group-41",
+      "frame": 6,
+      "start": 42.076,
+      "end": 43.216,
+      "text": "LP file and",
+      "words": [
+        {
+          "id": "caption-word-41-0",
+          "text": "LP",
+          "start": 42.076,
+          "end": 42.276
+        },
+        {
+          "id": "caption-word-41-1",
+          "text": "file",
+          "start": 42.436,
+          "end": 42.836
+        },
+        {
+          "id": "caption-word-41-2",
+          "text": "and",
+          "start": 42.836,
+          "end": 43.216
+        }
+      ]
+    },
+    {
+      "id": "caption-group-42",
+      "frame": 6,
+      "start": 43.216,
+      "end": 44.056,
+      "text": "solve.",
+      "words": [
+        {
+          "id": "caption-word-42-0",
+          "text": "solve.",
+          "start": 43.216,
+          "end": 43.936
+        }
+      ]
+    }
+  ]
+}

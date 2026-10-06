@@ -1,0 +1,432 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Mona Sans VF";
+      src: url("assets/fonts/Mona-Sans-VF.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    @font-face {
+      font-family: "Mona Sans Mono";
+      src: url("assets/fonts/Mona-Sans-Mono.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      container-type: size;
+      overflow: hidden;
+    }
+
+    .clip {
+      position: absolute;
+      inset: 0;
+    }
+
+    .intelligence-bg {
+      background: #f6f8fa;
+    }
+
+    .intelligence-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .intelligence-diagram img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+    }
+
+    .intelligence-stage {
+      inset: 0;
+      bottom: auto;
+      height: 83%;
+      overflow: hidden;
+    }
+
+    .intelligence-camera {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 42%;
+      will-change: transform;
+    }
+
+    .intelligence-kicker {
+      position: absolute;
+      left: 4.2cqw;
+      top: 4.2cqw;
+      font-family: "Mona Sans Mono", monospace;
+      font-size: 1.46cqw;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #1f2328;
+      opacity: 0;
+    }
+
+    .intelligence-kicker .intelligence-spike {
+      color: #0550ae;
+    }
+
+    .intelligence-icon-wrap {
+      position: absolute;
+      left: 50%;
+      top: 42%;
+      width: 8cqw;
+      margin-left: -4cqw;
+      margin-top: -4cqw;
+      opacity: 0;
+      z-index: 4;
+    }
+
+    .intelligence-icon-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .intelligence-grid-wrap {
+      position: absolute;
+      left: 50%;
+      top: 38%;
+      width: 0;
+      height: 0;
+      z-index: 2;
+    }
+
+    .intelligence-card,
+    .intelligence-card-ghost {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20cqw;
+      min-height: 9.2cqw;
+      padding: 1.4cqw 1.6cqw;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 35, 40, 0.12);
+      box-shadow:
+        0 1px 3px rgba(31, 35, 40, 0.08),
+        0 4px 16px rgba(31, 35, 40, 0.04);
+      will-change: transform, opacity;
+    }
+
+    .intelligence-card {
+      background: #d7f6e0;
+      z-index: 2;
+    }
+
+    .intelligence-card:nth-child(4),
+    .intelligence-card:nth-child(8) {
+      background: #f6f8fa;
+    }
+
+    .intelligence-card-ghost {
+      display: none;
+      background: rgba(215, 246, 224, 0.55);
+      border-color: rgba(31, 35, 40, 0.08);
+      box-shadow: none;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .intelligence-card-label {
+      display: block;
+      font-family: "Mona Sans Mono", monospace;
+      font-size: 1.35cqw;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(31, 35, 40, 0.55);
+      margin-bottom: 0.5cqw;
+    }
+
+    .intelligence-card-title {
+      font-family: "Mona Sans VF", Georgia, serif;
+      font-size: 2.3cqw;
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: -0.005em;
+      color: #1f2328;
+    }
+
+    .intelligence-payoff {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      font-family: "Mona Sans VF", Georgia, serif;
+      font-size: 5.4cqw;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.12;
+      letter-spacing: -0.012em;
+      color: #0550ae;
+      white-space: nowrap;
+      opacity: 0;
+      z-index: 5;
+    }
+  </style>
+
+  <div data-hf-id="hf-bb5p" id="root" data-composition-id="05-intelligence" data-width="1920" data-height="1080" data-duration="8.713">
+    <div data-hf-id="hf-x3tw" class="clip intelligence-bg" data-start="0" data-duration="8.713" data-track-index="0"></div>
+
+    <div data-hf-id="hf-1imz" class="clip intelligence-diagram" data-start="0" data-duration="8.713" data-track-index="1">
+      <img data-hf-id="hf-ykp3" id="05-intelligence-diagram-img" src="assets/aspls-architecture-diagram.png" alt="" width="1920" height="1080">
+    </div>
+
+    <div data-hf-id="hf-94qx" class="clip intelligence-stage" data-start="0" data-duration="8.713" data-track-index="2">
+      <div data-hf-id="hf-t7bh" class="intelligence-kicker" id="05-intelligence-kicker">
+        <span data-hf-id="hf-vr3g" class="intelligence-spike">✱</span> Language intelligence
+      </div>
+
+      <div data-hf-id="hf-j5v5" class="intelligence-camera" id="05-intelligence-camera" data-layout-allow-overflow="">
+        <div data-hf-id="hf-oqkz" class="intelligence-icon-wrap" id="05-intelligence-icon">
+          <img data-hf-id="hf-r0m9" src="assets/aspls-icon.png" alt="" width="154" height="154">
+        </div>
+
+        <div data-hf-id="hf-x785" class="intelligence-grid-wrap" id="05-intelligence-grid">
+          <div data-hf-id="hf-07dl" class="intelligence-card-ghost" id="05-intelligence-ghost-0" data-layout-allow-overlap="" data-layout-allow-occlusion="" data-target-x="-210" data-target-y="-78">
+          </div>
+          <div data-hf-id="hf-le2m" class="intelligence-card" id="05-intelligence-card-0" data-layout-allow-overlap="" data-target-x="-210" data-target-y="-78">
+            <span data-hf-id="hf-7did" class="intelligence-card-label">01</span>
+            <span data-hf-id="hf-fr4q" class="intelligence-card-title">Diagnostics</span>
+          </div>
+
+          <div data-hf-id="hf-qtkl" class="intelligence-card-ghost" id="05-intelligence-ghost-1" data-layout-allow-overlap="" data-layout-allow-occlusion="" data-target-x="210" data-target-y="-78">
+          </div>
+          <div data-hf-id="hf-w6ls" class="intelligence-card" id="05-intelligence-card-1" data-layout-allow-overlap="" data-target-x="210" data-target-y="-78">
+            <span data-hf-id="hf-8kfg" class="intelligence-card-label">02</span>
+            <span data-hf-id="hf-g5oo" class="intelligence-card-title">Completion</span>
+          </div>
+
+          <div data-hf-id="hf-a3sa" class="intelligence-card-ghost" id="05-intelligence-ghost-2" data-layout-allow-overlap="" data-layout-allow-occlusion="" data-target-x="-210" data-target-y="78">
+          </div>
+          <div data-hf-id="hf-9u5b" class="intelligence-card" id="05-intelligence-card-2" data-layout-allow-overlap="" data-target-x="-210" data-target-y="78">
+            <span data-hf-id="hf-864f" class="intelligence-card-label">03</span>
+            <span data-hf-id="hf-0ag6" class="intelligence-card-title">Go to definition</span>
+          </div>
+
+          <div data-hf-id="hf-jqxs" class="intelligence-card-ghost" id="05-intelligence-ghost-3" data-layout-allow-overlap="" data-layout-allow-occlusion="" data-target-x="210" data-target-y="78">
+          </div>
+          <div data-hf-id="hf-e90j" class="intelligence-card" id="05-intelligence-card-3" data-layout-allow-overlap="" data-target-x="210" data-target-y="78">
+            <span data-hf-id="hf-9d1i" class="intelligence-card-label">04</span>
+            <span data-hf-id="hf-hi9p" class="intelligence-card-title">Find references</span>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-hexh" class="intelligence-payoff" id="05-intelligence-payoff" data-layout-allow-overlap="">One extension.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const DURATION = 8.213;
+
+      const T = {
+        diagram: 0,
+        kicker: 0.06,
+        icon: 0.08,
+        iconOut: 1.85,
+        cards: [0.09, 1.28, 2.21, 3.64],
+        float: 4.25,
+        push: 4.25,
+        payoff: 4.9,
+      };
+
+      const diagramImg = document.getElementById("05-intelligence-diagram-img");
+      const kicker = document.getElementById("05-intelligence-kicker");
+      const icon = document.getElementById("05-intelligence-icon");
+      const camera = document.getElementById("05-intelligence-camera");
+      const payoff = document.getElementById("05-intelligence-payoff");
+
+      const cards = [
+        document.getElementById("05-intelligence-card-0"),
+        document.getElementById("05-intelligence-card-1"),
+        document.getElementById("05-intelligence-card-2"),
+        document.getElementById("05-intelligence-card-3"),
+      ];
+
+      const ghosts = [
+        document.getElementById("05-intelligence-ghost-0"),
+        document.getElementById("05-intelligence-ghost-1"),
+        document.getElementById("05-intelligence-ghost-2"),
+        document.getElementById("05-intelligence-ghost-3"),
+      ];
+
+      const GHOST_OFFSET = { x: 8, y: 8 };
+      const EXPAND_DUR = 0.55;
+      const STAGGER = 0.06;
+
+      const tl = gsap.timeline({ paused: true });
+
+      function assembleItem(el, at, ghostEl) {
+        const targetX = Number(el.dataset.targetX);
+        const targetY = Number(el.dataset.targetY);
+
+        if (ghostEl) {
+          tl.fromTo(
+            ghostEl,
+            {
+              xPercent: -50,
+              yPercent: -50,
+              x: targetX * 0.35,
+              y: targetY * 0.35,
+              scale: 0.94,
+              opacity: 0,
+            },
+            {
+              x: targetX + GHOST_OFFSET.x,
+              y: targetY + GHOST_OFFSET.y,
+              scale: 1,
+              opacity: 0.42,
+              duration: EXPAND_DUR,
+              ease: "power3.out",
+            },
+            at - STAGGER,
+          );
+        }
+
+        tl.fromTo(
+          el,
+          {
+            xPercent: -50,
+            yPercent: -50,
+            x: 0,
+            y: 0,
+            scale: 0.92,
+            opacity: 0,
+          },
+          {
+            x: targetX,
+            y: targetY,
+            scale: 1,
+            opacity: 1,
+            duration: EXPAND_DUR,
+            ease: "power3.out",
+          },
+          at,
+        );
+      }
+
+      gsap.set(diagramImg, { opacity: 0 });
+      gsap.set(kicker, { opacity: 0, y: 6 });
+      gsap.set(icon, { opacity: 0, scale: 0.88 });
+      gsap.set(payoff, { opacity: 0, xPercent: -50, y: 12 });
+      gsap.set(cards.concat(ghosts), {
+        xPercent: -50,
+        yPercent: -50,
+        x: 0,
+        y: 0,
+        opacity: 0,
+        scale: 0.92,
+      });
+
+      tl.fromTo(
+        diagramImg,
+        { opacity: 0 },
+        { opacity: 0.1, duration: 0.7, ease: "power2.out" },
+        T.diagram,
+      );
+      // Once cards take over, kill the diagram so label text never fights the grid
+      tl.to(diagramImg, { opacity: 0, duration: 0.35, ease: "power2.out" }, T.cards[0] + 0.55);
+
+      tl.fromTo(
+        kicker,
+        { opacity: 0, y: 6 },
+        { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+        T.kicker,
+      );
+
+      tl.fromTo(
+        icon,
+        { opacity: 0, scale: 0.88 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" },
+        T.icon,
+      );
+
+      cards.forEach(function (card, i) {
+        assembleItem(card, T.cards[i], ghosts[i]);
+      });
+
+      tl.to(
+        icon,
+        { opacity: 0, scale: 0.82, duration: 0.45, ease: "power2.inOut" },
+        T.iconOut,
+      );
+
+      const phase = { scale: 1 };
+      const drift = { p: 0 };
+
+      tl.to(
+        phase,
+        { scale: 1.035, duration: 3.2, ease: "power1.inOut" },
+        T.push,
+      );
+
+      tl.to(
+        drift,
+        {
+          p: Math.PI * 2 * 1.2,
+          duration: DURATION - T.float,
+          ease: "none",
+          onUpdate: function () {
+            const dx = Math.sin(drift.p) * 1.2;
+            const dy = Math.sin(drift.p * 1.3) * 0.9;
+            camera.style.transform =
+              "scale(" + phase.scale + ") translate(" + dx + "px, " + dy + "px)";
+          },
+        },
+        T.float,
+      );
+
+      cards.forEach(function (card, i) {
+        tl.to(
+          card,
+          {
+            y: "+=" + 2,
+            duration: 2.1,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: 1,
+          },
+          T.float + i * 0.18,
+        );
+      });
+
+      // Clear the grid before the payoff so "One extension." never sits on the cards
+      tl.to(
+        cards.concat(ghosts),
+        { opacity: 0, scale: 0.96, duration: 0.35, ease: "power2.inOut", stagger: 0.03 },
+        T.payoff - 0.28,
+      );
+      tl.to(kicker, { opacity: 0, duration: 0.25, ease: "power2.out" }, T.payoff - 0.2);
+
+      tl.fromTo(
+        payoff,
+        { opacity: 0, xPercent: -50, y: 12 },
+        { opacity: 1, xPercent: -50, y: 0, duration: 0.45, ease: "power3.out" },
+        T.payoff,
+      );
+
+      // Clear local stage before cut (never target global #root)
+      tl.to(
+        [camera, payoff, kicker, diagramImg],
+        { opacity: 0, duration: 0.1, ease: "none" },
+        Math.max(0, DURATION - 0.1),
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["05-intelligence"] = tl;
+    })();
+  </script>
+</template>

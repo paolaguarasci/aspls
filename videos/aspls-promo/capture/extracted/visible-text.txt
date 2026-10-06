@@ -1,0 +1,681 @@
+[a] Skip to content
+[h2] Navigation Menu
+[span] Sign in
+[button] Platform
+[button] Solutions
+[button] Resources
+[button] Open Source
+[button] Enterprise
+[span] Search
+[span] Sign in
+[span] Sign up
+[a] Reload
+[a] Reload
+[a] Reload
+[a] paolaguarasci
+[a] aspls
+[span] Public
+[a] Notifications
+[a] Fork
+[span] Star
+[span] Pull requests
+[span] Projects
+[span] Security and quality
+[span] Insights
+[span] main
+[span] Branch
+[span] Tags
+[span] Go to file
+[span] Code
+[h2] Latest commit
+[a] paolaguarasci
+[a] Update package.json and client/package.json to include new publish sc…
+[relative-time] Sep 2, 2026
+[a] 270133a
+[relative-time] Sep 2, 2026
+[h2] History
+[span] 148 Commits
+[h2] Folders and files
+[span] Name
+[span] Name
+[span] Last commit message
+[span] Last commit date
+[span] .github/
+[span] workflows
+[span] .github/
+[span] workflows
+[a] Add Python 3.10–3.13 CI matrix and VS Code/Cursor packaging smoke test.
+[relative-time] Sep 2, 2026
+[a] .vscode
+[a] .vscode
+[a] impruve grammatic
+[relative-time] Jul 28, 2026
+[a] client
+[a] client
+[a] Update package.json and client/package.json to include new publish sc…
+[relative-time] Sep 2, 2026
+[a] docs
+[a] docs
+[a] Add standalone LSP setup guide for Neovim, Emacs, and Zed.
+[relative-time] Sep 2, 2026
+[a] examples
+[a] examples
+[a] Document WASM multi-file limits and add parity smoke test
+[relative-time] Sep 2, 2026
+[a] server
+[a] server
+[a] Refactor grounding debug session and error handling; add tests for cl…
+[relative-time] Sep 2, 2026
+[a] .gitignore
+[a] .gitignore
+[a] Ignore common agent scratch paths in the repository.
+[relative-time] Jul 26, 2026
+[a] aspls.clingo.json
+[a] aspls.clingo.json
+[a] Refactor grounding debug session and error handling; add tests for cl…
+[relative-time] Sep 2, 2026
+[a] license
+[a] license
+[a] minor fix before first publication
+[relative-time] Jul 26, 2026
+[a] package.json
+[a] package.json
+[a] Update package.json and client/package.json to include new publish sc…
+[relative-time] Sep 2, 2026
+[a] readme.md
+[a] readme.md
+[a] Add anonymous opt-in telemetry for feature usage and parser errors
+[relative-time] Sep 2, 2026
+[button] View all files
+[h2] Repository files navigation
+[span] MIT license
+[h1] aspls
+[strong] Answer Set Programming for VS Code, Cursor, and VSCodium
+[p] Language intelligence + Clingo runner in one extension · ASP-Core-2 /
+[a] Clingo
+[strong] Install on VS Marketplace
+[strong] Install on Open VSX
+[strong] Report issue
+[strong] aspls
+[p] is a VS Code / Cursor / VSCodium extension for
+[strong] Answer Set Programming
+[p] in the ASP-Core-2 /
+[a] Clingo
+[p] dialect. It combines
+[strong] language intelligence
+[p] (diagnostics, completion, hover, go-to-definition, find-references, semantic + rainbow highlighting) with a
+[strong] Clingo runner
+[p] (bundled WASM or PATH binary, Solver sidebar) — so you do not need a highlight-only extension plus a separate run tool.
+[p] Works with
+[code] .lp
+[p] and
+[code] .asp
+[p] files.
+[h2] Screenshots
+[h3] Semantic highlighting
+[p] Facts, rule heads, negation, and directives each get distinct colors. Optional rainbow underlines keep predicate names visually distinct across a file.
+[h3] ASP Solver sidebar
+[p] Run Clingo from the editor title bar or the
+[strong] ASP → Solver
+[p] view. Answer sets, errors, and re-run controls stay in the sidebar;
+[strong] Controls
+[p] persist models, native Clingo path, and additional files.
+[h3] Architecture
+[p] The TypeScript extension hosts the Clingo runner and UI; a Python LSP server provides parsing and IDE features. Both share the same file
+[strong] pool
+[p] via
+[code] aspls.clingo.json
+[h2] Features
+[th] Feature
+[th] What you get
+[strong] Run Clingo
+[td] Compute first or all answer sets (title bar, context menu, Command Palette)
+[strong] ASP → Solver
+[td] First / All / Config runs, answer sets, errors, re-run; Controls for models, PATH,
+[code] additionalFiles
+[strong] ASP → Predicates
+[td] Active-file predicates by role; optional workspace pool toggle; powers
+[strong] Outline
+[strong] PATH or WASM
+[td] Bundled
+[code] clingo-wasm
+[td] by default; optional Clingo binary from PATH
+[strong] Syntax highlighting
+[td] Atoms, variables, comments, directives, operators
+[strong] Semantic highlighting
+[td] Facts, rule heads, bodies, constraints,
+[code] #show
+[code] #minimize
+[strong] Rainbow predicates
+[td] Optional stable underline color per predicate name
+[strong] Diagnostics
+[td] ASP parser syntax errors; optional Clingo-backed checks
+[strong] IntelliSense
+[td] Predicate completion from workspace / config pool
+[strong] Hover
+[td] Arity, counts,
+[code] %*…*%
+[td] docstrings, definition line + preceding comment
+[strong] Go to Definition
+[td] Facts and rule heads (cross-file)
+[strong] Find References
+[td] All occurrences of a predicate in the pool
+[strong] Learner mode
+[td] Optional rule-order and comment hints with quick fixes (off by default)
+[strong] Code Cookbook
+[td] Browse ASP patterns; insert at cursor or open as new
+[code] .lp
+[strong] Snippets
+[td] Templates for directives, aggregates, choice rules, weak constraints
+[h2] Video walkthrough
+[p] ~5-minute screencast script:
+[strong] install → first answer set → multi-file pool
+[p] Recording guide:
+[code] docs/walkthrough.md
+[p] (uses
+[code] examples/01_basics/
+[p] and
+[code] examples/04_multi_file/
+[h2] Quick start
+[li] Install from the
+[a] VS Marketplace
+[a] Open VSX
+[li] Ensure
+[strong] Python 3
+[li] is on your PATH (or set
+[code] aspls.pythonPath
+[li] ). The language server creates a local venv on first use.
+[li] Open a
+[code] .lp
+[li] file.
+[li] Click
+[strong] play
+[strong] run all
+[li] in the editor title bar, or run:
+[code] aspls: Compute first answer set
+[code] aspls: Compute all answer sets
+[li] Results appear in
+[strong] ASP → Solver
+[li] (sidebar focuses after a run).
+[p] Optional: install
+[a] Clingo
+[p] on PATH for extra diagnostics and native multi-file runs via
+[code] aspls.clingo.usePath
+[h2] Example
+[pre] % Birds that are not penguins can fly
+bird(tweety).
+penguin(pingu).
+
+flies(X) :- bird(X), not penguin(X).
+
+#show flies/1.
+[th] Element
+[th] Semantic role
+[code] bird
+[code] penguin
+[td] Facts — green
+[code] flies
+[td] (head)
+[td] Rule head — blue
+[code] not penguin
+[td] Negation in body — muted / italic
+[code] #show
+[td] Directive — gold
+[h2] Tutorial examples
+[p] Progressive tutorials under
+[code] examples/
+[p] . Open a file in the editor and run Clingo from the title bar or
+[strong] ASP → Solver
+[th] Tutorial
+[th] Path
+[th] Topic
+[strong] 1 — Basics
+[code] examples/01_basics/birds.lp
+[td] Facts, rules, default negation
+[strong] 2 — Choice
+[code] examples/02_choice/menu.lp
+[td] Choice rules (pick exactly one)
+[strong] 3 — Optimization
+[code] examples/03_optimization/budget.lp
+[code] #minimize
+[td] and hard constraints
+[strong] 4 — Multi-file
+[code] examples/04_multi_file/rules.lp
+[td] Pool via
+[code] aspls.clingo.json
+[code] additionalFiles
+[p] Reference catalogs (grammar coverage, not tutorials):
+[code] grammar_tour.lp
+[code] test.lp
+[h2] Learning path (Potassco & ASP courses)
+[p] aspls tutorials and the
+[strong] Code Cookbook
+[p] follow the progression used in the
+[a] Potassco Guide
+[p] and graduate ASP courses such as
+[a] Answer set solving in practice
+[p] (University of Potsdam) and typical university lab sequences (facts → choice → optimization → classic encodings).
+[th] Step
+[th] aspls material
+[th] Potassco Guide / course topic
+[strong] Language — facts & rules
+[code] examples/01_basics/birds.lp
+[td] , Cookbook
+[em] Facts and rules
+[td] Language §3.1; flying-birds example (
+[code] bird.lp
+[td] / default negation)
+[strong] Language — choice rules
+[code] examples/02_choice/menu.lp
+[td] , Cookbook
+[em] Choice rule
+[td] Language §3.1 choice rules; assignment / menu encodings
+[strong] Language — optimization
+[code] examples/03_optimization/budget.lp
+[td] , Cookbook
+[em] Minimize
+[em] Weak constraint
+[code] #minimize
+[td] / weak constraints; TSP §5.2 cost minimization
+[strong] Multi-file programs
+[code] examples/04_multi_file/
+[code] #include
+[td] and modular encodings (Guide Language §3.1)
+[strong] Modeling — graph coloring
+[td] Cookbook
+[em] Graph 3-coloring
+[td] Guide §5.1 n-Coloring; common lab exercise
+[strong] Modeling — puzzles
+[td] Cookbook
+[em] 4×4 Sudoku
+[td] Course assignment 1 (Sudoku ↔ n-Queens); Guide
+[code] queensC.lp
+[strong] Modeling — scheduling
+[td] Cookbook
+[em] Job scheduling
+[em] Precedences
+[td] Scheduling encodings in Modeling track
+[strong] Modeling — planning
+[td] Cookbook
+[em] STRIPS schema
+[em] Bounded horizon
+[td] Guide §5.3 Blocks World Planning
+[strong] External references
+[a] Potassco Guide
+[li] — language, options, classic examples (coloring, TSP, blocks world)
+[a] Answer set solving in practice
+[li] — lectures, exercises, assignments
+[a] Clingo
+[li] — install, docs, release binaries
+[p] Open any row’s
+[code] .lp
+[p] file or run
+[strong] aspls: Open Code Cookbook
+[p] to explore the pattern in the editor with highlighting, hover, and the Solver sidebar.
+[h2] Standalone language server
+[p] Use the Python LSP in
+[strong] Neovim
+[strong] Emacs
+[p] , or
+[strong] Zed
+[p] without the VS Code extension — diagnostics, completion, hover, navigation, semantic tokens, and more. See
+[code] docs/lsp-standalone.md
+[h2] Clingo config
+[p] Workspace file
+[code] aspls.clingo.json
+[p] (name configurable via
+[code] aspls.clingo.configFile
+[p] ) is the
+[strong] canonical source
+[p] for
+[code] additionalFiles
+[code] models
+[code] threads
+[p] , and
+[code] customArgs
+[p] for both the LSP and the runner.
+[p] Create it with
+[code] aspls: Initialize Clingo config file
+[p] . Legacy
+[code] aspls.clingo.additionalFiles
+[p] in Settings is copied once on init — not read at runtime.
+[span] "models"
+[span] "threads"
+[span] "customArgs"
+[span] "additionalFiles"
+[pre] : [
+[span] facts.lp
+[pre] ]
+}
+[p] Then run
+[code] aspls: Compute answer sets (config)
+[p] . Paths in
+[code] additionalFiles
+[p] resolve relative to the active file, then the workspace root.
+[code] additionalFiles
+[th] in config
+[th] LSP pool
+[th] Runner file set
+[td] Key absent /
+[code] null
+[td] All
+[code] .lp
+[code] .asp
+[td] in workspace
+[td] Active file only
+[td] (explicit empty)
+[td] Active file only
+[td] Active file only
+[code] ["a.lp", "b.lp"]
+[td] Active + listed files
+[td] Active + listed files
+[p] An explicit
+[p] means “analyse/run this file in isolation” — not “no config”. That prevents surprising cross-file symbol leakage.
+[p] Before every run, aspls
+[strong] preflights
+[p] the request: missing
+[code] additionalFiles
+[p] , invalid
+[code] models
+[p] , and a configured but missing
+[code] aspls.clingo.path
+[p] fail immediately in the Solver panel.
+[h3] WASM vs PATH
+[th] Feature
+[th] Bundled WASM
+[th] Native PATH
+[td] Basic programs / answer sets
+[td] yes
+[td] yes
+[td] Multi-file via
+[code] additionalFiles
+[td] limited (concatenated)
+[td] yes
+[code] models
+[td] yes
+[td] yes
+[code] --const
+[td] yes
+[td] yes
+[td] Threads (
+[td] limited
+[td] yes
+[td] Output control (
+[code] --outf
+[td] , stats)
+[td] yes
+[td] Advanced CLI (parallel-mode, Lua, limits)
+[td] yes
+[p] When WASM cannot honor
+[code] customArgs
+[p] , the Solver shows a
+[strong] capability warning
+[p] and suggests
+[code] aspls.clingo.usePath
+[h4] WASM multi-file limits
+[strong] Evaluation:
+[p] bundled
+[code] clingo-wasm
+[p] exposes a single-program API — it accepts one source string, not separate input files. Native multi-file grounding (per-file module boundaries, Clingo resolving
+[code] #include
+[p] itself) is
+[strong] not available
+[p] under WASM without switching backends.
+[strong] What aspls does instead
+[p] when
+[code] aspls.clingo.usePath
+[code] false
+[code] #include "…"
+[li] in the active file is expanded recursively before the run (PATH Clingo resolves these natively at load time).
+[code] additionalFiles
+[li] from
+[code] aspls.clingo.json
+[li] are read and appended after the primary source, separated by
+[code] % === filename ===
+[li] markers.
+[p] This covers typical modular encodings — see
+[code] examples/04_multi_file/
+[p] — but is not identical to native Clingo:
+[th] Scenario
+[th] WASM (concatenated)
+[th] PATH (native files)
+[td] Facts + rules in separate files
+[td] Usually equivalent
+[td] Separate CLI inputs
+[code] #program
+[td] / modular boundaries per file
+[td] Single merged program
+[td] Per-file module semantics
+[td] Mixing
+[code] #include
+[td] and
+[code] additionalFiles
+[td] Both inlined then concatenated
+[td] Includes resolved by Clingo; extras passed as separate args
+[strong] When to enable
+[code] aspls.clingo.usePath
+[p] per-file
+[code] #program
+[p] blocks,
+[code] #script
+[p] , or any case where concatenation differs from native Clingo. Install
+[a] Clingo
+[p] on PATH and set
+[code] aspls.clingo.usePath
+[code] true
+[h2] Grammar coverage
+[p] The LSP parses a growing
+[strong] subset
+[p] of Clingo / ASP-Core-2. Unsupported constructs may show syntax diagnostics even when Clingo accepts them.
+[th] Construct
+[th] Status
+[td] Facts, rules, integrity constraints
+[td] Supported
+[td] Default negation (
+[code] not
+[td] Supported
+[td] Comparisons,
+[code] #count
+[code] #sum
+[code] #max
+[code] #min
+[td] Supported
+[code] #const
+[code] #show
+[code] #minimize
+[code] #maximize
+[td] Supported
+[td] Choice rules
+[code] { … }
+[td] Supported
+[td] Weak constraints (
+[code] :~ … . [w@p, …]
+[td] Supported
+[td] Variable bounds on choice
+[td] Supported
+[code] #include
+[code] #external
+[code] #heuristic
+[code] #script
+[code] #program
+[td] Supported
+[p] Prefer this table when diagnostics disagree with Clingo. Snippets and the Cookbook may preview patterns ahead of the parser.
+[h2] Docstrings & learner mode
+[p] Document predicates with asp-lsp-style blocks:
+[pre] %*
+#bird(X).
+
+A flying animal (unless it is a penguin).
+
+#parameters
+    - X : The individual.
+*%
+
+bird(tweety).
+[p] With
+[code] aspls.learnerMode
+[p] enabled, Information hints suggest rule order and missing
+[p] comments, with
+[strong] Fix Order
+[p] and
+[strong] Add preceding comment
+[p] quick fixes.
+[code] aspls.diagnostics.onceUsed
+[p] warns when a predicate appears only once as a body/constraint use (likely typo). Lone definitions and
+[code] #show
+[code] #minimize
+[p] -linked predicates are skipped.
+[h2] Settings
+[th] Setting
+[th] Default
+[th] Description
+[code] aspls.pythonPath
+[td] Python 3 path; empty = auto-detect
+[code] aspls.rainbowPredicates
+[code] true
+[td] Rainbow underline per predicate
+[code] aspls.diagnostics.onceUsed
+[code] true
+[td] Warn on single-use body predicates
+[code] aspls.learnerMode
+[code] false
+[td] Rule order + comment hints
+[code] aspls.clingo.usePath
+[code] false
+[td] Use PATH /
+[code] aspls.clingo.path
+[td] instead of WASM
+[code] aspls.clingo.path
+[td] Optional absolute Clingo binary path
+[code] aspls.clingo.models
+[td] Default models for config runs (
+[td] = all)
+[code] aspls.clingo.threads
+[td] Clingo
+[td] threads
+[code] aspls.clingo.customArgs
+[td] Extra CLI args
+[code] aspls.clingo.additionalFiles
+[strong] Deprecated
+[td] — migrated on init only
+[code] aspls.clingo.configFile
+[code] aspls.clingo.json
+[td] Workspace config file name
+[code] aspls.telemetry.enabled
+[code] false
+[td] Anonymous opt-in usage events
+[code] aspls.telemetry.endpoint
+[td] HTTPS collector URL (required to send)
+[p] Semantic highlighting for ASP is enabled by default for
+[code] [asp]
+[h2] Repository layout
+[th] Path
+[th] Purpose
+[code] client/
+[td] Publishable VS Code extension (TypeScript)
+[code] server/
+[td] Python LSP server (pygls, Lark)
+[code] examples/
+[td] Tutorial projects + grammar reference files
+[code] docs/images/
+[td] README illustrations
+[code] docs/walkthrough.md
+[td] 5-minute video recording script
+[code] docs/lsp-standalone.md
+[td] Language server setup for Neovim, Emacs, and Zed
+[p] The extension README for Marketplace / Open VSX lives in
+[code] client/README.md
+[h2] Development
+[h3] Prerequisites
+[li] Node.js 20+
+[li] Python 3.12+
+[li] Optional:
+[a] Clingo
+[li] on PATH for PATH smoke tests
+[h3] Client
+[pre] client
+npm ci
+npm
+[span] test
+[span] unit + regression + WASM/PATH smoke
+[pre] npm run compile
+[h3] Server
+[pre] server
+pip install pytest==8.3.3 pygls==1.3.1 lark==1.2.2 clingo
+PYTHONPATH=. pytest -q
+[p] CI runs both jobs on every push/PR to
+[code] main
+[code] master
+[p] — see
+[code] .github/workflows/ci.yml
+[h3] Extension development
+[p] Open the repo in VS Code, run the
+[strong] Run Extension
+[p] launch config from
+[code] client/.vscode/launch.json
+[p] , or:
+[pre] npm run compile
+[span] from repo root
+[h3] Publish (maintainers)
+[pre] npm run publish:marketplace
+[span] VS Marketplace
+[pre] npm run publish:openvsx
+[span] Open VSX
+[p] See
+[code] client/README.md
+[p] for the release checklist.
+[h2] Contributing
+[p] Issues and pull requests are welcome at
+[a] github.com/paolaguarasci/aspls
+[h2] License
+[p] MIT ©
+[a] Paola Guarasci
+[span] About
+[p] VS Code / Cursor extension for Answer Set Programming (ASP-Core-2 / Clingo): LSP diagnostics, completion, navigation, semantic highlighting, and Clingo runner (WASM or PATH).
+[a] open-vsx.org/extension/pingflood/aspls
+[span] Topics
+[a] answer-set-programming
+[a] asp
+[a] asp-core-2
+[a] clingo
+[a] cursor
+[a] intellisense
+[a] language-server
+[a] logic-programming
+[a] lsp
+[a] potassco
+[a] python
+[a] semantic-highlighting
+[a] typescript
+[a] vscode
+[a] vscode-extension
+[a] vscodium
+[a] wasm
+[span] Resources
+[span] Readme
+[span] MIT license
+[span] Activity
+[span] Stars
+[span] stars
+[span] Watchers
+[span] watching
+[span] Forks
+[span] forks
+[span] Report repository
+[span] Releases
+[span] No releases published
+[span] Contributors
+[strong] paolaguarasci
+[span] Paola Guarasci
+[span] Languages
+[span] Python
+[span] 54.3
+[span] TypeScript
+[span] 45.5
+[span] Shell
+[span] 0.2
+[span] © 2026 GitHub, Inc.
+[h3] Footer navigation
+[a] Security
+[a] Community
+[button] Do not share my personal information

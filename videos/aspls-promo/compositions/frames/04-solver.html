@@ -1,0 +1,308 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Mona Sans VF";
+      src: url("assets/fonts/Mona-Sans-VF.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    @font-face {
+      font-family: "Mona Sans Mono";
+      src: url("assets/fonts/Mona-Sans-Mono.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      container-type: size;
+      overflow: hidden;
+    }
+
+    .clip {
+      position: absolute;
+      inset: 0;
+    }
+
+    .solver-bg {
+      background: #f6f8fa;
+    }
+
+    .solver-stage {
+      inset: 0;
+      bottom: 17%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .solver-headline {
+      inset: auto;
+      left: 4.2cqw;
+      top: 3.2cqw;
+      right: 4.2cqw;
+      height: auto;
+      bottom: auto;
+      font-family: "Mona Sans VF", Georgia, serif;
+      font-weight: 400;
+      font-size: 3.2cqw;
+      line-height: 1.1;
+      letter-spacing: -0.018em;
+      color: #1f2328;
+      max-width: 70cqw;
+      z-index: 6;
+    }
+
+    .solver-layout {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 2.4cqw;
+    }
+
+    .solver-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2cqw;
+      flex-shrink: 0;
+    }
+
+    .solver-chip {
+      font-family: "Mona Sans Mono", monospace;
+      font-weight: 500;
+      font-size: 1.46cqw;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.9cqw 1.6cqw;
+      border-radius: 9999px;
+      white-space: nowrap;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .solver-chip--wasm {
+      background: #0969da;
+      color: #f6f8fa;
+      border: 1px solid rgba(31, 35, 40, 0.12);
+    }
+
+    .solver-chip--path {
+      background: #d7f6e0;
+      color: #1f2328;
+      border: 1px solid rgba(31, 35, 40, 0.12);
+    }
+
+    .solver-window-col {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .solver-accent {
+      position: absolute;
+      inset: -2.4cqw;
+      background: #d7f6e0;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 35, 40, 0.12);
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .solver-window {
+      position: relative;
+      width: 70cqw;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(246, 248, 250, 0.14);
+      box-shadow:
+        0 1px 3px rgba(31, 35, 40, 0.08),
+        0 4px 16px rgba(31, 35, 40, 0.04);
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .solver-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 0.6cqw;
+      padding: 0.8cqw 1.2cqw;
+      background: #202225;
+      border-bottom: 1px solid rgba(246, 248, 250, 0.14);
+    }
+
+    .solver-dot {
+      width: 0.7cqw;
+      height: 0.7cqw;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .solver-dot--red {
+      background: #c64545;
+    }
+
+    .solver-dot--yellow {
+      background: #e8a55a;
+    }
+
+    .solver-dot--green {
+      background: #5db872;
+    }
+
+    .solver-titlebar-label {
+      margin-left: 0.8cqw;
+      font-family: "Mona Sans Mono", monospace;
+      font-weight: 500;
+      font-size: 1.35cqw;
+      letter-spacing: 0.02em;
+      color: rgba(246, 248, 250, 0.72);
+    }
+
+    .solver-screenshot {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .solver-diagram-wrap {
+      inset: auto;
+      right: 4.2cqw;
+      bottom: calc(17% + 4.2cqw);
+      width: 22cqw;
+      height: auto;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(31, 35, 40, 0.12);
+      box-shadow:
+        0 1px 3px rgba(31, 35, 40, 0.08),
+        0 4px 16px rgba(31, 35, 40, 0.04);
+      background: #f6f8fa;
+    }
+
+    .solver-diagram-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+
+  <div data-hf-id="hf-clny" id="root" data-composition-id="04-solver" data-width="1920" data-height="1080" data-duration="8.287">
+    <div data-hf-id="hf-dn9u" class="clip solver-bg" data-start="0" data-duration="8.287" data-track-index="0"></div>
+
+    <div data-hf-id="hf-5qjo" class="clip solver-stage" data-start="0" data-duration="8.287" data-track-index="1">
+      <div data-hf-id="hf-nlft" class="solver-layout" id="04-solver-layout">
+        <div data-hf-id="hf-lpqb" class="solver-chips">
+          <div data-hf-id="hf-gesk" class="solver-chip solver-chip--wasm" id="04-solver-chip-wasm">WASM</div>
+          <div data-hf-id="hf-hnt9" class="solver-chip solver-chip--path" id="04-solver-chip-path">PATH</div>
+        </div>
+
+        <div data-hf-id="hf-ug45" class="solver-window-col" id="04-solver-window-col">
+          <div data-hf-id="hf-2zi9" class="solver-accent" id="04-solver-accent"></div>
+          <div data-hf-id="hf-9au1" class="solver-window" id="04-solver-window">
+            <div data-hf-id="hf-2juj" class="solver-titlebar">
+              <span data-hf-id="hf-7790" class="solver-dot solver-dot--red"></span>
+              <span data-hf-id="hf-dvwj" class="solver-dot solver-dot--yellow"></span>
+              <span data-hf-id="hf-s0ac" class="solver-dot solver-dot--green"></span>
+              <span data-hf-id="hf-psni" class="solver-titlebar-label" data-layout-allow-overlap="">ASP Solver</span>
+            </div>
+            <img data-hf-id="hf-fwru" class="solver-screenshot" src="assets/asp-solver-sidebar.png" alt="" width="1440" height="720">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-dcer" class="clip solver-headline" id="04-solver-headline" data-layout-allow-overlap="" data-start="6.2" data-duration="2.087" data-track-index="2">
+      ASP Solver sidebar
+    </div>
+
+    <div data-hf-id="hf-myjn" class="clip solver-diagram-wrap" id="04-solver-diagram" data-start="6.5" data-duration="1.787" data-track-index="3">
+      <img data-hf-id="hf-uxsl" src="assets/aspls-architecture-diagram.png" alt="" width="1640" height="560">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const T = {
+        window: 0.08,
+        accent: 0.12,
+        wasm: 2.5,
+        path: 4.6,
+        headline: 6.2,
+        diagram: 6.5,
+      };
+
+      const windowEl = document.getElementById("04-solver-window");
+      const accentEl = document.getElementById("04-solver-accent");
+      const chipWasm = document.getElementById("04-solver-chip-wasm");
+      const chipPath = document.getElementById("04-solver-chip-path");
+      const headline = document.getElementById("04-solver-headline");
+      const diagram = document.getElementById("04-solver-diagram");
+
+      gsap.set(windowEl, { scale: 0.94, opacity: 0 });
+      gsap.set(accentEl, { scale: 0.88, opacity: 0 });
+      gsap.set(chipWasm, { scale: 0, opacity: 0 });
+      gsap.set(chipPath, { scale: 0, opacity: 0 });
+      gsap.set(headline, { opacity: 0, y: 16 });
+      gsap.set(diagram, { opacity: 0, scale: 0.96 });
+
+      const tl = gsap.timeline({ paused: true });
+
+      tl.fromTo(
+        accentEl,
+        { scale: 0.88, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.55, ease: "power3.out" },
+        T.accent,
+      );
+
+      tl.fromTo(
+        windowEl,
+        { scale: 0.94, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.65, ease: "power3.out" },
+        T.window,
+      );
+
+      tl.fromTo(
+        chipWasm,
+        { scale: 0, opacity: 0, y: 18 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+        T.wasm,
+      );
+
+      tl.fromTo(
+        chipPath,
+        { scale: 0, opacity: 0, y: 18 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+        T.path,
+      );
+
+      // Make room for the headline — pull the demo down so titlebar text does not collide
+      const layout = document.getElementById("04-solver-layout");
+      tl.to(
+        layout,
+        { y: 48, scale: 0.88, duration: 0.4, ease: "power2.inOut", transformOrigin: "50% 50%" },
+        T.headline - 0.15,
+      );
+
+      tl.fromTo(
+        headline,
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" },
+        T.headline,
+      );
+
+      tl.fromTo(
+        diagram,
+        { opacity: 0, scale: 0.96 },
+        { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" },
+        T.diagram,
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["04-solver"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,52 @@
+{
+  "schema": "hyperframes.capture.icons.v1",
+  "headline": {
+    "file": "assets/favicon.svg",
+    "source": "assets/icon-icon-unsized.svg",
+    "rank": 0,
+    "shape": "bare-mark",
+    "reason": "bare mark preferred over 1 badge(s)"
+  },
+  "icons": [
+    {
+      "file": "assets/icon-icon-unsized.svg",
+      "url": "https://github.githubassets.com/favicons/favicon.svg",
+      "rel": "icon",
+      "sizes": null,
+      "type": "image/svg+xml",
+      "rank": 0,
+      "shape": "bare-mark",
+      "shapeReason": "first painted element is <path> with margins"
+    },
+    {
+      "file": "assets/icon-fluid-icon-unsized.png",
+      "url": "https://github.com/fluidicon.png",
+      "rel": "fluid-icon",
+      "sizes": null,
+      "type": null,
+      "rank": 1,
+      "shape": "bare-mark",
+      "shapeReason": "0 of 4 edge midpoints are opaque, so the drawing has transparent margins"
+    },
+    {
+      "file": "assets/icon-alternate-icon-unsized.png",
+      "url": "https://github.githubassets.com/favicons/favicon.png",
+      "rel": "alternate icon",
+      "sizes": null,
+      "type": "image/png",
+      "rank": 2,
+      "shape": "badge",
+      "shapeReason": "3 of 4 edge midpoints are opaque, so the drawing carries a backdrop"
+    },
+    {
+      "file": "assets/icon-mask-icon-unsized.svg",
+      "url": "https://github.githubassets.com/assets/pinned-octocat-093da3e6fa40.svg",
+      "rel": "mask-icon",
+      "sizes": null,
+      "type": null,
+      "rank": 3,
+      "shape": "bare-mark",
+      "shapeReason": "first painted element is <path> with margins"
+    }
+  ]
+}

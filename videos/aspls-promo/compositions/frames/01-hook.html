@@ -1,0 +1,312 @@
+<template>
+  <style>
+    @font-face {
+      font-family: "Mona Sans VF";
+      src: url("assets/fonts/Mona-Sans-VF.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    @font-face {
+      font-family: "Mona Sans Mono";
+      src: url("assets/fonts/Mona-Sans-Mono.woff2") format("woff2");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: block;
+    }
+
+    #root {
+      position: absolute;
+      inset: 0;
+      container-type: size;
+      overflow: hidden;
+    }
+
+    .clip {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hook-bg {
+      background: #f6f8fa;
+    }
+
+    .hook-stage {
+      inset: 0 0 17% 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hook-beat {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #1f2328;
+      font-family: "Mona Sans VF", Georgia, serif;
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.022em;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .hook-beat-inner {
+      max-width: 78cqw;
+    }
+
+    .hook-beat--lead .hook-beat-inner {
+      font-size: 5.5cqw;
+      letter-spacing: -0.018em;
+      max-width: 55cqw;
+    }
+
+    .hook-beat--display .hook-beat-inner {
+      font-size: 7.3cqw;
+      letter-spacing: -0.022em;
+    }
+
+    .hook-beat--punch .hook-beat-inner {
+      font-size: 9.4cqw;
+      letter-spacing: -0.025em;
+    }
+
+    .hook-depth-stack {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hook-depth-layer {
+      font-family: "Mona Sans VF", Georgia, serif;
+      font-weight: 400;
+      font-size: 7.3cqw;
+      line-height: 1.02;
+      letter-spacing: -0.022em;
+      white-space: nowrap;
+    }
+
+    .hook-depth-layer.is-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      color: rgba(31, 35, 40, 0.35);
+    }
+
+    .hook-depth-layer.is-front {
+      position: relative;
+      z-index: 2;
+      color: #1f2328;
+    }
+
+    .hook-scattered-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hook-scattered-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hook-underline-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.08em;
+      height: 0.12em;
+      background: #0969da;
+      border-radius: 2px;
+      transform: scaleX(0);
+      transform-origin: left center;
+      z-index: 0;
+    }
+
+    .hook-icon-wrap {
+      position: absolute;
+      left: 4.2cqw;
+      top: 4.2cqw;
+      width: 12cqw;
+      height: auto;
+      inset: auto;
+      opacity: 0;
+    }
+
+    .hook-icon-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+
+  <div data-hf-id="hf-vizr" id="root" data-composition-id="01-hook" data-width="1920" data-height="1080" data-duration="5.056">
+    <div data-hf-id="hf-shd2" class="clip hook-bg" data-start="0" data-duration="5.056" data-track-index="0"></div>
+
+    <div data-hf-id="hf-478g" class="clip hook-stage" data-start="0" data-duration="5.056" data-track-index="1">
+      <div data-hf-id="hf-6xxc" class="hook-beat hook-beat--lead" id="01-hook-beat-1">
+        <div data-hf-id="hf-bysq" class="hook-beat-inner" id="01-hook-beat-1-inner">Where do you write</div>
+      </div>
+
+      <div data-hf-id="hf-s65f" class="hook-beat hook-beat--display" id="01-hook-beat-2">
+        <div data-hf-id="hf-vl69" class="hook-beat-inner">
+          <div data-hf-id="hf-sjr4" class="hook-depth-stack" id="01-hook-depth-stack">
+            <div data-hf-id="hf-0hzp" class="hook-depth-layer is-back" id="01-hook-depth-back" data-layout-allow-overlap="">Answer Set Programming</div>
+            <div data-hf-id="hf-mjmf" class="hook-depth-layer is-front" id="01-hook-depth-front" data-layout-allow-overlap="">Answer Set Programming</div>
+          </div>
+        </div>
+      </div>
+
+      <div data-hf-id="hf-e3s0" class="hook-beat hook-beat--punch" id="01-hook-beat-3">
+        <div data-hf-id="hf-5hrz" class="hook-beat-inner">today?</div>
+      </div>
+
+      <div data-hf-id="hf-5gbp" class="hook-beat hook-beat--display" id="01-hook-beat-4">
+        <div data-hf-id="hf-yv7u" class="hook-beat-inner">
+          <span data-hf-id="hf-spyf" class="hook-scattered-wrap">
+            <span data-hf-id="hf-vx3l" class="hook-scattered-text">Scattered</span>
+            <span data-hf-id="hf-uns7" class="hook-underline-bar" id="01-hook-underline"></span>
+          </span>
+          tools.
+        </div>
+      </div>
+
+      <div data-hf-id="hf-4onw" class="hook-beat hook-beat--display" id="01-hook-beat-5">
+        <div data-hf-id="hf-l9a1" class="hook-beat-inner">Or one editor.</div>
+      </div>
+    </div>
+
+    <div data-hf-id="hf-9v4c" class="clip hook-icon-wrap" id="01-hook-icon" data-start="0" data-duration="5.056" data-track-index="2">
+      <img data-hf-id="hf-ukat" src="assets/aspls-icon.png" alt="" width="230" height="230">
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const DURATION = 5.056;
+
+      const BEAT_TIMES = [
+        { t: 0.08, index: 0 },
+        { t: 0.81, index: 1 },
+        { t: 1.92, index: 2 },
+        { t: 2.64, index: 3 },
+        { t: 4.02, index: 4 },
+      ];
+
+      const T_UNDERLINE = 2.72;
+      const T_ICON = 4.02;
+
+      const beats = [
+        document.getElementById("01-hook-beat-1"),
+        document.getElementById("01-hook-beat-2"),
+        document.getElementById("01-hook-beat-3"),
+        document.getElementById("01-hook-beat-4"),
+        document.getElementById("01-hook-beat-5"),
+      ];
+
+      const beat1Inner = document.getElementById("01-hook-beat-1-inner");
+      const depthBack = document.getElementById("01-hook-depth-back");
+      const depthFront = document.getElementById("01-hook-depth-front");
+      const underline = document.getElementById("01-hook-underline");
+      const icon = document.getElementById("01-hook-icon");
+
+      const OFFSET_X = 2;
+      const OFFSET_Y = 2;
+
+      function activeBeatAt(time) {
+        let active = 0;
+        for (let i = BEAT_TIMES.length - 1; i >= 0; i--) {
+          if (time >= BEAT_TIMES[i].t) {
+            active = BEAT_TIMES[i].index;
+            break;
+          }
+        }
+        return active;
+      }
+
+      function syncBeats(time) {
+        const active = activeBeatAt(time);
+        beats.forEach(function (el, i) {
+          gsap.set(el, {
+            opacity: i === active ? 1 : 0,
+            visibility: i === active ? "visible" : "hidden",
+          });
+        });
+      }
+
+      gsap.set(beats, { opacity: 0, visibility: "hidden" });
+      gsap.set(beat1Inner, { opacity: 0, scale: 0.96 });
+      gsap.set(depthBack, { opacity: 0, x: 0, y: 0 });
+      gsap.set(depthFront, { opacity: 0, scale: 0.98 });
+      gsap.set(underline, { scaleX: 0 });
+      gsap.set(icon, { opacity: 0, scale: 0.92 });
+
+      const tl = gsap.timeline({ paused: true });
+
+      const driver = { t: 0 };
+      tl.to(
+        driver,
+        {
+          t: DURATION,
+          duration: DURATION,
+          ease: "none",
+          onUpdate: function () {
+            syncBeats(driver.t);
+          },
+        },
+        0,
+      );
+
+      tl.fromTo(
+        beat1Inner,
+        { opacity: 0, scale: 0.96 },
+        { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" },
+        BEAT_TIMES[0].t,
+      );
+
+      tl.fromTo(
+        depthBack,
+        { opacity: 0, x: 0, y: 0 },
+        { opacity: 1, x: OFFSET_X, y: OFFSET_Y, duration: 0.18, ease: "power2.out" },
+        BEAT_TIMES[1].t,
+      );
+
+      tl.fromTo(
+        depthFront,
+        { opacity: 0, scale: 0.98 },
+        { opacity: 1, scale: 1, duration: 0.15, ease: "power2.out" },
+        BEAT_TIMES[1].t,
+      );
+
+      tl.to(
+        underline,
+        { scaleX: 1, duration: 0.22, ease: "power2.out" },
+        T_UNDERLINE,
+      );
+
+      tl.fromTo(
+        icon,
+        { opacity: 0, scale: 0.92 },
+        { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out" },
+        T_ICON,
+      );
+
+      // Hard clear before cut — inactive hosts can leave the last beat painted
+      tl.to(
+        beats.concat([icon]),
+        { opacity: 0, duration: 0.08, ease: "none", onComplete: function () {
+          gsap.set(beats.concat([icon]), { visibility: "hidden" });
+        } },
+        DURATION - 0.08,
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["01-hook"] = tl;
+    })();
+  </script>
+</template>
