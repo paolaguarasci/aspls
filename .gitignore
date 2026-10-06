@@ -521,3 +521,10 @@ TSWLatexianTemp*
 
 # glossaries
 *.glstex
+
+# HyperFrames promo — local renders / capture (keep 4K off the clone)
+videos/**/renders/
+videos/**/capture/
+videos/**/snapshots/
+videos/**/assets/voice/
+videos/**/.hyperframes/preview/

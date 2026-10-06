@@ -2,7 +2,14 @@ import * as assert from "assert";
 import { COOKBOOK_RECIPES } from "./recipes";
 
 function testCatalogNonEmpty(): void {
-  assert.ok(COOKBOOK_RECIPES.length >= 8);
+  assert.ok(COOKBOOK_RECIPES.length >= 16);
+}
+
+function testTeachingRecipesPresent(): void {
+  const ids = new Set(COOKBOOK_RECIPES.map((r) => r.id));
+  for (const id of ["puzzles-nqueens", "teaching-guess-and-check", "teaching-reachability"]) {
+    assert.ok(ids.has(id), `missing cookbook recipe ${id}`);
+  }
 }
 
 function testUniqueIds(): void {
@@ -35,6 +42,7 @@ function testRecipesHaveWorkingCode(): void {
 }
 
 testCatalogNonEmpty();
+testTeachingRecipesPresent();
 testUniqueIds();
 testRecipesHaveWorkingCode();
 console.log("cookbook recipes tests passed");

@@ -168,7 +168,9 @@ edge(X, Y) :- edge(Y, X).
 node(X) :- edge(X, _).
 node(X) :- edge(_, X).
 
-color(red; green; blue).
+color(red).
+color(green).
+color(blue).
 
 1 { colored(N, C) : color(C) } 1 :- node(N).
 
@@ -233,6 +235,63 @@ value(1, 1, 2).
 value(2, 2, 4).
 
 #show value/3.`,
+  },
+  {
+    id: "puzzles-nqueens",
+    title: "N-Queens",
+    category: "Puzzles",
+    description: "Guess-and-check: one queen per row; forbid shared columns/diagonals",
+    code: `% Place 4 queens with no attacks (classic ASP lab)
+% Diagonals via next/next2/next3 (parser-friendly; same models as |r1-r2|=|c1-c2|)
+#const n = 4.
+row(1..n).
+col(1..n).
+next(1, 2). next(2, 3). next(3, 4).
+next2(1, 3). next2(2, 4).
+next3(1, 4).
+
+1 { queen(R, C) : col(C) } 1 :- row(R).
+
+:- queen(R1, C), queen(R2, C), R1 < R2.
+:- queen(R1, C1), queen(R2, C2), next(R1, R2), next(C1, C2).
+:- queen(R1, C1), queen(R2, C2), next(R1, R2), next(C2, C1).
+:- queen(R1, C1), queen(R2, C2), next2(R1, R2), next2(C1, C2).
+:- queen(R1, C1), queen(R2, C2), next2(R1, R2), next2(C2, C1).
+:- queen(R1, C1), queen(R2, C2), next3(R1, R2), next3(C1, C2).
+:- queen(R1, C1), queen(R2, C2), next3(R1, R2), next3(C2, C1).
+
+#show queen/2.`,
+  },
+  {
+    id: "teaching-guess-and-check",
+    title: "Guess-and-check schema",
+    category: "Teaching",
+    description: "Template for lab sessions: generate candidates, then constrain",
+    code: `% Teaching pattern: guess a solution, then check properties
+item(a; b; c).
+
+% Guess — pick a non-empty subset
+{ selected(X) : item(X) }.
+has_pick :- selected(_).
+:- not has_pick.
+
+% Check — forbid selecting both a and b
+:- selected(a), selected(b).
+
+#show selected/1.`,
+  },
+  {
+    id: "teaching-reachability",
+    title: "Graph reachability",
+    category: "Teaching",
+    description: "Recursive rules for paths — common first-week modeling exercise",
+    code: `% Reachability via recursive rules
+edge(1, 2). edge(2, 3). edge(3, 4). edge(1, 5).
+
+reachable(Y) :- edge(1, Y).
+reachable(Y) :- reachable(X), edge(X, Y).
+
+#show reachable/1.`,
   },
   {
     id: "planning-strips-schema",

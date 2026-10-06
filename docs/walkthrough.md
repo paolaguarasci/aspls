@@ -4,6 +4,8 @@ Target duration: **~5 minutes**
 Audience: developers new to Answer Set Programming or aspls  
 Prerequisites: VS Code, Cursor, or VSCodium; **Python 3** on PATH
 
+For a short product overview (~44s), see [`docs/media/aspls-promo.mp4`](media/aspls-promo.mp4) (linked from the root README). This document is the longer **hands-on screencast** script.
+
 Use this repo checked out locally so paths below match on screen.
 
 | Act | Topic | Duration |
@@ -121,4 +123,17 @@ Use this repo checked out locally so paths below match on screen.
 | `examples/04_multi_file/rules.lp` | Rules + `#show`; active file for config run |
 | `examples/04_multi_file/aspls.clingo.json` | Pool config (`additionalFiles`) |
 
-After recording, host the video (YouTube, etc.) and add the URL to the README **Video walkthrough** section.
+
+---
+
+## After recording (publish checklist)
+
+1. Export **1080p MP4** (or upload to YouTube Unlisted / Public).
+2. Optional local copy: `docs/video/aspls-walkthrough.mp4` (git-lfs if large).
+3. Update README **Video walkthrough** with the public URL.
+4. Attach the same link in the GitHub release `v0.8.0` notes.
+5. End card should use Marketplace `paolaguarasci.aspls` and Open VSX `pingflood/aspls`.
+
+### Suggested macOS capture
+
+QuickTime Player → File → New Screen Recording → select the editor window → follow Acts 1–3 above. Keep cursor large and avoid switching desktops.

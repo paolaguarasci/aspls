@@ -1,0 +1,44 @@
+# Trusted publisher on Open VSX must match this filename exactly.
+# Register: open-vsx.org → namespace → Trusted Publishers → paolaguarasci/aspls / publish-openvsx.yml
+name: Publish Open VSX
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Use Open VSX publisher (pingflood)
+        run: |
+          node -e "
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            p.publisher = 'pingflood';
+            fs.writeFileSync('package.json', JSON.stringify(p, null, 4) + '\n');
+          "
+
+      - name: Package and publish with OIDC
+        run: |
+          npx --yes @vscode/vsce package -o /tmp/aspls-openvsx.vsix
+          npx --yes ovsx publish /tmp/aspls-openvsx.vsix --trusted-publishing
