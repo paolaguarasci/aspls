@@ -2,6 +2,19 @@
 
 All notable changes to **aspls** are documented in this file.
 
+## [0.8.1] — 2026-10-19
+
+### Security
+- `aspls.pythonPath` and `aspls.clingo.path` can no longer be set by a workspace (`.vscode/settings.json`). Both name an executable, so an untrusted project could have made the extension run a program of its choice. They are now machine-scoped, restricted in untrusted workspaces, and read from user settings only.
+
+### Changed
+- The Solver sidebar saves the chosen Clingo binary to user settings instead of workspace settings, so the choice applies to every project.
+- The extension declares limited support for untrusted workspaces.
+
+### Publishing
+- Open VSX: `0.8.1` (namespace `pingflood`)
+- GitHub release: `v0.8.1`
+
 ## [0.8.0] — 2026-10-06
 
 ### Added
