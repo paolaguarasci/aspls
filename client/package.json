@@ -395,7 +395,8 @@
                 "aspls.clingo.path": {
                     "type": "string",
                     "default": "",
-                    "description": "Optional absolute path to the Clingo executable. Empty = look up `clingo` on PATH when usePath is enabled."
+                    "scope": "machine",
+                    "description": "Optional absolute path to the Clingo executable. Empty = look up `clingo` on PATH when usePath is enabled. User settings only: a workspace cannot set it, because it names an executable to run."
                 },
                 "aspls.clingo.models": {
                     "type": "number",
@@ -454,9 +455,10 @@
     "capabilities": {
         "untrustedWorkspaces": {
             "supported": "limited",
-            "description": "The language server and grounding debug use only a Python interpreter set in user settings.",
+            "description": "The language server, grounding debug and Clingo runs use only interpreter and Clingo paths set in user settings.",
             "restrictedConfigurations": [
-                "aspls.pythonPath"
+                "aspls.pythonPath",
+                "aspls.clingo.path"
             ]
         }
     },

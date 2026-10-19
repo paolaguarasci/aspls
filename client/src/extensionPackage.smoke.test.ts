@@ -41,14 +41,16 @@ function main(): void {
     };
   };
 
-  // aspls.pythonPath names an executable: a workspace must never be able to set it.
-  const pythonPath = pkg.contributes.configuration.properties["aspls.pythonPath"];
-  assert.strictEqual(pythonPath?.scope, "machine", "aspls.pythonPath must be machine-scoped");
+  // These settings name an executable: a workspace must never be able to set them.
   assert.strictEqual(pkg.capabilities?.untrustedWorkspaces?.supported, "limited");
-  assert.ok(
-    pkg.capabilities?.untrustedWorkspaces?.restrictedConfigurations?.includes("aspls.pythonPath"),
-    "aspls.pythonPath must be restricted in untrusted workspaces",
-  );
+  for (const key of ["aspls.pythonPath", "aspls.clingo.path"]) {
+    const setting = pkg.contributes.configuration.properties[key];
+    assert.strictEqual(setting?.scope, "machine", `${key} must be machine-scoped`);
+    assert.ok(
+      pkg.capabilities?.untrustedWorkspaces?.restrictedConfigurations?.includes(key),
+      `${key} must be restricted in untrusted workspaces`,
+    );
+  }
 
   assert.ok(
     pkg.engines?.vscode,

@@ -111,7 +111,8 @@ export function resolveClingoConfig(options?: {
     additionalFiles,
     additionalFilesExplicit,
     usePath: cfg.get<boolean>("clingo.usePath", false),
-    clingoPath: cfg.get<string>("clingo.path", "") ?? "",
+    // User settings only: a workspace must not choose the executable to run.
+    clingoPath: cfg.inspect<string>("clingo.path")?.globalValue ?? "",
     configFileName,
   };
 }
@@ -243,5 +244,5 @@ export async function updateClingoUsePath(usePath: boolean): Promise<void> {
 export async function updateClingoPath(clingoPath: string): Promise<void> {
   await vscode.workspace
     .getConfiguration("aspls")
-    .update("clingo.path", clingoPath, vscode.ConfigurationTarget.Workspace);
+    .update("clingo.path", clingoPath, vscode.ConfigurationTarget.Global);
 }
