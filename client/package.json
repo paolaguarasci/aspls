@@ -369,7 +369,8 @@
                 "aspls.pythonPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Path to a Python 3 interpreter. Leave empty to auto-detect python3/python on PATH."
+                    "scope": "machine",
+                    "description": "Path to a Python 3 interpreter. Leave empty to auto-detect python3/python on PATH. User settings only: a workspace cannot set it, because it names an executable to run."
                 },
                 "aspls.rainbowPredicates": {
                     "type": "boolean",
@@ -448,6 +449,15 @@
                     "description": "HTTPS URL that receives anonymous telemetry batches when aspls.telemetry.enabled is true. Leave empty to keep events local (nothing is sent)."
                 }
             }
+        }
+    },
+    "capabilities": {
+        "untrustedWorkspaces": {
+            "supported": "limited",
+            "description": "The language server and grounding debug use only a Python interpreter set in user settings.",
+            "restrictedConfigurations": [
+                "aspls.pythonPath"
+            ]
         }
     },
     "scripts": {

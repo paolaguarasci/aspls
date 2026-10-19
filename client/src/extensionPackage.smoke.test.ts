@@ -33,7 +33,22 @@ function main(): void {
     publisher?: string;
     name?: string;
     version?: string;
+    contributes: {
+      configuration: { properties: Record<string, { scope?: string }> };
+    };
+    capabilities?: {
+      untrustedWorkspaces?: { supported: string; restrictedConfigurations?: string[] };
+    };
   };
+
+  // aspls.pythonPath names an executable: a workspace must never be able to set it.
+  const pythonPath = pkg.contributes.configuration.properties["aspls.pythonPath"];
+  assert.strictEqual(pythonPath?.scope, "machine", "aspls.pythonPath must be machine-scoped");
+  assert.strictEqual(pkg.capabilities?.untrustedWorkspaces?.supported, "limited");
+  assert.ok(
+    pkg.capabilities?.untrustedWorkspaces?.restrictedConfigurations?.includes("aspls.pythonPath"),
+    "aspls.pythonPath must be restricted in untrusted workspaces",
+  );
 
   assert.ok(
     pkg.engines?.vscode,

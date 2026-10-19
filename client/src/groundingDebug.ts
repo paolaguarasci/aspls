@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { findPythonInterpreter } from "./pythonSetup";
+import { configuredPythonPath } from "./pythonPathSetting";
 import {
   GroundingDebugSession,
   resolveGroundingDebugScript,
@@ -63,9 +64,7 @@ class GroundingDebugAdapterFactory
   async createDebugAdapterDescriptor(
     session: vscode.DebugSession,
   ): Promise<vscode.DebugAdapterDescriptor> {
-    const config = vscode.workspace.getConfiguration("aspls");
-    const configuredPath = config.get<string>("pythonPath");
-    const pythonInterpreter = await findPythonInterpreter(configuredPath);
+    const pythonInterpreter = await findPythonInterpreter(configuredPythonPath());
     if (!pythonInterpreter) {
       throw new Error(
         "Debug Grounding requires Python 3. Set aspls.pythonPath or install python3 on PATH.",

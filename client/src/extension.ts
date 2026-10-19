@@ -12,6 +12,7 @@ import { registerAdditionalFilesDeprecationWarning } from "./clingoConfigDepreca
 import { registerCookbookCommands } from "./cookbook/cookbookCommands";
 import { ClingoSolverView } from "./clingoSolverView";
 import { findPythonInterpreter, ensureServerVenv } from "./pythonSetup";
+import { configuredPythonPath } from "./pythonPathSetting";
 import { PredicateRainbow } from "./predicateRainbowDecorations";
 import { registerPredicatesTree } from "./predicatesTree";
 import { registerGroundingDebug } from "./groundingDebug";
@@ -50,10 +51,7 @@ async function startLanguageServer(
   context: vscode.ExtensionContext,
   predicatesProvider: ReturnType<typeof registerPredicatesTree>,
 ): Promise<void> {
-  const config = vscode.workspace.getConfiguration("aspls");
-  const configuredPath = config.get<string>("pythonPath");
-
-  const pythonInterpreter = await findPythonInterpreter(configuredPath);
+  const pythonInterpreter = await findPythonInterpreter(configuredPythonPath());
   if (!pythonInterpreter) {
     vscode.window.showErrorMessage(
       "ASP Language Server: no Python 3 interpreter found. Install Python 3 and/or set 'aspls.pythonPath'. Clingo run commands still work.",
